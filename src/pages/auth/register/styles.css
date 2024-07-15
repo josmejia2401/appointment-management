@@ -1,0 +1,69 @@
+#auth-register {
+    height: 100vh;
+    overflow-x: hidden
+}
+
+#auth-register #auth-right {
+    height: 100%;
+    background-color: #7a9e9f;
+}
+
+#auth-register #auth-left {
+    padding: 5rem
+}
+
+#auth-register #auth-left .auth-title {
+    font-size: 4rem;
+    margin-bottom: 1rem
+}
+
+#auth-register #auth-left .auth-subtitle {
+    font-size: 1.7rem;
+    line-height: 2.5rem;
+    color: #a8aebb
+}
+
+#auth-register #auth-left .auth-logo {
+    margin-bottom: unset;
+}
+
+#auth-register #auth-left .auth-logo img {
+    height: 8rem;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 1399.9px) {
+    #auth-register #auth-left {
+        padding: 3rem
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #auth-register #auth-left {
+        padding: 5rem
+    }
+}
+
+@media screen and (max-width: 576px) {
+    #auth-register #auth-left {
+        padding: 5rem 3rem
+    }
+}
+
+#auth-right {
+    background-color: #7a9e9f;
+}
+
+.center-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.h1-current-value {
+    font-size: 60px;
+    padding: 100px;
+    text-align: justify;
+    color: #EEF5DB;
+}

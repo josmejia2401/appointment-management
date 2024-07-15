@@ -1,0 +1,69 @@
+#auth-login {
+    height: 100vh;
+    overflow-x: hidden
+}
+
+#auth-login #auth-right {
+    height: 100%;
+    background-color: #7a9e9f;
+}
+
+#auth-login #auth-left {
+    padding: 5rem
+}
+
+#auth-login #auth-left .auth-title {
+    font-size: 4rem;
+    margin-bottom: 1rem
+}
+
+#auth-login #auth-left .auth-subtitle {
+    font-size: 1.7rem;
+    line-height: 2.5rem;
+    color: #a8aebb
+}
+
+#auth-login #auth-left .auth-logo {
+    margin-bottom: unset;
+}
+
+#auth-login #auth-left .auth-logo img {
+    height: 8rem;
+    object-fit: contain;
+}
+
+@media screen and (max-width: 1399.9px) {
+    #auth-login #auth-left {
+        padding: 3rem
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #auth-login #auth-left {
+        padding: 5rem
+    }
+}
+
+@media screen and (max-width: 576px) {
+    #auth-login #auth-left {
+        padding: 5rem 3rem
+    }
+}
+
+#auth-right {
+    background-color: #7a9e9f;
+}
+
+.center-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.h1-current-value {
+    font-size: 60px;
+    padding: 100px;
+    text-align: justify;
+    color: #EEF5DB;
+}
