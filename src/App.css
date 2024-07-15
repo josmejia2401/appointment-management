@@ -26,6 +26,19 @@ button[disabled] {
   color: white;
 }
 
+
+.color-primary {
+  color: #7a9e9f;
+}
+
+.background-color-off-white {
+  background-color: #FAF9F6;
+}
+
+.background-color-off-blue {
+  background-color: #f2f7ff;
+}
+
 .fade-in-text {
   font-family: Arial;
   animation: fadeIn 1.5s;
