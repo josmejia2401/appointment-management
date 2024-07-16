@@ -21,10 +21,7 @@ function App() {
           <Route exact path="/403" element={<RouteComponent children={Error403Page}></RouteComponent>} />
           <Route exact path="/404" element={<RouteComponent children={Error404Page}></RouteComponent>} />
           <Route exact path="/500" element={<RouteComponent children={Error500Page}></RouteComponent>} />
-
           <Route exact path="/customers/view" element={<RouteComponent children={CustomersViewPage}></RouteComponent>} />
-
-
           <Route path="*" element={<Navigate to={"/login"} replace></Navigate>} />
         </Routes>
       </Router>

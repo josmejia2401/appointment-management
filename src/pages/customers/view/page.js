@@ -2,6 +2,8 @@ import * as React from 'react';
 import "./styles.css";
 import Template from '../../../components/template';
 import CreateComponent from '../create';
+import EditComponent from '../edit';
+import { findDocumentTypeById, findStatusById } from '../../../lib/list_values';
 
 class Page extends React.Component {
 
@@ -9,12 +11,73 @@ class Page extends React.Component {
         super(props);
         this.state = {
             loading: false,
+            isValidForm: false,
+            data: [],
+            dataSelected: undefined,
+            isFocused: false,
         };
+
+        this.loadData = this.loadData.bind(this);
+        this.validateForm = this.validateForm.bind(this);
+        this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
+        this.propagateState = this.propagateState.bind(this);
+        this.updateState = this.updateState.bind(this);
+
+        this.doLogInAction = this.doLogInAction.bind(this);
+        this.dataSelectedAction = this.dataSelectedAction.bind(this);
+    }
+
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    async loadData() {
+        this.updateState({
+            data: [{
+                firstName: "fistName",
+                lastName: "lastName",
+                documentType: 1,
+                documentNumber: '123',
+                gender: 1,
+                birthday: new Date().toDateString(),
+                phoneNumber: '123456',
+                email: 'aa@gmail.com',
+                address: 'address',
+                notes: 'nota',
+                status: 1
+            }]
+        });
+    }
+
+
+    doLogInAction = async (e) => {
+    }
+
+    validateForm(key) { }
+
+    async setChangeInputEvent(key, event) {
+        const { data } = this.state;
+        data[key].value = event.target.value;
+        this.updateState({ data: data });
+        this.validateForm(key);
+    }
+
+    propagateState() { }
+
+    updateState(payload) {
+        this.setState({ ...payload }, () => this.propagateState());
+    }
+
+
+
+    async dataSelectedAction(e, item) {
+        this.updateState({ dataSelected: item });
     }
 
     render() {
         return (
-            <Template title={'Clientes'}>
+            <Template title={'Clientes'} navigate={this.props.navigate}>
                 <section className="section background-color-off-white">
                     <div className="row" id="table-hover-row">
                         <div className="col-12">
@@ -37,75 +100,33 @@ class Page extends React.Component {
                                         <table className="table table-hover mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th>Nombre</th>
-                                                    <th>Teléfono</th>
-                                                    <th>Correo</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
+                                                    <th>Tipo documento</th>
+                                                    <th>Número documento</th>
                                                     <th>Estado</th>
-                                                    <th>Fecha creación</th>
                                                     <th>Acción</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td className="text-bold-500">Michael Right</td>
-                                                    <td>352684525</td>
-                                                    <td className="text-bold-500">josmq@gmail.com</td>
-                                                    <td>Activo</td>
-                                                    <td>{new Date().toDateString()}</td>
-                                                    <td>
-                                                        <a href="#">
-                                                            <i className="fa-regular fa-pen-to-square"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="text-bold-500">Morgan Vanblum</td>
-                                                    <td>$13/hr</td>
-                                                    <td className="text-bold-500">Graphic concepts</td>
-                                                    <td>Remote</td>
-                                                    <td>Shangai,China</td>
-                                                    <td>
-                                                        <a href="#">
-                                                            <i className="fa-regular fa-pen-to-square"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="text-bold-500">Tiffani Blogz</td>
-                                                    <td>$15/hr</td>
-                                                    <td className="text-bold-500">Animation</td>
-                                                    <td>Remote</td>
-                                                    <td>Austin,Texas</td>
-                                                    <td>
-                                                        <a href="#">
-                                                            <i className="fa-regular fa-pen-to-square"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="text-bold-500">Ashley Boul</td>
-                                                    <td>$15/hr</td>
-                                                    <td className="text-bold-500">Animation</td>
-                                                    <td>Remote</td>
-                                                    <td>Austin,Texas</td>
-                                                    <td>
-                                                        <a href="#">
-                                                            <i className="fa-regular fa-pen-to-square"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="text-bold-500">Mikkey Mice</td>
-                                                    <td>$15/hr</td>
-                                                    <td className="text-bold-500">Animation</td>
-                                                    <td>Remote</td>
-                                                    <td>Austin,Texas</td>
-                                                    <td>
-                                                        <a href="#">
-                                                            <i className="fa-regular fa-pen-to-square"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                {this.state.data.map((item, index) => {
+                                                    return (<tr key={index}>
+                                                        <td className="text-bold-500">{item.firstName}</td>
+                                                        <td>{item.lastName}</td>
+                                                        <td className="text-bold-500">{findDocumentTypeById(item.documentType).name}</td>
+                                                        <td>{item.documentNumber}</td>
+                                                        <td><span className={findStatusById(item.status).id === 1 ? "badge bg-success" : "badge bg-danger"}>{findStatusById(item.status).name}</span></td>
+                                                        <td>
+                                                            <a
+                                                                href="#"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#inlineFormEditCustomer"
+                                                                onClick={(e) => this.dataSelectedAction(e, item)} >
+                                                                <i className="fa-regular fa-pen-to-square color-primary" onClick={(e) => this.dataSelectedAction(e, item)}></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>);
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>
@@ -113,7 +134,8 @@ class Page extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <CreateComponent navigation={this.props.navigation}></CreateComponent>
+                    <CreateComponent navigate={this.props.navigate}></CreateComponent>
+                    <EditComponent navigate={this.props.navigate} data={this.state.dataSelected}></EditComponent>
                 </section>
             </Template>
 

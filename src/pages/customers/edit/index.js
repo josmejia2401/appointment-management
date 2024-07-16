@@ -57,14 +57,6 @@ class LocalComponent extends React.Component {
                     value: '',
                     errors: []
                 },
-                history: {
-                    value: '',
-                    errors: []
-                },
-                termCond: {
-                    value: false,
-                    errors: []
-                }
             },
         };
 
@@ -73,8 +65,35 @@ class LocalComponent extends React.Component {
         this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
+        this.loadFirstData = this.loadFirstData.bind(this);
     }
 
+
+    componentDidMount() {
+        console.log(this.props.data);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.data !== prevProps.data) {
+            this.loadFirstData(this.props.data);
+        }
+    }
+
+    loadFirstData(dataFirst) {
+        const { data } = this.state;
+        data.firstName.value = dataFirst.firstName;
+        data.lastName.value = dataFirst.lastName;
+        data.documentType.value = dataFirst.documentType;
+        data.documentNumber.value = dataFirst.documentNumber;
+        data.gender.value = dataFirst.gender;
+        data.birthday.value = new Date(dataFirst.birthday).toISOString().split("T")[0];
+        data.phoneNumber.value = dataFirst.phoneNumber;
+        data.address.value = dataFirst.address;
+        data.email.value = dataFirst.email;
+        data.notes.value = dataFirst.notes;
+        this.updateState({ data: data });
+
+    }
 
     doLogInAction = async (e) => {
         e.preventDefault();
@@ -110,8 +129,6 @@ class LocalComponent extends React.Component {
         const erroremail = Validator.validateEmail(data.email.value);
         const erroraddress = Validator.validateAddress(data.address.value);
         const errornotes = Validator.validateNotes(data.notes.value);
-        const errorhistory = Validator.validateHistory(data.history.value);
-        const errortermCond = Validator.validateTermCond(data.termCond.value);
 
         if (Utils.isEmpty(errorfirstName) &&
             Utils.isEmpty(errorlastName) &&
@@ -122,9 +139,7 @@ class LocalComponent extends React.Component {
             Utils.isEmpty(errorphoneNumber) &&
             Utils.isEmpty(erroremail) &&
             Utils.isEmpty(erroraddress) &&
-            Utils.isEmpty(errornotes) &&
-            Utils.isEmpty(errorhistory) &&
-            Utils.isEmpty(errortermCond)) {
+            Utils.isEmpty(errornotes)) {
             isValidForm = true;
         }
         if (!Utils.isEmpty(errorfirstName) && key === 'firstName') {
@@ -157,12 +172,6 @@ class LocalComponent extends React.Component {
         if (!Utils.isEmpty(errornotes) && key === 'notes') {
             data.notes.errors.push(errornotes);
         }
-        if (!Utils.isEmpty(errorhistory) && key === 'history') {
-            data.history.errors.push(errorhistory);
-        }
-        if (!Utils.isEmpty(errortermCond) && key === 'termCond') {
-            data.termCond.errors.push(errortermCond);
-        }
         this.updateState({ isValidForm, data: data });
     }
 
@@ -179,15 +188,16 @@ class LocalComponent extends React.Component {
         this.setState({ ...payload }, () => this.propagateState());
     }
 
+
     render() {
         return (
-            <div className="modal fade text-left" id="inlineFormCreateCustomer" tabIndex="-1" role="dialog"
-                aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div className="modal fade text-left" id="inlineFormEditCustomer" tabIndex="-1" role="dialog"
+                aria-labelledby="modalLabelEdit" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="myModalLabel33">Crear cliente </h4>
+                            <h4 className="modal-title" id="modalLabelEdit">Modificar cliente</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
                                 aria-label="Close">
                                 <i data-feather="x"></i>
@@ -472,40 +482,6 @@ class LocalComponent extends React.Component {
                                                                             display: this.state.data.notes.errors.length > 0 ? 'block' : 'none'
                                                                         }}>
                                                                         {this.state.data.notes.errors[0]}
-                                                                    </div>
-
-
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="col-12">
-                                                                <div className="form-group">
-                                                                    <div className="form-check mandatory">
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            id="termCond"
-                                                                            name='termCond'
-                                                                            className="form-check-input"
-                                                                            checked={this.state.data.termCond.value}
-                                                                            data-parsley-required="true"
-                                                                            data-parsley-error-message="You have to accept our terms and conditions to proceed."
-                                                                            value={this.state.data.termCond.value}
-                                                                            onChange={(event) => this.setChangeInputEvent('termCond', event)}
-                                                                            disabled={this.state.loading}
-                                                                            autoComplete='off'
-                                                                        />
-
-                                                                        <label htmlFor="termCond" className="form-check-label form-label">Acepto términos y condiciones.</label>
-
-
-                                                                        <div
-                                                                            className="invalid-feedback"
-                                                                            style={{
-                                                                                display: this.state.data.termCond.errors.length > 0 ? 'block' : 'none'
-                                                                            }}>
-                                                                            {this.state.data.termCond.errors[0]}
-                                                                        </div>
-
                                                                     </div>
                                                                 </div>
                                                             </div>
