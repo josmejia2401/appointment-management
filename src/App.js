@@ -3,8 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import './App.css';
 
 import { AuthProvider, RouteComponent } from './lib/context';
+
 import SignInPage from './pages/auth/login';
 import RegisterPage from './pages/auth/register';
+
 import Error403Page from './pages/errors/403';
 import Error404Page from './pages/errors/404';
 import Error500Page from './pages/errors/500';
@@ -16,13 +18,13 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route exact path="/login" element={<RouteComponent children={SignInPage}></RouteComponent>} />
-          <Route exact path="/register" element={<RouteComponent children={RegisterPage}></RouteComponent>} />
-          <Route exact path="/403" element={<RouteComponent children={Error403Page}></RouteComponent>} />
-          <Route exact path="/404" element={<RouteComponent children={Error404Page}></RouteComponent>} />
-          <Route exact path="/500" element={<RouteComponent children={Error500Page}></RouteComponent>} />
+          <Route exact path="/auth/login" element={<RouteComponent children={SignInPage}></RouteComponent>} />
+          <Route exact path="/auth/register" element={<RouteComponent children={RegisterPage}></RouteComponent>} />
+          <Route exact path="/error/403" element={<RouteComponent children={Error403Page}></RouteComponent>} />
+          <Route exact path="/error/404" element={<RouteComponent children={Error404Page}></RouteComponent>} />
+          <Route exact path="/error/500" element={<RouteComponent children={Error500Page}></RouteComponent>} />
           <Route exact path="/customers/view" element={<RouteComponent children={CustomersViewPage}></RouteComponent>} />
-          <Route path="*" element={<Navigate to={"/login"} replace></Navigate>} />
+          <Route path="*" element={<Navigate to={"/auth/login"} replace></Navigate>} />
         </Routes>
       </Router>
     </AuthProvider>

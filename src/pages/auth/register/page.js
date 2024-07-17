@@ -3,6 +3,8 @@ import "./styles.css";
 import { buildPayload } from '../../../lib/form';
 import Validator from './validators/validator';
 import Utils from '../../../lib/utils';
+import ButtonPrimary from '../../../components/button-primary';
+
 import { register } from '../../../api/auth.services';
 
 class Page extends React.Component {
@@ -170,7 +172,7 @@ class Page extends React.Component {
                     <div className="col-lg-5 col-12">
                         <div id="auth-left">
                             <div className="auth-logo">
-                                <a href="index.html">
+                                <a href="/">
                                     <img src="https://cdn5.f-cdn.com/contestentries/366848/10688121/56e5395903343_thumb900.jpg" alt="Logo" />
                                 </a>
                             </div>
@@ -181,23 +183,22 @@ class Page extends React.Component {
 
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">
-                                        <i className="fa-solid fa-person"></i>
+                                        <i className="fa-solid fa-person icon-input-color"></i>
                                     </span>
 
                                     <input
                                         type="text"
-                                        className="form-control form-control-xl"
+                                        className="form-control form-control-xl input-color"
                                         placeholder="Nombre completo"
                                         name='fullName'
                                         id='fullName'
                                         value={this.state.data.fullName.value}
                                         onChange={(event) => this.setChangeInputEvent('fullName', event)}
                                         disabled={this.state.loading}
-                                        autoFocus={true}
                                         autoComplete='off'
                                     />
                                     <div
-                                        className="invalid-feedback"
+                                        className="invalid-feedback error-color"
                                         style={{
                                             display: this.state.data.fullName.errors.length > 0 ? 'block' : 'none'
                                         }}>
@@ -208,12 +209,12 @@ class Page extends React.Component {
 
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">
-                                        <i className="fa-solid fa-envelope"></i>
+                                        <i className="fa-solid fa-envelope icon-input-color"></i>
                                     </span>
 
                                     <input
                                         type="email"
-                                        className="form-control form-control-xl"
+                                        className="form-control form-control-xl input-color"
                                         placeholder="Correo electrónico"
                                         name='email'
                                         id='email'
@@ -223,7 +224,7 @@ class Page extends React.Component {
                                         autoComplete='off'
                                     />
                                     <div
-                                        className="invalid-feedback"
+                                        className="invalid-feedback error-color"
                                         style={{
                                             display: this.state.data.email.errors.length > 0 ? 'block' : 'none'
                                         }}>
@@ -234,12 +235,12 @@ class Page extends React.Component {
 
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">
-                                        <i className="fa-regular fa-user"></i>
+                                        <i className="fa-regular fa-user icon-input-color"></i>
                                     </span>
 
                                     <input
                                         type="text"
-                                        className="form-control form-control-xl"
+                                        className="form-control form-control-xl input-color"
                                         placeholder="Usuario"
                                         name='username'
                                         id='username'
@@ -249,7 +250,7 @@ class Page extends React.Component {
                                         autoComplete='off'
                                     />
                                     <div
-                                        className="invalid-feedback"
+                                        className="invalid-feedback error-color"
                                         style={{
                                             display: this.state.data.username.errors.length > 0 ? 'block' : 'none'
                                         }}>
@@ -259,12 +260,12 @@ class Page extends React.Component {
                                 <div className="input-group mb-3">
 
                                     <span className="input-group-text">
-                                        <i className="fa-solid fa-mask"></i>
+                                        <i className="fa-solid fa-mask icon-input-color"></i>
                                     </span>
 
                                     <input
                                         type="password"
-                                        className="form-control form-control-xl"
+                                        className="form-control form-control-xl input-color"
                                         placeholder="Contraseña"
                                         name='password'
                                         id='password'
@@ -273,7 +274,7 @@ class Page extends React.Component {
                                         disabled={this.state.loading}
                                         autoComplete='off' />
                                     <div
-                                        className="invalid-feedback"
+                                        className="invalid-feedback error-color"
                                         style={{
                                             display: this.state.data.password.errors.length > 0 ? 'block' : 'none'
                                         }}>
@@ -281,12 +282,16 @@ class Page extends React.Component {
                                     </div>
                                 </div>
 
-                                <button className="btn btn-primary-custom btn-block btn-lg mt-5 background-color-primary"
-                                    disabled={!this.state.isValidForm}>Ingresar</button>
+                                <ButtonPrimary
+                                    className="btn-block btn-lg mt-5"
+                                    disabled={!this.state.isValidForm}
+                                    loading={this.state.loading}
+                                    text={'Registrar ahora'}></ButtonPrimary>
 
                             </form>
                             <div className="text-center mt-5 text-lg fs-4">
-                                <p className='text-gray-600'>Ya tienes cuenta? <a href="/login" className="font-bold">Inicar sesión</a>.</p>
+                                <p className='text-gray-600'>Ya tienes cuenta?
+                                    <a href="#" className="font-bold" onClick={() => this.props.navigate("/auth/login")}>Inicar sesión</a>.</p>
                             </div>
                         </div>
                     </div>

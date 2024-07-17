@@ -3,6 +3,8 @@ import "./styles.css";
 import { buildPayload } from '../../../lib/form';
 import Utils from '../../../lib/utils';
 import Validator from './validators/validator';
+import ButtonPrimary from '../../../components/button-primary';
+import ButtonSecondary from '../../../components/button-secondary';
 
 class LocalComponent extends React.Component {
 
@@ -518,17 +520,16 @@ class LocalComponent extends React.Component {
                                 </section>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-light-secondary" data-bs-dismiss="modal">
-                                    <i className="bx bx-x d-block d-sm-none"></i>
-                                    <span className="d-none d-sm-block">Cancelar</span>
-                                </button>
-                                <button
-                                    className="btn btn-primary-custom btn-block btn-lg background-color-primary"
-                                    disabled={!this.state.isValidForm}
-                                    type='submit'>
-                                    <i className="bx bx-check d-block d-sm-none"></i>
-                                    <span className="d-none d-sm-block">Crear</span>
-                                </button>
+                                <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
+
+                                <ButtonPrimary
+                                    disabled={!this.state.isValidForm || this.state.loading}
+                                    className="btn-block btn-lg background-color-primary"
+                                    type='submit'
+                                    loading={this.state.loading}
+                                    showText={false}
+                                    text='Crear'
+                                />
                             </div>
                         </form>
                     </div>

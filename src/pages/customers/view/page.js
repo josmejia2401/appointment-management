@@ -83,7 +83,7 @@ class Page extends React.Component {
                         <div className="col-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h4 className="card-title">Listado de clientes</h4>
+                                    <h4 className="card-title title-color">Listado de clientes</h4>
 
                                     <button type="button" className="btn icon btn-primary-custom btn-create-customer" data-bs-toggle="modal"
                                         data-bs-target="#inlineFormCreateCustomer">
@@ -93,10 +93,14 @@ class Page extends React.Component {
                                 </div>
                                 <div className="card-content">
                                     <div className="card-body">
-                                        <p>A continuación se muestran los <code className="highlighter-rouge">clientes</code> disponibles.
+                                        <p className='subtitle-color'>A continuación se muestran los <code className="highlighter-rouge">clientes</code> disponibles.
                                         </p>
                                     </div>
-                                    <div className="table-responsive">
+                                    {this.state.data.length === 0 && (<div>
+                                        <i className="fa-solid fa-circle-exclamation no-found-icon"></i>
+                                        <h1 className="no-found-text">No hay datos</h1>
+                                    </div>)}
+                                    {this.state.data.length > 0 && (<div className="table-responsive">
                                         <table className="table table-hover mb-0">
                                             <thead>
                                                 <tr>
@@ -111,10 +115,10 @@ class Page extends React.Component {
                                             <tbody>
                                                 {this.state.data.map((item, index) => {
                                                     return (<tr key={index}>
-                                                        <td className="text-bold-500">{item.firstName}</td>
-                                                        <td>{item.lastName}</td>
-                                                        <td className="text-bold-500">{findDocumentTypeById(item.documentType).name}</td>
-                                                        <td>{item.documentNumber}</td>
+                                                        <td className="text-color">{item.firstName}</td>
+                                                        <td className="text-color">{item.lastName}</td>
+                                                        <td className="text-color">{findDocumentTypeById(item.documentType).name}</td>
+                                                        <td className="text-color">{item.documentNumber}</td>
                                                         <td><span className={findStatusById(item.status).id === 1 ? "badge bg-success" : "badge bg-danger"}>{findStatusById(item.status).name}</span></td>
                                                         <td>
                                                             <a
@@ -122,14 +126,14 @@ class Page extends React.Component {
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#inlineFormEditCustomer"
                                                                 onClick={(e) => this.dataSelectedAction(e, item)} >
-                                                                <i className="fa-regular fa-pen-to-square color-primary" onClick={(e) => this.dataSelectedAction(e, item)}></i>
+                                                                <i className="fa-regular fa-pen-to-square primary-color" onClick={(e) => this.dataSelectedAction(e, item)}></i>
                                                             </a>
                                                         </td>
                                                     </tr>);
                                                 })}
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div>)}
                                 </div>
                             </div>
                         </div>

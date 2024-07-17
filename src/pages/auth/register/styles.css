@@ -5,22 +5,23 @@
 
 #auth-register #auth-right {
     height: 100%;
-    background-color: #7a9e9f;
+    background-color: var(--primary-color)
 }
 
 #auth-register #auth-left {
-    padding: 5rem
+    padding: 5rem;
 }
 
 #auth-register #auth-left .auth-title {
     font-size: 4rem;
-    margin-bottom: 1rem
+    margin-bottom: 1rem;
+    color: var(--title-color);
 }
 
 #auth-register #auth-left .auth-subtitle {
     font-size: 1.7rem;
     line-height: 2.5rem;
-    color: #a8aebb
+    color: var(--subtitle-color);
 }
 
 #auth-register #auth-left .auth-logo {
@@ -50,10 +51,6 @@
     }
 }
 
-#auth-right {
-    background-color: #7a9e9f;
-}
-
 .center-text {
     display: flex;
     align-items: center;
@@ -65,5 +62,4 @@
     font-size: 60px;
     padding: 100px;
     text-align: justify;
-    color: #EEF5DB;
 }

@@ -3,6 +3,8 @@ import "./styles.css";
 import { buildPayload } from '../../../lib/form';
 import Validator from './validators/validator';
 import Utils from '../../../lib/utils';
+import ButtonPrimary from '../../../components/button-primary';
+
 import { signIn } from '../../../api/auth.services';
 
 class Page extends React.Component {
@@ -153,33 +155,32 @@ class Page extends React.Component {
                     <div className="col-lg-5 col-12">
                         <div id="auth-left">
                             <div className="auth-logo">
-                                <a href="index.html">
+                                <a href="/">
                                     <img src="https://cdn5.f-cdn.com/contestentries/366848/10688121/56e5395903343_thumb900.jpg" alt="Logo" />
                                 </a>
                             </div>
                             <h1 className="auth-title">Iniciar sesión</h1>
-                            <p className="auth-subtitle mb-5">Digita los datos para ingresar al sistema</p>
+                            <p className="auth-subtitle mb-5 color-matte-black">Digita los datos para ingresar al sistema</p>
 
                             <form className="needs-validation" onSubmit={this.doLogInAction} noValidate>
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">
-                                        <i className="fa-regular fa-user"></i>
+                                        <i className="fa-regular fa-user icon-input-color"></i>
                                     </span>
 
                                     <input
                                         type="text"
-                                        className="form-control form-control-xl"
+                                        className="form-control form-control-xl input-color"
                                         placeholder="Usuario"
                                         name='username'
                                         id='username'
                                         value={this.state.data.username.value}
                                         onChange={(event) => this.setChangeInputEvent('username', event)}
                                         disabled={this.state.loading}
-                                        autoFocus={!this.state.loading}
                                         autoComplete='off'
                                     />
                                     <div
-                                        className="invalid-feedback"
+                                        className="invalid-feedback error-color"
                                         style={{
                                             display: this.state.data.username.errors.length > 0 ? 'block' : 'none'
                                         }}>
@@ -189,22 +190,21 @@ class Page extends React.Component {
                                 <div className="input-group mb-3">
 
                                     <span className="input-group-text">
-                                        <i className="fa-solid fa-mask"></i>
+                                        <i className="fa-solid fa-mask icon-input-color"></i>
                                     </span>
 
                                     <input
                                         type="password"
-                                        className="form-control form-control-xl"
+                                        className="form-control form-control-xl input-color"
                                         placeholder="Contraseña"
                                         name='password'
                                         id='password'
                                         value={this.state.data.password.value}
                                         onChange={(event) => this.setChangeInputEvent('password', event)}
                                         disabled={this.state.loading}
-                                        autoFocus={!this.state.loading}
                                         autoComplete='off' />
                                     <div
-                                        className="invalid-feedback"
+                                        className="invalid-feedback error-color"
                                         style={{
                                             display: this.state.data.password.errors.length > 0 ? 'block' : 'none'
                                         }}>
@@ -212,27 +212,24 @@ class Page extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className="form-check form-check-lg d-flex align-items-end">
-                                    <input className="form-check-input me-2" type="checkbox" value="" id="keepSessionId" style={{ marginTop: "unset", alignSelf: 'center' }} />
-                                    <label className="form-check-label text-gray-600" htmlFor="keepSessionId">
-                                        Matener sesión
-                                    </label>
-                                </div>
-
-                                <button className="btn btn-primary-custom btn-block btn-lg mt-5 background-color-primary"
-                                    disabled={!this.state.isValidForm}>Ingresar</button>
+                                <ButtonPrimary
+                                    className="btn-block btn-lg mt-5"
+                                    disabled={!this.state.isValidForm}
+                                    loading={this.state.loading}
+                                    text={'Ingresar'}></ButtonPrimary>
 
                             </form>
                             <div className="text-center mt-5 text-lg fs-4">
-                                <p className="text-gray-600">No tienes cuenta? <a href="/register"
-                                    className="font-bold">Registrate ahora</a>.</p>
-                                <p><a className="font-bold" href="auth-forgot-password.html">Recordar contraseña?</a>.</p>
+                                <p className="text-gray-600 text-color">
+                                    No tienes cuenta?
+                                    <a onClick={() => this.props.navigate("/auth/register")} href="#" className="font-bold">Registrate ahora</a>.</p>
+                                <p><a className="font-bold" onClick={() => this.props.navigate("/auth/forgot-password")} href="#">Recordar contraseña?</a>.</p>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-7 d-none d-lg-block">
                         <div id="auth-right">
-                            <h1 id="h1-current-value" className='center-text fade-in-text h1-current-value'>{this.state.animations.currentValue}</h1>
+                            <h1 id="h1-current-value" className='center-text fade-in-text h1-current-value text-color'>{this.state.animations.currentValue}</h1>
                         </div>
                     </div>
                 </div>

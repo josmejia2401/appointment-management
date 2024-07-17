@@ -7,51 +7,92 @@ class Page extends React.Component {
         super(props);
         this.state = {
             loading: false,
+            selected: null
         };
+
+        this.onSelectOption = this.onSelectOption.bind(this);
+    }
+
+    async onSelectOption(e, value) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({ selected: value })
     }
 
     render() {
         return (
             <div className="container-fluid">
                 <div className="row flex-nowrap">
-                    <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 background-color-off-white">
-                        <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 sidebar-left">
+                        <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 text-white min-vh-100">
                             <a href="/" className="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                                <span className="fs-5 d-none d-sm-inline">Menu</span>
+                                <span className="fs-5 d-none d-sm-inline title-color">Menu</span>
                             </a>
-                            <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                                <li>
-                                    <a href="#" className="nav-link px-0 align-middle">
-                                        <i className="fa-solid fa-house i-icon color-primary"></i>
-                                        <span className="ms-1 d-none d-sm-inline color-primary">Tablero</span></a>
+
+                            <hr className="divider"></hr>
+
+                            <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100" id="menu">
+                                <li className='sidebar-li w-100'>
+                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Tablero' ? 'li-active' : ''}`}
+                                        onClick={(e) => this.onSelectOption(e, 'Tablero')}>
+                                        <i
+                                            className={`fa-solid fa-house i-icon  ${this.state.selected === 'Tablero' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
+                                        ></i>
+                                        <span
+                                            className={`d-none d-sm-inline  ${this.state.selected === 'Tablero' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Tablero</span></a>
                                 </li>
-                                <li>
-                                    <a href="#" className="nav-link px-0 align-middle">
-                                        <i className="fa-solid fa-calendar i-icon color-primary"></i>
-                                        <span className="ms-1 d-none d-sm-inline color-primary">Calendario</span></a>
-                                </li>
-                                <li>
-                                    <a className="nav-link px-0 align-middle" onClick={(_e) => this.props.navigate('/customers/view')}>
-                                        <i className="fa-solid fa-people-group i-icon color-primary"></i>
-                                        <span className="ms-1 d-none d-sm-inline color-primary">Clientes</span></a>
-                                </li>
-                                <li>
-                                    <a href="#" className="nav-link px-0 align-middle">
-                                        <i className="fa-solid fa-user-plus i-icon color-primary"></i>
-                                        <span className="ms-1 d-none d-sm-inline color-primary">Equipo</span></a>
+                                <li className='sidebar-li w-100'>
+
+                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Calendario' ? 'li-active' : ''}`}
+                                        onClick={(e) => this.onSelectOption(e, 'Calendario')}>
+                                        <i
+                                            className={`fa-solid fa-calendar i-icon  ${this.state.selected === 'Calendario' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
+                                        ></i>
+                                        <span
+                                            className={`d-none d-sm-inline  ${this.state.selected === 'Calendario' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Calendario</span></a>
                                 </li>
 
-                                <li>
+                                <li className='sidebar-li w-100'>
+
+                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Clientes' ? 'li-active' : ''}`}
+                                        onClick={(e) => this.onSelectOption(e, 'Clientes')}>
+                                        <i
+                                            className={`fa-solid fa-people-group i-icon  ${this.state.selected === 'Clientes' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
+                                        ></i>
+                                        <span
+                                            className={`d-none d-sm-inline  ${this.state.selected === 'Clientes' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Clientes</span></a>
+                                </li>
+
+                                <li className='sidebar-li w-100'>
+
+                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Equipo' ? 'li-active' : ''}`}
+                                        onClick={(e) => this.onSelectOption(e, 'Equipo')}>
+                                        <i
+                                            className={`fa-solid fa-user-plus  i-icon  ${this.state.selected === 'Equipo' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
+                                        ></i>
+                                        <span
+                                            className={`d-none d-sm-inline  ${this.state.selected === 'Equipo' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Equipo</span></a>
+                                </li>
+
+                                <li className='sidebar-li w-100'>
                                     <a href="#submenu2" data-bs-toggle="collapse" className="nav-link px-0 align-middle ">
-                                        <i className="fa-solid fa-chart-line i-icon color-primary"></i>
+                                        <i className="fa-solid fa-chart-line i-icon sidebar-icon-color"></i>
+                                        <span className="d-none d-sm-inline sidebar-color-title">Reportes</span>
+                                        <i className="fa-solid fa-angle-down sidebar-icon-color" style={{ marginLeft: '5px' }}></i>
+                                    </a>
 
-                                        <span className="ms-1 d-none d-sm-inline color-primary">Reportes</span></a>
-                                    <ul className="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                                        <li className="w-100">
-                                            <a href="#" className="nav-link px-0  color-primary"> <span className="d-none d-sm-inline color-primary">Reporte </span> general</a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="nav-link px-0  color-primary"> <span className="d-none d-sm-inline  color-primary">Reporte </span> día</a>
+
+                                    <ul className="collapse nav flex-column ms-3" id="submenu2" data-bs-parent="#menu">
+                                        <li className="w-100 sidebar-li w-100">
+
+                                            <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Reporte 1' ? 'li-active' : ''}`}
+                                                onClick={(e) => this.onSelectOption(e, 'Reporte 1')}>
+                                                <i
+                                                    className={`fa-solid fa-user-plus  i-icon  ${this.state.selected === 'Reporte 1' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
+                                                ></i>
+                                                <span
+                                                    className={`d-none d-sm-inline  ${this.state.selected === 'Reporte 1' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Reporte 1</span></a>
+
                                         </li>
                                     </ul>
                                 </li>

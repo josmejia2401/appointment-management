@@ -3,6 +3,8 @@ import "./styles.css";
 import { buildPayload } from '../../../lib/form';
 import Utils from '../../../lib/utils';
 import Validator from './validators/validator';
+import ButtonPrimary from '../../../components/button-primary';
+import ButtonSecondary from '../../../components/button-secondary';
 
 class LocalComponent extends React.Component {
 
@@ -66,6 +68,8 @@ class LocalComponent extends React.Component {
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
         this.loadFirstData = this.loadFirstData.bind(this);
+
+        this.delay = this.delay.bind(this);
     }
 
 
@@ -78,6 +82,11 @@ class LocalComponent extends React.Component {
             this.loadFirstData(this.props.data);
         }
     }
+
+    delay(ms) {
+        return new Promise(res => setTimeout(res, ms));
+    }
+
 
     loadFirstData(dataFirst) {
         const { data } = this.state;
@@ -104,6 +113,7 @@ class LocalComponent extends React.Component {
             this.setState({ loading: true });
             const data = buildPayload(form, { username: "", password: "" });
             console.log(data);
+            await this.delay(3000);
             /*signIn(data).then(_result => {
                 form.reset();
                 this.props.navigate("/home");
@@ -492,19 +502,19 @@ class LocalComponent extends React.Component {
                                         </div>
                                     </div>
                                 </section>
-                            </div>
+                            </div> 
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-light-secondary" data-bs-dismiss="modal">
-                                    <i className="bx bx-x d-block d-sm-none"></i>
-                                    <span className="d-none d-sm-block">Cancelar</span>
-                                </button>
-                                <button
-                                    className="btn btn-primary-custom btn-block btn-lg background-color-primary"
-                                    disabled={!this.state.isValidForm}
-                                    type='submit'>
-                                    <i className="bx bx-check d-block d-sm-none"></i>
-                                    <span className="d-none d-sm-block">Crear</span>
-                                </button>
+
+                                <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
+
+                                <ButtonPrimary
+                                    disabled={!this.state.isValidForm || this.state.loading}
+                                    className="btn-block btn-lg background-color-primary"
+                                    type='submit'
+                                    loading={this.state.loading}
+                                    showText={false}
+                                    text='Actualizar'
+                                />
                             </div>
                         </form>
                     </div>

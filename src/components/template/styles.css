@@ -1,0 +1,32 @@
+.sidebar-left {
+    background-color: var(--sidebar-color);
+}
+
+.sidebar-color-title {
+    color: var(--title-color);
+    margin-left: 10px;
+}
+
+.sidebar-icon-color {
+    color: var(--matte-black-color);
+    padding-left: 5px;
+}
+
+.sidebar-li {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.li-active {
+    background-color: var(--matte-black-color);
+}
+
+.sidebar-color-title-active {
+    color: var(--off-white-color);
+    margin-left: 10px;
+}
+
+.sidebar-icon-color-active {
+    color: var(--off-white-color);
+    padding-left: 5px;
+}
