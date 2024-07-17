@@ -60,6 +60,10 @@ class LocalComponent extends React.Component {
                     value: '',
                     errors: []
                 },
+                termCond: {
+                    value: false,
+                    errors: []
+                }
             },
         };
 
@@ -68,42 +72,8 @@ class LocalComponent extends React.Component {
         this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
-        this.loadFirstData = this.loadFirstData.bind(this);
-
-        this.delay = this.delay.bind(this);
     }
 
-
-    componentDidMount() {
-        console.log(this.props.data);
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.data !== prevProps.data) {
-            this.loadFirstData(this.props.data);
-        }
-    }
-
-    delay(ms) {
-        return new Promise(res => setTimeout(res, ms));
-    }
-
-
-    loadFirstData(dataFirst) {
-        const { data } = this.state;
-        data.firstName.value = dataFirst.firstName;
-        data.lastName.value = dataFirst.lastName;
-        data.documentType.value = dataFirst.documentType;
-        data.documentNumber.value = dataFirst.documentNumber;
-        data.gender.value = dataFirst.gender;
-        data.birthday.value = new Date(dataFirst.birthday).toISOString().split("T")[0];
-        data.phoneNumber.value = dataFirst.phoneNumber;
-        data.address.value = dataFirst.address;
-        data.email.value = dataFirst.email;
-        data.notes.value = dataFirst.notes;
-        this.updateState({ data: data });
-
-    }
 
     doLogInAction = async (e) => {
         e.preventDefault();
@@ -114,7 +84,6 @@ class LocalComponent extends React.Component {
             this.setState({ loading: true });
             const data = buildPayload(form, { username: "", password: "" });
             console.log(data);
-            await this.delay(3000);
             /*signIn(data).then(_result => {
                 form.reset();
                 this.props.navigate("/home");
@@ -140,6 +109,7 @@ class LocalComponent extends React.Component {
         const erroremail = Validator.validateEmail(data.email.value);
         const erroraddress = Validator.validateAddress(data.address.value);
         const errornotes = Validator.validateNotes(data.notes.value);
+        const errortermCond = Validator.validateTermCond(data.termCond.value);
 
         if (Utils.isEmpty(errorfirstName) &&
             Utils.isEmpty(errorlastName) &&
@@ -150,7 +120,8 @@ class LocalComponent extends React.Component {
             Utils.isEmpty(errorphoneNumber) &&
             Utils.isEmpty(erroremail) &&
             Utils.isEmpty(erroraddress) &&
-            Utils.isEmpty(errornotes)) {
+            Utils.isEmpty(errornotes) &&
+            Utils.isEmpty(errortermCond)) {
             isValidForm = true;
         }
         if (!Utils.isEmpty(errorfirstName) && key === 'firstName') {
@@ -183,6 +154,9 @@ class LocalComponent extends React.Component {
         if (!Utils.isEmpty(errornotes) && key === 'notes') {
             data.notes.errors.push(errornotes);
         }
+        if (!Utils.isEmpty(errortermCond) && key === 'termCond') {
+            data.termCond.errors.push(errortermCond);
+        }
         this.updateState({ isValidForm, data: data });
     }
 
@@ -199,16 +173,15 @@ class LocalComponent extends React.Component {
         this.setState({ ...payload }, () => this.propagateState());
     }
 
-
     render() {
         return (
-            <div className="modal fade text-left" id="inlineFormEditCustomer" tabIndex="-1" role="dialog"
-                aria-labelledby="modalLabelEdit" aria-hidden="true">
+            <div className="modal fade text-left" id="inlineFormCreateTeam" tabIndex="-1" role="dialog"
+                aria-labelledby="myModalLabel33" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="modalLabelEdit">Modificar cliente</h4>
+                            <h4 className="modal-title" id="myModalLabel33">Crear integrante </h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
                                 aria-label="Close">
                                 <i data-feather="x"></i>
@@ -221,7 +194,7 @@ class LocalComponent extends React.Component {
                                         <div className="col-12">
                                             <div className="card">
                                                 <div className="card-header">
-                                                    <h4 className="card-title">Información del cliente o persona</h4>
+                                                    <h4 className="card-title">Información del integrante</h4>
                                                 </div>
                                                 <div className="card-content">
                                                     <div className="card-body">
@@ -491,8 +464,11 @@ class LocalComponent extends React.Component {
                                                                         }}>
                                                                         {this.state.data.notes.errors[0]}
                                                                     </div>
+
+
                                                                 </div>
                                                             </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -500,9 +476,8 @@ class LocalComponent extends React.Component {
                                         </div>
                                     </div>
                                 </section>
-                            </div> 
+                            </div>
                             <div className="modal-footer">
-
                                 <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
 
                                 <ButtonPrimary
@@ -511,7 +486,7 @@ class LocalComponent extends React.Component {
                                     type='submit'
                                     loading={this.state.loading}
                                     showText={false}
-                                    text='Actualizar'
+                                    text='Crear'
                                 />
                             </div>
                         </form>

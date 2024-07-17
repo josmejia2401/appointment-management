@@ -13,6 +13,8 @@ import Error500Page from './pages/errors/500';
 
 import CustomersViewPage from './pages/customers/view';
 
+import TeamViewPage from './pages/team/view';
+
 function App() {
   return (
     <AuthProvider>
@@ -24,6 +26,7 @@ function App() {
           <Route exact path="/error/404" element={<RouteComponent children={Error404Page}></RouteComponent>} />
           <Route exact path="/error/500" element={<RouteComponent children={Error500Page}></RouteComponent>} />
           <Route exact path="/customers/view" element={<RouteComponent children={CustomersViewPage}></RouteComponent>} />
+          <Route exact path="/team/view" element={<RouteComponent children={TeamViewPage}></RouteComponent>} />
           <Route path="*" element={<Navigate to={"/auth/login"} replace></Navigate>} />
         </Routes>
       </Router>

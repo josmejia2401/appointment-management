@@ -202,13 +202,13 @@ class LocalComponent extends React.Component {
 
     render() {
         return (
-            <div className="modal fade text-left" id="inlineFormEditCustomer" tabIndex="-1" role="dialog"
+            <div className="modal fade text-left" id="inlineFormEditTeam" tabIndex="-1" role="dialog"
                 aria-labelledby="modalLabelEdit" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="modalLabelEdit">Modificar cliente</h4>
+                            <h4 className="modal-title" id="modalLabelEdit">Modificar integrante</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
                                 aria-label="Close">
                                 <i data-feather="x"></i>
@@ -221,7 +221,7 @@ class LocalComponent extends React.Component {
                                         <div className="col-12">
                                             <div className="card">
                                                 <div className="card-header">
-                                                    <h4 className="card-title">Información del cliente o persona</h4>
+                                                    <h4 className="card-title">Información del integrante</h4>
                                                 </div>
                                                 <div className="card-content">
                                                     <div className="card-body">
@@ -500,7 +500,7 @@ class LocalComponent extends React.Component {
                                         </div>
                                     </div>
                                 </section>
-                            </div> 
+                            </div>
                             <div className="modal-footer">
 
                                 <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>

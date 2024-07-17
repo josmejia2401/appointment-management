@@ -41,3 +41,27 @@ export const status = [
 export function findStatusById(id) {
     return status.filter(p => p.id === id)[0];
 }
+
+
+export const genders = [
+    {
+        id: 1,
+        name: 'Masculino'
+    },
+    {
+        id: 2,
+        name: 'Femenino'
+    },
+    {
+        id: 3,
+        name: 'LGTBI'
+    },
+    {
+        id: 4,
+        name: 'Otro'
+    }
+];
+
+export function findGenderById(id) {
+    return status.filter(p => p.id === id)[0];
+}

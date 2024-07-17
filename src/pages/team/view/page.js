@@ -102,23 +102,23 @@ class Page extends React.Component {
 
     render() {
         return (
-            <Template title={'Clientes'} navigate={this.props.navigate} location={this.props.location}>
+            <Template title={'Equipo'} navigate={this.props.navigate} location={this.props.location}>
                 <section className="section background-color-off-white">
                     <div className="row" id="table-hover-row">
                         <div className="col-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h4 className="card-title title-color">Listado de clientes</h4>
+                                    <h4 className="card-title title-color">Listado de integrantes</h4>
 
                                     <button type="button" className="btn icon btn-primary-custom btn-create-customer" data-bs-toggle="modal"
-                                        data-bs-target="#inlineFormCreateCustomer">
+                                        data-bs-target="#inlineFormCreateTeam">
                                         <i className="fa-solid fa-plus"></i>
                                     </button>
 
                                 </div>
                                 <div className="card-content">
                                     <div className="card-body">
-                                        <p className='subtitle-color'>A continuación se muestran los <code className="highlighter-rouge">clientes</code> disponibles.
+                                        <p className='subtitle-color'>A continuación se muestran los <code className="highlighter-rouge">integrantes</code> disponibles.
                                         </p>
                                     </div>
 
@@ -167,7 +167,7 @@ class Page extends React.Component {
                                                             <a
                                                                 href="#"
                                                                 data-bs-toggle="modal"
-                                                                data-bs-target="#inlineFormEditCustomer"
+                                                                data-bs-target="#inlineFormEditTeam"
                                                                 onClick={(e) => this.dataSelectedAction(e, item)} >
                                                                 <i className="fa-regular fa-pen-to-square primary-color" onClick={(e) => this.dataSelectedAction(e, item)}></i>
                                                             </a>

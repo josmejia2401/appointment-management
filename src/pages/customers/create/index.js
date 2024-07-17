@@ -5,6 +5,7 @@ import Utils from '../../../lib/utils';
 import Validator from './validators/validator';
 import ButtonPrimary from '../../../components/button-primary';
 import ButtonSecondary from '../../../components/button-secondary';
+import { documentTypes, genders } from '../../../lib/list_values';
 
 class LocalComponent extends React.Component {
 
@@ -271,11 +272,9 @@ class LocalComponent extends React.Component {
                                                                         onChange={(event) => this.setChangeInputEvent('documentType', event)}
                                                                         disabled={this.state.loading}>
                                                                         <option value={null}>Seleccionar...</option>
-                                                                        <option value={1}>Cédula de ciudadanía</option>
-                                                                        <option value={2}>Tarjeta de identidad</option>
-                                                                        <option value={3}>Registro civil</option>
-                                                                        <option value={4}>NIT</option>
-                                                                        <option value={5}>OTRO</option>
+                                                                        {documentTypes.map((item, index) => {
+                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
+                                                                        })}
                                                                     </select>
 
                                                                     <div
@@ -325,10 +324,9 @@ class LocalComponent extends React.Component {
                                                                         onChange={(event) => this.setChangeInputEvent('gender', event)}
                                                                         disabled={this.state.loading}>
                                                                         <option value={null}>Seleccionar...</option>
-                                                                        <option value={1}>Masculino</option>
-                                                                        <option value={2}>Femenino</option>
-                                                                        <option value={3}>LGBTI</option>
-                                                                        <option value={4}>Otro</option>
+                                                                        {genders.map((item, index) => {
+                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
+                                                                        })}
                                                                     </select>
 
 

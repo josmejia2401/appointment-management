@@ -7,16 +7,94 @@ class Page extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            selected: null
+            selectedId: null,
+            data: [
+                {
+                    id: "1",
+                    name: "Tablero",
+                    icon: "fa-house",
+                    path: "/dashboard/view",
+                    href: "",
+                    children: null
+                },
+                {
+                    id: "2",
+                    name: "Calendario",
+                    icon: "fa-calendar",
+                    path: "/calendar/view",
+                    href: "",
+                    children: null
+                },
+                {
+                    id: "3",
+                    name: "Tablero",
+                    icon: "fa-house",
+                    path: "/dashboard/view",
+                    href: "",
+                    children: null
+                },
+                {
+                    id: "4",
+                    name: "Clientes",
+                    icon: "fa-people-group",
+                    path: "/customers/view",
+                    href: "",
+                    children: null
+                },
+                {
+                    id: "5",
+                    name: "Equipo",
+                    icon: "fa-user-plus",
+                    path: "/team/view",
+                    href: "",
+                    children: null
+                },
+                {
+                    id: "6",
+                    name: "Reportes",
+                    icon: "fa-chart-line",
+                    path: "/reports/view",
+                    href: "7",
+                    children: [
+                        {
+                            id: "7",
+                            name: "Reporte 1",
+                            icon: "fa-chart-line",
+                            path: "/reports/view2",
+                            href: "#7"
+                        }
+                    ]
+                }
+            ]
         };
 
         this.onSelectOption = this.onSelectOption.bind(this);
+        this.loadData = this.loadData.bind(this);
+    }
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    async loadData() {
+        let loc = this.state.data.filter(p => p.path === this.props.location.pathname)[0];
+        if (!loc) {
+            loc = this.state.data.filter(p => p.children && p.children.length > 0).filter(p => p.path === this.props.location.pathname)[0];
+        }
+        this.setState({ selectedId: loc.id });
     }
 
     async onSelectOption(e, value) {
         e.preventDefault();
         e.stopPropagation();
-        this.setState({ selected: value })
+        this.setState({ selectedId: value });
+        let loc = this.state.data.filter(p => p.id === value)[0];
+        if (!loc) {
+            loc = this.state.data.filter(p => p.children && p.children.length > 0).filter(p => p.id === value)[0];
+        } else if (loc.children && loc.children.length > 0) {
+            return;
+        }
+        this.props.navigate(loc.path);
     }
 
     render() {
@@ -26,76 +104,43 @@ class Page extends React.Component {
                     <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 sidebar-left">
                         <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 text-white min-vh-100">
                             <a href="/" className="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                                <span className="fs-5 d-none d-sm-inline title-color">Menu</span>
+                                <span className="fs-5 d-none d-sm-inline title-color">Menú</span>
                             </a>
 
                             <hr className="divider"></hr>
 
                             <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100" id="menu">
-                                <li className='sidebar-li w-100'>
-                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Tablero' ? 'li-active' : ''}`}
-                                        onClick={(e) => this.onSelectOption(e, 'Tablero')}>
-                                        <i
-                                            className={`fa-solid fa-house i-icon  ${this.state.selected === 'Tablero' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
-                                        ></i>
-                                        <span
-                                            className={`d-none d-sm-inline  ${this.state.selected === 'Tablero' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Tablero</span></a>
-                                </li>
-                                <li className='sidebar-li w-100'>
+                                {this.state.data.map((item, index) => {
+                                    return (<li className='sidebar-li w-100' key={item.id}>
+                                        <a href={`#${item.href}`}
+                                            data-bs-toggle="collapse"
+                                            className={`nav-link px-0 align-middle ${this.state.selectedId === item.id ? 'li-active' : ''}`}
+                                            onClick={(e) => this.onSelectOption(e, item.id)}>
+                                            <i className={`fa-solid ${item.icon} i-icon ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}></i>
+                                            <span className={`d-none d-sm-inline  ${this.state.selectedId === item.id ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>{item.name}</span>
+                                            {item.children && item.children.length > 0 && <i className={`fa-solid fa-angle-down ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'fa-solid fa-angle-down sidebar-icon-color'}`} style={{ marginLeft: '5px' }}></i>}
+                                        </a>
 
-                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Calendario' ? 'li-active' : ''}`}
-                                        onClick={(e) => this.onSelectOption(e, 'Calendario')}>
-                                        <i
-                                            className={`fa-solid fa-calendar i-icon  ${this.state.selected === 'Calendario' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
-                                        ></i>
-                                        <span
-                                            className={`d-none d-sm-inline  ${this.state.selected === 'Calendario' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Calendario</span></a>
-                                </li>
+                                        <ul className="collapse nav flex-column ms-3" data-bs-parent="#menu" id={item.href}>
+                                            {item.children && item.children.map((item2, index2) => {
+                                                return (
+                                                    <li className="sidebar-li w-100" key={item2.id}>
 
-                                <li className='sidebar-li w-100'>
+                                                        <a href="#" className={`nav-link px-0 align-middle ${this.state.selectedId === item2.id ? 'li-active' : ''}`}
+                                                            onClick={(e) => this.onSelectOption(e, item2.id)}>
+                                                            <i
+                                                                className={`fa-solid ${item.icon} i-icon  ${this.state.selectedId === item2.id ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
+                                                            ></i>
+                                                            <span
+                                                                className={`d-none d-sm-inline  ${this.state.selectedId === item2.id ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>{item2.name}</span></a>
 
-                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Clientes' ? 'li-active' : ''}`}
-                                        onClick={(e) => this.onSelectOption(e, 'Clientes')}>
-                                        <i
-                                            className={`fa-solid fa-people-group i-icon  ${this.state.selected === 'Clientes' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
-                                        ></i>
-                                        <span
-                                            className={`d-none d-sm-inline  ${this.state.selected === 'Clientes' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Clientes</span></a>
-                                </li>
+                                                    </li>
+                                                )
+                                            })}
+                                        </ul>
+                                    </li>);
+                                })}
 
-                                <li className='sidebar-li w-100'>
-
-                                    <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Equipo' ? 'li-active' : ''}`}
-                                        onClick={(e) => this.onSelectOption(e, 'Equipo')}>
-                                        <i
-                                            className={`fa-solid fa-user-plus  i-icon  ${this.state.selected === 'Equipo' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
-                                        ></i>
-                                        <span
-                                            className={`d-none d-sm-inline  ${this.state.selected === 'Equipo' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Equipo</span></a>
-                                </li>
-
-                                <li className='sidebar-li w-100'>
-                                    <a href="#submenu2" data-bs-toggle="collapse" className="nav-link px-0 align-middle ">
-                                        <i className="fa-solid fa-chart-line i-icon sidebar-icon-color"></i>
-                                        <span className="d-none d-sm-inline sidebar-color-title">Reportes</span>
-                                        <i className="fa-solid fa-angle-down sidebar-icon-color" style={{ marginLeft: '5px' }}></i>
-                                    </a>
-
-
-                                    <ul className="collapse nav flex-column ms-3" id="submenu2" data-bs-parent="#menu">
-                                        <li className="w-100 sidebar-li w-100">
-
-                                            <a href="#" className={`nav-link px-0 align-middle ${this.state.selected === 'Reporte 1' ? 'li-active' : ''}`}
-                                                onClick={(e) => this.onSelectOption(e, 'Reporte 1')}>
-                                                <i
-                                                    className={`fa-solid fa-user-plus  i-icon  ${this.state.selected === 'Reporte 1' ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}
-                                                ></i>
-                                                <span
-                                                    className={`d-none d-sm-inline  ${this.state.selected === 'Reporte 1' ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>Reporte 1</span></a>
-
-                                        </li>
-                                    </ul>
-                                </li>
                             </ul>
                             <hr />
                             <div className="dropdown pb-4">
