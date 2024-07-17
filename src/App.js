@@ -15,6 +15,10 @@ import CustomersViewPage from './pages/customers/view';
 
 import TeamViewPage from './pages/team/view';
 
+import CalendarViewPage from './pages/calendar/view';
+
+import ServiceViewPage from './pages/services/view';
+
 function App() {
   return (
     <AuthProvider>
@@ -27,6 +31,8 @@ function App() {
           <Route exact path="/error/500" element={<RouteComponent children={Error500Page}></RouteComponent>} />
           <Route exact path="/customers/view" element={<RouteComponent children={CustomersViewPage}></RouteComponent>} />
           <Route exact path="/team/view" element={<RouteComponent children={TeamViewPage}></RouteComponent>} />
+          <Route exact path="/calendar/view" element={<RouteComponent children={CalendarViewPage}></RouteComponent>} />
+          <Route exact path="/services/view" element={<RouteComponent children={ServiceViewPage}></RouteComponent>} />
           <Route path="*" element={<Navigate to={"/auth/login"} replace></Navigate>} />
         </Routes>
       </Router>

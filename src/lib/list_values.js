@@ -35,6 +35,10 @@ export const status = [
     {
         id: 2,
         name: 'INACTIVO'
+    },
+    {
+        id: 3,
+        name: 'PENDIENTE'
     }
 ];
 

@@ -27,14 +27,6 @@ class Page extends React.Component {
                 },
                 {
                     id: "3",
-                    name: "Tablero",
-                    icon: "fa-house",
-                    path: "/dashboard/view",
-                    href: "",
-                    children: null
-                },
-                {
-                    id: "4",
                     name: "Clientes",
                     icon: "fa-people-group",
                     path: "/customers/view",
@@ -42,10 +34,18 @@ class Page extends React.Component {
                     children: null
                 },
                 {
-                    id: "5",
+                    id: "4",
                     name: "Equipo",
                     icon: "fa-user-plus",
                     path: "/team/view",
+                    href: "",
+                    children: null
+                },
+                {
+                    id: "5",
+                    name: "Servicios",
+                    icon: "fa-microchip",
+                    path: "/services/view",
                     href: "",
                     children: null
                 },
@@ -54,14 +54,14 @@ class Page extends React.Component {
                     name: "Reportes",
                     icon: "fa-chart-line",
                     path: "/reports/view",
-                    href: "7",
+                    href: "6.1",
                     children: [
                         {
-                            id: "7",
+                            id: "6.1",
                             name: "Reporte 1",
                             icon: "fa-chart-line",
                             path: "/reports/view2",
-                            href: "#7"
+                            href: "6.1"
                         }
                     ]
                 }

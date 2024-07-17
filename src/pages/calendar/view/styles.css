@@ -1,0 +1,33 @@
+.card-header {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+#weekHeader {
+    line-height: 40px;
+    border: 1px solid var(--matte-black-color);
+    text-align: left;
+}
+
+.headerDay {
+    width: calc(100vw / 7);
+
+}
+
+.day {
+    width: calc(100vw / 7);
+    line-height: 90px;
+    border: 1px solid var(--matte-black-color);
+    text-align: left;
+    vertical-align: top;
+
+}
+
+#prev:hover,
+#next:hover,
+.day {
+    cursor: pointer;
+}

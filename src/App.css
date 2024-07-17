@@ -43,6 +43,10 @@ body {
   color: var(--primary-color)
 }
 
+.table-responsive {
+  padding: 15px;
+}
+
 :link {
   color: #0000EE;
 }
