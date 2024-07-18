@@ -4,6 +4,8 @@ import Template from '../../../components/template';
 import CreateComponent from '../create';
 import EditComponent from '../edit';
 import { findDocumentTypeById, findStatusById } from '../../../lib/list_values';
+import ButtonIcon from '../../../components/button-icon';
+
 
 class Page extends React.Component {
 
@@ -110,10 +112,22 @@ class Page extends React.Component {
                                 <div className="card-header">
                                     <h4 className="card-title title-color">Listado de clientes</h4>
 
-                                    <button type="button" className="btn icon btn-primary-custom btn-create-customer" data-bs-toggle="modal"
-                                        data-bs-target="#inlineFormCreateCustomer">
-                                        <i className="fa-solid fa-plus"></i>
-                                    </button>
+                                    <div className='btn-create-customer'>
+                                        <ButtonIcon type="button"
+                                            className="btn icon btn-primary-custom btn-create-customer"
+                                            onClick={this.loadData}>
+                                            <i className="fa-solid fa-rotate-right"></i>
+                                        </ButtonIcon>
+
+                                        <ButtonIcon type="button"
+                                            className="btn icon btn-primary-custom btn-create-customer"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#inlineFormCreateCustomer"
+                                            style={{ marginLeft: '5px' }}>
+                                            <i className="fa-solid fa-plus"></i>
+                                        </ButtonIcon>
+
+                                    </div>
 
                                 </div>
                                 <div className="card-content">

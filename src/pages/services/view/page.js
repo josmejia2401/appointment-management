@@ -4,6 +4,7 @@ import Template from '../../../components/template';
 import CreateComponent from '../create';
 import EditComponent from '../edit';
 import { findStatusById } from '../../../lib/list_values';
+import ButtonIcon from '../../../components/button-icon';
 
 class Page extends React.Component {
 
@@ -98,10 +99,22 @@ class Page extends React.Component {
                                 <div className="card-header">
                                     <h4 className="card-title title-color">Listado de servicios</h4>
 
-                                    <button type="button" className="btn icon btn-primary-custom btn-create-customer" data-bs-toggle="modal"
-                                        data-bs-target="#inlineFormCreateService">
-                                        <i className="fa-solid fa-plus"></i>
-                                    </button>
+                                    <div className='btn-create-customer'>
+                                        <ButtonIcon type="button"
+                                            className="btn icon btn-primary-custom btn-create-customer"
+                                            onClick={this.loadData}>
+                                            <i className="fa-solid fa-rotate-right"></i>
+                                        </ButtonIcon>
+
+                                        <ButtonIcon type="button"
+                                            className="btn icon btn-primary-custom btn-create-customer"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#inlineFormCreateService"
+                                            style={{ marginLeft: '5px' }}>
+                                            <i className="fa-solid fa-plus"></i>
+                                        </ButtonIcon>
+
+                                    </div>
 
                                 </div>
                                 <div className="card-content">

@@ -60,10 +60,6 @@ class LocalComponent extends React.Component {
                     value: '',
                     errors: []
                 },
-                history: {
-                    value: '',
-                    errors: []
-                },
                 termCond: {
                     value: false,
                     errors: []
@@ -113,7 +109,6 @@ class LocalComponent extends React.Component {
         const erroremail = Validator.validateEmail(data.email.value);
         const erroraddress = Validator.validateAddress(data.address.value);
         const errornotes = Validator.validateNotes(data.notes.value);
-        const errorhistory = Validator.validateHistory(data.history.value);
         const errortermCond = Validator.validateTermCond(data.termCond.value);
 
         if (Utils.isEmpty(errorfirstName) &&
@@ -126,7 +121,6 @@ class LocalComponent extends React.Component {
             Utils.isEmpty(erroremail) &&
             Utils.isEmpty(erroraddress) &&
             Utils.isEmpty(errornotes) &&
-            Utils.isEmpty(errorhistory) &&
             Utils.isEmpty(errortermCond)) {
             isValidForm = true;
         }
@@ -159,9 +153,6 @@ class LocalComponent extends React.Component {
         }
         if (!Utils.isEmpty(errornotes) && key === 'notes') {
             data.notes.errors.push(errornotes);
-        }
-        if (!Utils.isEmpty(errorhistory) && key === 'history') {
-            data.history.errors.push(errorhistory);
         }
         if (!Utils.isEmpty(errortermCond) && key === 'termCond') {
             data.termCond.errors.push(errortermCond);
