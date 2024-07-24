@@ -3,12 +3,28 @@ import Utils from '../../../../lib/utils';
 export default class Validator {
 
 
-    static validateFullName(value) {
+    static validateFirstName(value) {
         if (Utils.isEmpty(value)) {
             return 'El Nombre es requerido.'
         }
         if (String(value).length < 4) {
-            return 'El Nombre debe tener mínimo 4 dígitos.'
+            return 'El Nombre debe tener mínimo 4 caracteres.'
+        }
+        if (String(value).length > 100) {
+            return 'El Nombre debe tener máximo 100 caracteres.'
+        }
+        return;
+    }
+
+    static validateLastName(value) {
+        if (Utils.isEmpty(value)) {
+            return 'El Apellido es requerido.'
+        }
+        if (String(value).length < 4) {
+            return 'El Apellido debe tener mínimo 4 caracteres.'
+        }
+        if (String(value).length > 100) {
+            return 'El Apellido debe tener máximo 100 caracteres.'
         }
         return;
     }
@@ -34,10 +50,10 @@ export default class Validator {
             return 'El Usuario es requerido.'
         }
         if (String(value).length < 6) {
-            return 'El Usuario debe tener mínimo 6 dígitos.'
+            return 'El Usuario debe tener mínimo 6 caracteres.'
         }
-        if (String(value).length > 12) {
-            return 'El Usuario debe tener máximo 12 dígitos.'
+        if (String(value).length > 20) {
+            return 'El Usuario debe tener máximo 20 caracteres.'
         }
         return;
     }
@@ -47,10 +63,10 @@ export default class Validator {
             return 'La Contraseña es requerida.'
         }
         if (String(value).length < 6) {
-            return 'La Contraseña debe tener mínimo 6 dígitos.'
+            return 'La Contraseña debe tener mínimo 6 caracteres.'
         }
-        if (String(value).length > 12) {
-            return 'La Contraseña debe tener máximo 12 dígitos.'
+        if (String(value).length > 20) {
+            return 'La Contraseña debe tener máximo 20 caracteres.'
         }
         return;
     }

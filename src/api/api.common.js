@@ -48,7 +48,7 @@ export const buildAndThrowNewError = (error) => {
         console.error(error.response.data);
         console.error(error.response.status);
         console.error(error.response.headers);
-        throw new CustomError(error.response.data["message"], error.response.data["code"], error.response.status);
+        throw new CustomError(error.response.data["message"], error.response.data["code"], error.response.status, error.response.data["error"]);
     }
     throw error;
 }

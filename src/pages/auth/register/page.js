@@ -14,8 +14,13 @@ class Page extends React.Component {
         this.state = {
             loading: false,
             isValidForm: false,
+            isSuccessfullyCreation: false,
             data: {
-                fullName: {
+                firstName: {
+                    value: '',
+                    errors: []
+                },
+                lastName: {
                     value: '',
                     errors: []
                 },
@@ -52,23 +57,23 @@ class Page extends React.Component {
         this.startAnimations = this.startAnimations.bind(this);
         this.processAnimation = this.processAnimation.bind(this);
         this.addAnimations = this.addAnimations.bind(this);
+        this.goToLogin = this.goToLogin.bind(this);
     }
 
     doRegisterAction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        //const { setUserInfo, getUserInfo } = this.context;
         const form = e.target;
         const isValid = form.checkValidity();
         if (isValid === true) {
             this.setState({ loading: true });
-            const data = buildPayload(form, { username: "", password: "", fullName: "", email: "" });
+            const data = buildPayload(form, { username: "", password: "", firstName: "", email: "", lastName: "" });
             register(data).then(_result => {
                 form.reset();
-                this.props.navigate("/home");
+                this.updateState({ isSuccessfullyCreation: true });
             }).catch(err => {
                 console.log(err.fileName, err);
-                this.props.addNotification({ typeToast: 'error', text: err.message, title: "ERROR" });
+                this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
             }).finally(() => this.setState({ loading: false }));
         }
         form.classList.add('was-validated');
@@ -78,12 +83,20 @@ class Page extends React.Component {
         let isValidForm = false;
         const data = this.state.data;
         data[key].errors = [];
+
+        const errorfirstName = Validator.validateFirstName(data.firstName.value);
+        const errorLastName = Validator.validateLastName(data.firstName.value);
+
         const errorUsername = Validator.validateUsername(data.username.value);
         const errorPassword = Validator.validatePassword(data.password.value);
-        const errorFullName = Validator.validateFullName(data.fullName.value);
+
         const errorEmail = Validator.validateEmail(data.email.value);
 
-        if (Utils.isEmpty(errorUsername) && Utils.isEmpty(errorPassword) && Utils.isEmpty(errorFullName) && Utils.isEmpty(errorEmail)) {
+        if (Utils.isEmpty(errorUsername) &&
+            Utils.isEmpty(errorPassword) &&
+            Utils.isEmpty(errorfirstName) &&
+            Utils.isEmpty(errorLastName) &&
+            Utils.isEmpty(errorEmail)) {
             isValidForm = true;
         }
         if (!Utils.isEmpty(errorUsername) && key === 'username') {
@@ -92,8 +105,11 @@ class Page extends React.Component {
         if (!Utils.isEmpty(errorPassword) && key === 'password') {
             data.password.errors.push(errorPassword);
         }
-        if (!Utils.isEmpty(errorFullName) && key === 'fullName') {
-            data.fullName.errors.push(errorFullName);
+        if (!Utils.isEmpty(errorfirstName) && key === 'firstName') {
+            data.firstName.errors.push(errorfirstName);
+        }
+        if (!Utils.isEmpty(errorLastName) && key === 'lastName') {
+            data.lastName.errors.push(errorLastName);
         }
         if (!Utils.isEmpty(errorEmail) && key === 'email') {
             data.email.errors.push(errorEmail);
@@ -164,8 +180,24 @@ class Page extends React.Component {
         }
     }
 
+    goToLogin() {
+        this.props.navigate("/auth/login");
+    }
+
 
     render() {
+        if (this.state.isSuccessfullyCreation) {
+            return (<div className="center-div">
+                <h1 className='center-text'>¡Registro exitoso!</h1>
+                <i className="fa-regular fa-thumbs-up center-text" style={{ fontSize: "150px" }}></i>
+                <ButtonPrimary
+                    type="button"
+                    className="btn-block btn-lg mt-5 center-text"
+                    style={{ width: '100%' }}
+                    onClick={this.goToLogin}
+                    text={'Ir a Iniciar Sesión'}></ButtonPrimary>
+            </div>);
+        }
         return (
             <main className='form-signin w-100 m-auto' id="auth-register">
                 <div className="row h-100">
@@ -189,20 +221,45 @@ class Page extends React.Component {
                                     <input
                                         type="text"
                                         className="form-control form-control-xl input-color"
-                                        placeholder="Nombre completo"
-                                        name='fullName'
-                                        id='fullName'
-                                        value={this.state.data.fullName.value}
-                                        onChange={(event) => this.setChangeInputEvent('fullName', event)}
+                                        placeholder="Nombres"
+                                        name='firstName'
+                                        id='firstName'
+                                        value={this.state.data.firstName.value}
+                                        onChange={(event) => this.setChangeInputEvent('firstName', event)}
                                         disabled={this.state.loading}
                                         autoComplete='off'
                                     />
                                     <div
                                         className="invalid-feedback error-color"
                                         style={{
-                                            display: this.state.data.fullName.errors.length > 0 ? 'block' : 'none'
+                                            display: this.state.data.firstName.errors.length > 0 ? 'block' : 'none'
                                         }}>
-                                        {this.state.data.fullName.errors[0]}
+                                        {this.state.data.firstName.errors[0]}
+                                    </div>
+                                </div>
+
+                                <div className="input-group mb-3">
+                                    <span className="input-group-text">
+                                        <i className="fa-solid fa-file-signature icon-input-color"></i>
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-xl input-color"
+                                        placeholder="Apellidos"
+                                        name='lastName'
+                                        id='lastName'
+                                        value={this.state.data.lastName.value}
+                                        onChange={(event) => this.setChangeInputEvent('lastName', event)}
+                                        disabled={this.state.loading}
+                                        autoComplete='off'
+                                    />
+                                    <div
+                                        className="invalid-feedback error-color"
+                                        style={{
+                                            display: this.state.data.lastName.errors.length > 0 ? 'block' : 'none'
+                                        }}>
+                                        {this.state.data.lastName.errors[0]}
                                     </div>
                                 </div>
 
@@ -283,6 +340,7 @@ class Page extends React.Component {
                                 </div>
 
                                 <ButtonPrimary
+                                    type="submit"
                                     className="btn-block btn-lg mt-5"
                                     disabled={!this.state.isValidForm}
                                     loading={this.state.loading}

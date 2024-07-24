@@ -94,8 +94,8 @@ class LocalComponent extends React.Component {
      *  password: '',
      *  documentType: '',
      *  documentNumber: '',
-     *  status: 1,
-     *  createAt: new Date(),
+     *  recordStatus: 1,
+     *  createdAt: new Date(),
      *  updateAt: new Date(),
      *  customers: [
      *      {
@@ -109,8 +109,7 @@ class LocalComponent extends React.Component {
      *       birthday: '',
      *       gender: 1,
      *       status: 1,
-     *       createAt: new Date(),
-     *       updateAt: new Date(),
+     *       createdAt: new Date(),
      *       notes: [{id: 1, description: '', createdAt: '', userId: ''}]
      *      }
      *  ],

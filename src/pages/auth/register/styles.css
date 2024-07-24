@@ -58,6 +58,16 @@
     height: 100%;
 }
 
+.center-div {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+
+
 .h1-current-value {
     font-size: 60px;
     padding: 100px;
