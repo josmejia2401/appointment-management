@@ -5,6 +5,8 @@ import Utils from '../../../lib/utils';
 import Validator from './validators/validator';
 import ButtonPrimary from '../../../components/button-primary';
 import ButtonSecondary from '../../../components/button-secondary';
+import { associateEmployee } from '../../../api/users.services';
+import { getTokenInfo } from '../../../api/api.common';
 
 class LocalComponent extends React.Component {
 
@@ -19,6 +21,8 @@ class LocalComponent extends React.Component {
                     errors: []
                 }
             },
+            isSuccessfullyCreation: false,
+            errorMessage: undefined
         };
         this.validateForm = this.validateForm.bind(this);
         this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
@@ -42,16 +46,17 @@ class LocalComponent extends React.Component {
         const form = e.target;
         const isValid = form.checkValidity();
         if (isValid === true) {
-            this.setState({ loading: true });
-            const data = buildPayload(form, { username: "", password: "" });
-            console.log(data);
-            /*signIn(data).then(_result => {
+            const userInfo = getTokenInfo();
+            this.updateState({ loading: true, errorMessage: undefined });
+            const data = buildPayload(form, { username: "", recordStatus: 3 });
+            associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
-                this.props.navigate("/home");
+                this.updateState({ loading: false, isSuccessfullyCreation: true })
             }).catch(err => {
                 console.log(err.fileName, err);
+                this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
                 this.props.addNotification({ typeToast: 'error', text: err.message, title: "ERROR" });
-            }).finally(() => this.setState({ loading: false }));*/
+            });
         }
         form.classList.add('was-validated');
     }
@@ -98,6 +103,21 @@ class LocalComponent extends React.Component {
                             </button>
                         </div>
                         <form className="needs-validation" onSubmit={this.doInviteAction} noValidate>
+
+                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
+                                <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
+                                <div>
+                                    ¡Invitación enviada!
+                                </div>
+                            </div>}
+
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                                <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
+                                <div>
+                                    {this.state.errorMessage}
+                                </div>
+                            </div>}
+
                             <div className="modal-body">
                                 <section id="multiple-column-form">
                                     <div className="row match-height">
@@ -125,7 +145,7 @@ class LocalComponent extends React.Component {
                                                                         data-parsley-required="true"
                                                                         value={this.state.data.username.value}
                                                                         onChange={(event) => this.setChangeInputEvent('username', event)}
-                                                                        disabled={this.state.loading}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
                                                                         autoFocus={true}
                                                                         autoComplete='off'
                                                                     />
@@ -152,7 +172,7 @@ class LocalComponent extends React.Component {
                                 <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
 
                                 <ButtonPrimary
-                                    disabled={!this.state.isValidForm || this.state.loading}
+                                    disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
                                     className="btn-block btn-lg background-color-primary"
                                     type='submit'
                                     loading={this.state.loading}

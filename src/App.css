@@ -1,8 +1,7 @@
 :root {
-  --primary-color: #E0CCAD;
-  --secondary-color: #E0CCAD;
+  --primary-color: #026AA4;
+  --secondary-color: #1B66A1;
   --off-white-color: #FAF9F6;
-  --sidebar-color: #F6F1EE;
   --matte-black-color: #2F2F41;
   --title-color: #2E3347;
   --subtitle-color: #3D3D46;
@@ -12,10 +11,12 @@
   --disabled-color: #AFAFB0;
   --outline-color: #F6F6F6;
   --no-found-color: #3D3D46;
+  --background-color: #edf0f2;
+  --background-color2: #e4e6e9;
 }
 
 body {
-  background-color: var(--off-white-color);
+  background-color: var(--background-color);
 }
 
 .title-color {
@@ -137,4 +138,55 @@ body {
   100% {
     opacity: 1;
   }
+}
+
+
+
+
+
+
+
+
+
+
+.logo-holder {
+  text-align: center;
+}
+
+.logo-5 h3 {
+  color: var(--primary-color);
+  font-size: 50px;
+  line-height: 0.8;
+  letter-spacing: 0px;
+}
+
+.logo-5 p {
+  font-size: 14px;
+  margin-left: 0;
+  color: var(--matte-black-color);
+  font-weight: 400;
+  text-transform: capitalize;
+  font-style: italic;
+  font-family: 'Mansalva', cursive;
+  position: relative;
+}
+
+.logo-5 p:before {
+  position: absolute;
+  content: '';
+  width: 17px;
+  height: 12px;
+  background: var(--primary-color);
+  left: 0px;
+  top: 5px;
+}
+
+.logo-5 p:after {
+  position: absolute;
+  content: '';
+  width: 17px;
+  height: 12px;
+  background: var(--primary-color);
+  right: 0px;
+  top: 5px;
 }

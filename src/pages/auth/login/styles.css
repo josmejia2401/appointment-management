@@ -3,17 +3,12 @@
     overflow-x: hidden
 }
 
-#auth-login #auth-right {
-    height: 100%;
-    background-color: var(--primary-color)
-}
-
 #auth-login #auth-left {
-    padding: 5rem;
+    padding: 4rem;
 }
 
 #auth-login #auth-left .auth-title {
-    font-size: 4rem;
+    font-size: 2rem;
     margin-bottom: 1rem;
     color: var(--title-color);
 }
@@ -26,28 +21,32 @@
 
 #auth-login #auth-left .auth-logo {
     margin-bottom: unset;
-}
-
-#auth-login #auth-left .auth-logo img {
-    height: 8rem;
-    object-fit: contain;
+    width: 165px;
 }
 
 @media screen and (max-width: 1399.9px) {
     #auth-login #auth-left {
-        padding: 3rem
+        padding: 2rem;
+        padding-left: 4rem;
+        padding-right: 4rem;
     }
 }
 
 @media screen and (max-width: 767px) {
     #auth-login #auth-left {
-        padding: 5rem
+        padding: 1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 }
 
 @media screen and (max-width: 576px) {
     #auth-login #auth-left {
-        padding: 5rem 3rem
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    .mt-5 {
+        margin-top: unset !important;
     }
 }
 
@@ -58,8 +57,53 @@
     height: 100%;
 }
 
-.h1-current-value {
-    font-size: 60px;
-    padding: 100px;
-    text-align: justify;
+.center-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+    flex: 1;
+    width: 100vw;
+}
+
+.form-control {
+    border: 1px solid var(--bs-border-color) !important;
+    border-bottom-right-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+
+}
+
+
+.border-2 {
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: transparent;
+}
+
+.bgc-white1 {
+    background-color: #fff !important;
+    border: 1px solid transparent !important;
+    border-radius: 16px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+.letter-spacing {
+    letter-spacing: .5px !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.mt-25,
+.my-25 {
+    margin-top: .75rem !important;
+}
+
+.input-group-text {
+    width: 40px;
 }

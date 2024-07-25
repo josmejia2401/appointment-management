@@ -5,6 +5,9 @@ import CreateComponent from '../create';
 import EditComponent from '../edit';
 import { findDocumentTypeById, findStatusById } from '../../../lib/list_values';
 import ButtonIcon from '../../../components/button-icon';
+import { find } from '../../../api/users.services';
+import { getTokenInfo } from '../../../api/api.common';
+
 
 class Page extends React.Component {
 
@@ -32,37 +35,20 @@ class Page extends React.Component {
 
 
     componentDidMount() {
-        this.loadData();
+        this.loadData(null);
     }
 
-    async loadData() {
-        this.updateState({
-            data: [{
-                firstName: "fistName",
-                lastName: "lastName",
-                documentType: 1,
-                documentNumber: '123',
-                gender: 1,
-                birthday: new Date().toDateString(),
-                phoneNumber: '123456',
-                email: 'aa@gmail.com',
-                address: 'address',
-                notes: 'nota',
-                status: 1
-            }],
-            dataFiltered: [{
-                firstName: "fistName",
-                lastName: "lastName",
-                documentType: 1,
-                documentNumber: '123',
-                gender: 1,
-                birthday: new Date().toDateString(),
-                phoneNumber: '123456',
-                email: 'aa@gmail.com',
-                address: 'address',
-                notes: 'nota',
-                status: 1
-            }],
+    async loadData(e) {
+        e?.preventDefault();
+        e?.stopPropagation();
+        this.updateState({ loading: true });
+        const userInfo = getTokenInfo();
+        find(userInfo.payload.keyid).then(result => {
+            this.updateState({ data: result.employees, dataFiltered: result.employees, loading: false });
+        }).catch(err => {
+            console.log(err.fileName, err);
+            this.updateState({ loading: false });
+            this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
         });
     }
 
@@ -171,11 +157,11 @@ class Page extends React.Component {
 
                                                 {this.state.dataFiltered.length > 0 && this.state.dataFiltered.map((item, index) => {
                                                     return (<tr key={index}>
-                                                        <td className="text-color">{item.firstName}</td>
+                                                        <td className="text-color">{item.firstName || JSON.stringify(item)}</td>
                                                         <td className="text-color">{item.lastName}</td>
-                                                        <td className="text-color">{findDocumentTypeById(item.documentType).name}</td>
+                                                        <td className="text-color">{''}</td>
                                                         <td className="text-color">{item.documentNumber}</td>
-                                                        <td><span className={findStatusById(item.status).id === 1 ? "badge bg-success" : "badge bg-danger"}>{findStatusById(item.status).name}</span></td>
+                                                        <td><span className={findStatusById(item.recordStatus).id === 1 ? "badge bg-success" : "badge bg-danger"}>{findStatusById(item.recordStatus).name}</span></td>
                                                         <td>
                                                             <a
                                                                 href="#"
@@ -194,8 +180,8 @@ class Page extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <CreateComponent navigate={this.props.navigate} location={this.props.location}></CreateComponent>
-                    <EditComponent navigate={this.props.navigate} location={this.props.location} data={this.state.dataSelected}></EditComponent>
+                    <CreateComponent navigate={this.props.navigate} location={this.props.location} addNotification={this.props.addNotification}></CreateComponent>
+                    <EditComponent navigate={this.props.navigate} location={this.props.location} data={this.state.dataSelected} addNotification={this.props.addNotification}></EditComponent>
                 </section>
             </Template>
 

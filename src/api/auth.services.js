@@ -19,19 +19,3 @@ export const signIn = async (payload) => {
         buildAndThrowNewError(error);
     }
 }
-
-export const register = async (payload) => {
-    try {
-        const authHeaders = buildHeaders();
-        const res = await axios.post(`${api.security.register}`, payload, {
-            headers: {
-                ...authHeaders
-            },
-        });
-        const data = res.data;
-        return data;
-    } catch (error) {
-        console.error(error);
-        buildAndThrowNewError(error);
-    }
-}

@@ -18,29 +18,6 @@ export const AuthProvider = (props) => {
     );
 };
 
-export const AuthRouteComponent = ({ children: Component, ...props }) => {
-    const { getTokenInfo } = React.useContext(AuthContext);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const notificationRef = React.useRef(null);
-    const addNotification = (value) => {
-        notificationRef.current.addItem(value);
-    }
-    React.useEffect(() => {
-        if (!getTokenInfo()) {
-            navigate("/sign-in");
-        }
-    }, [props?.location?.pathname, getTokenInfo, navigate]);
-    return <>
-        <Toast ref={notificationRef} ></Toast>
-        <Component
-            {...props}
-            location={location}
-            navigate={navigate}
-            addNotification={addNotification}></Component>
-    </>;
-};
-
 export const RouteComponent = ({ children: Component, ...props }) => {
     const { getTokenInfo } = React.useContext(AuthContext);
     const navigate = useNavigate();
@@ -50,8 +27,13 @@ export const RouteComponent = ({ children: Component, ...props }) => {
         notificationRef.current.addItem(value);
     }
     React.useEffect(() => {
+        console.log(getTokenInfo());
         if (getTokenInfo()) {
-            navigate("/home");
+            if (["/auth/login", "/auth/register"].includes(location.pathname)) {
+                navigate("/team/view");
+            }
+        } else {
+            navigate("/auth/login");
         }
     }, [props?.location?.pathname, getTokenInfo, navigate]);
     return <>
