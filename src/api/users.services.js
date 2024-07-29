@@ -103,3 +103,36 @@ export const associateEmployee = async (id, payload) => {
         buildAndThrowNewError(error);
     }
 }
+
+
+export const findEmployees = async (id,) => {
+    try {
+        const authHeaders = buildHeaders();
+        const res = await axios.get(`${api.users.find_employees.replace(":id", id)}`, {
+            headers: {
+                ...authHeaders
+            },
+        });
+        const data = res.data;
+        return data;
+    } catch (error) {
+        console.error(error);
+        buildAndThrowNewError(error);
+    }
+}
+
+export const findInvitations = async (id,) => {
+    try {
+        const authHeaders = buildHeaders();
+        const res = await axios.get(`${api.users.find_invitations.replace(":id", id)}`, {
+            headers: {
+                ...authHeaders
+            },
+        });
+        const data = res.data;
+        return data;
+    } catch (error) {
+        console.error(error);
+        buildAndThrowNewError(error);
+    }
+}

@@ -6,6 +6,8 @@ import Validator from './validators/validator';
 import ButtonPrimary from '../../../components/button-primary';
 import ButtonSecondary from '../../../components/button-secondary';
 import { status } from '../../../lib/list_values';
+import { getTokenInfo } from '../../../api/api.common';
+import { associateEmployee } from '../../../api/users.services';
 
 class LocalComponent extends React.Component {
 
@@ -14,6 +16,8 @@ class LocalComponent extends React.Component {
         this.state = {
             loading: false,
             isValidForm: false,
+            errorMessage: '',
+            isSuccessfullyCreation: false,
             data: {
                 id: {
                     value: '',
@@ -27,15 +31,12 @@ class LocalComponent extends React.Component {
                     value: '',
                     errors: []
                 },
-                status: {
+                recordStatus: {
                     value: '',
                     errors: []
                 },
-                notes: {
-                    value: '',
-                    errors: []
-                },
-                clientId: {
+
+                username: {
                     value: '',
                     errors: []
                 }
@@ -48,7 +49,8 @@ class LocalComponent extends React.Component {
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
         this.loadFirstData = this.loadFirstData.bind(this);
-
+        this.onFocus = this.onFocus.bind(this);
+        this.reset = this.reset.bind(this);
 
         this.doModifyAction = this.doModifyAction.bind(this);
         this.delay = this.delay.bind(this);
@@ -56,14 +58,46 @@ class LocalComponent extends React.Component {
 
 
     componentDidMount() {
-        console.log(this.props.data);
+        window.addEventListener("focus", this.onFocus)
+        window.addEventListener("visibilitychange", this.onFocus)
+        if (this.props.data) {
+            this.loadFirstData(this.props.data);
+        }
+
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.data !== prevProps.data) {
             this.loadFirstData(this.props.data);
+        } else if (prevState.isValidForm || prevState.errorMessage) {
+            this.updateState({
+                loading: false,
+                isValidForm: false,
+                errorMessage: '',
+                isSuccessfullyCreation: false,
+            });
         }
     }
+
+    componentWillUnmount() {
+        window.removeEventListener("focus", this.onFocus)
+        window.removeEventListener("visibilitychange", this.onFocus)
+    }
+
+    reset(override) {
+        this.updateState({
+            loading: false,
+            isValidForm: false,
+            errorMessage: '',
+            isSuccessfullyCreation: false,
+            ...override
+        });
+    }
+
+    onFocus = () => {
+        this.reset({});
+    }
+
 
     delay(ms) {
         return new Promise(res => setTimeout(res, ms));
@@ -75,88 +109,37 @@ class LocalComponent extends React.Component {
         data.id.value = dataFirst.id;
         data.firstName.value = dataFirst.firstName;
         data.lastName.value = dataFirst.lastName;
-        data.status.value = dataFirst.status;
-        data.clientId.value = dataFirst.clientId;
-        this.updateState({ data: data });
+        data.recordStatus.value = dataFirst.recordStatus;
+        data.username.value = dataFirst.username;
+        this.updateState({
+            data: data,
+            loading: false,
+            isValidForm: false,
+            errorMessage: '',
+            isSuccessfullyCreation: false,
+        });
     }
 
-
-    /**
-     * El sistema modifica el estado de la asociacion del usuario principal y el empleado.
-     * 
-     * nombre de tabla en dynamodb: apma_users_$env
-     * {
-     *  id: 1,
-     *  firstName: 'nombre de la empresa o administrador',
-     *  lastName: '',
-     *  email: '',
-     *  username: '',
-     *  password: '',
-     *  documentType: '',
-     *  documentNumber: '',
-     *  recordStatus: 1,
-     *  createdAt: new Date(),
-     *  updateAt: new Date(),
-     *  customers: [
-     *      {
-     *       id: 1,
-     *       firstName: 'nombre de la empresa o administrador',
-     *       lastName: '',
-     *       email: '',
-     *       phoneNumber: '',
-     *       documentType: '',
-     *       documentNumber: '',
-     *       birthday: '',
-     *       gender: 1,
-     *       status: 1,
-     *       createdAt: new Date(),
-     *       notes: [{id: 1, description: '', createdAt: '', userId: ''}]
-     *      }
-     *  ],
-     *  employees:[
-     *      {
-     *       id: 1,
-     *       note: '',
-     *       createdAt: ,
-     *       status: 1 = activo, inactivo, pendiente
-     *      }
-     *  ],
-     *  invitations: [
-     *      {
-     *       id: 1,
-     *       userFrom: '',
-     *       userTo: '',
-     *       createdAt: ,
-     *       note: '',
-     *       status: 1, activo, inactivo, pendiente
-     *       history: [
-     *          {id: 1, description: 'Se realiza la invitación', createdAt: ''},
-     *          {id: 2, description: 'Se acepta la invitación', createdAt: ''}
-     *       ]
-     *      }
-     *  ]
-     * }
-     * @param {*} e 
-     */
     doModifyAction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         const form = e.target;
         const isValid = form.checkValidity();
         if (isValid === true) {
-            this.setState({ loading: true });
-            const data = buildPayload(form, { username: "", password: "" });
-            console.log(data);
-            await this.delay(3000);
-            /*signIn(data).then(_result => {
+            const userInfo = getTokenInfo();
+            this.updateState({ loading: true, errorMessage: undefined });
+            const data = buildPayload(form, { username: this.state.data.username.value, recordStatus: 3 });
+            data.recordStatus = Number(data.recordStatus);
+            associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
-                this.props.navigate("/home");
+                this.updateState({ loading: false, isSuccessfullyCreation: true })
             }).catch(err => {
                 console.log(err.fileName, err);
+                this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
                 this.props.addNotification({ typeToast: 'error', text: err.message, title: "ERROR" });
-            }).finally(() => this.setState({ loading: false }));*/
+            });
         }
-        form.classList.add('was-validated');
+        //form.classList.add('was-validated');
     }
 
     validateForm(key) {
@@ -164,18 +147,13 @@ class LocalComponent extends React.Component {
         const data = this.state.data;
         data[key].errors = [];
 
-        const errorstatus = Validator.validateStatus(data.status.value);
-        const errornotes = Validator.validateNotes(data.notes.value);
+        const errorrecordStatus = Validator.validateStatus(data.recordStatus.value);
 
-        if (Utils.isEmpty(errornotes) || Utils.isEmpty(errorstatus)) {
+        if (Utils.isEmpty(errorrecordStatus)) {
             isValidForm = true;
         }
-
-        if (!Utils.isEmpty(errornotes) && key === 'notes') {
-            data.notes.errors.push(errornotes);
-        }
-        if (!Utils.isEmpty(errorstatus) && key === 'status') {
-            data.status.errors.push(errorstatus);
+        if (!Utils.isEmpty(errorrecordStatus) && key === 'recordStatus') {
+            data.recordStatus.errors.push(errorrecordStatus);
         }
         this.updateState({ isValidForm, data: data });
     }
@@ -209,6 +187,21 @@ class LocalComponent extends React.Component {
                             </button>
                         </div>
                         <form className="needs-validation" onSubmit={this.doModifyAction} noValidate>
+
+                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
+                                <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
+                                <div>
+                                    ¡Usuario actualizado!
+                                </div>
+                            </div>}
+
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                                <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
+                                <div>
+                                    {this.state.errorMessage}
+                                </div>
+                            </div>}
+
                             <div className="modal-body">
                                 <section id="multiple-column-form">
                                     <div className="row match-height">
@@ -274,14 +267,14 @@ class LocalComponent extends React.Component {
 
                                                             <div className="col-md-6 col-12">
                                                                 <div className="form-group">
-                                                                    <label htmlFor="status" className="form-label">Estado</label>
+                                                                    <label htmlFor="recordStatus" className="form-label">Estado</label>
                                                                     <select
                                                                         className="form-select"
-                                                                        id="status"
-                                                                        name='status'
-                                                                        value={this.state.data.status.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('status', event)}
-                                                                        disabled={this.state.loading}>
+                                                                        id="recordStatus"
+                                                                        name='recordStatus'
+                                                                        value={this.state.data.recordStatus.value}
+                                                                        onChange={(event) => this.setChangeInputEvent('recordStatus', event)}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
                                                                         <option value={null}>Seleccionar...</option>
                                                                         {status.map((item, index) => {
                                                                             return (<option value={item.id} key={index}>{item.name}</option>);
@@ -291,36 +284,11 @@ class LocalComponent extends React.Component {
                                                                     <div
                                                                         className="invalid-feedback"
                                                                         style={{
-                                                                            display: this.state.data.status.errors.length > 0 ? 'block' : 'none'
+                                                                            display: this.state.data.recordStatus.errors.length > 0 ? 'block' : 'none'
                                                                         }}>
-                                                                        {this.state.data.status.errors[0]}
+                                                                        {this.state.data.recordStatus.errors[0]}
                                                                     </div>
 
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="col-md-12 col-12">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="notes" className="form-label">Notas</label>
-                                                                    <textarea
-                                                                        className="form-control"
-                                                                        id="notes"
-                                                                        name='notes'
-                                                                        rows="3"
-                                                                        data-parsley-required="false"
-                                                                        value={this.state.data.notes.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('notes', event)}
-                                                                        disabled={this.state.loading}
-                                                                        autoComplete='off'
-                                                                    />
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.notes.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.notes.errors[0]}
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -336,7 +304,7 @@ class LocalComponent extends React.Component {
                                 <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
 
                                 <ButtonPrimary
-                                    disabled={!this.state.isValidForm || this.state.loading}
+                                    disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
                                     className="btn-block btn-lg background-color-primary"
                                     type='submit'
                                     loading={this.state.loading}

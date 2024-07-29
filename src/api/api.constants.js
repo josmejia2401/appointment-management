@@ -10,6 +10,8 @@ export default Object.freeze({
         update: `${API_BASE}/dev/api/core/users/:id`,
         find: `${API_BASE}/dev/api/core/users/:id`,
         filter: `${API_BASE}/dev/api/core/users`,
-        associate_employee: `${API_BASE}//dev/api/core/users/associate-employee/:id`
+        associate_employee: `${API_BASE}//dev/api/core/users/associate-employee/:id`,
+        find_employees: `${API_BASE}//dev/api/core/users/employees/:id`,
+        find_invitations: `${API_BASE}//dev/api/core/users/invitations/:id`
     }
 });

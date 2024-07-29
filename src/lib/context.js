@@ -27,7 +27,6 @@ export const RouteComponent = ({ children: Component, ...props }) => {
         notificationRef.current.addItem(value);
     }
     React.useEffect(() => {
-        console.log(getTokenInfo());
         if (getTokenInfo()) {
             if (["/auth/login", "/auth/register"].includes(location.pathname)) {
                 navigate("/team/view");

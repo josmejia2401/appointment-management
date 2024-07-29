@@ -39,6 +39,10 @@ export const status = [
     {
         id: 3,
         name: 'PENDIENTE'
+    },
+    {
+        id: 4,
+        name: 'ELIMINADO'
     }
 ];
 

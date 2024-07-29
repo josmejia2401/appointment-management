@@ -42,7 +42,7 @@ export const cleanAll = () => {
 
 export const buildAndThrowNewError = (error) => {
     if (error && error.response) {
-        if (error.response.status === 401 || error.response.status === 403) {
+        if (error.response.status === 401) {
             cleanAll();
         }
         console.error(error.response.data);

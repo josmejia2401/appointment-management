@@ -28,9 +28,43 @@ class LocalComponent extends React.Component {
         this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
-
+        this.onFocus = this.onFocus.bind(this);
+        this.reset = this.reset.bind(this);
 
         this.doInviteAction = this.doInviteAction.bind(this);
+    }
+
+
+    componentDidMount() {
+        window.addEventListener("focus", this.onFocus)
+        window.addEventListener("visibilitychange", this.onFocus)
+        //window.addEventListener("blur", this.onFocus)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("focus", this.onFocus)
+        window.removeEventListener("visibilitychange", this.onFocus)
+        //window.removeEventListener("blur", this.onFocus)
+    }
+
+    reset(override) {
+        this.updateState({
+            loading: false,
+            isValidForm: false,
+            errorMessage: '',
+            isSuccessfullyCreation: false,
+            data: {
+                username: {
+                    value: '',
+                    errors: []
+                },
+            },
+            ...override
+        });
+    }
+
+    onFocus = () => {
+        this.reset({});
     }
 
     /**
@@ -51,14 +85,14 @@ class LocalComponent extends React.Component {
             const data = buildPayload(form, { username: "", recordStatus: 3 });
             associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
-                this.updateState({ loading: false, isSuccessfullyCreation: true })
+                this.reset({ isSuccessfullyCreation: true })
             }).catch(err => {
                 console.log(err.fileName, err);
                 this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
                 this.props.addNotification({ typeToast: 'error', text: err.message, title: "ERROR" });
             });
         }
-        form.classList.add('was-validated');
+        //form.classList.add('was-validated');
     }
 
     validateForm(key) {

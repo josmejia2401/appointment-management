@@ -5,7 +5,7 @@ import CreateComponent from '../create';
 import EditComponent from '../edit';
 import { findDocumentTypeById, findStatusById } from '../../../lib/list_values';
 import ButtonIcon from '../../../components/button-icon';
-import { find } from '../../../api/users.services';
+import { findEmployees } from '../../../api/users.services';
 import { getTokenInfo } from '../../../api/api.common';
 
 
@@ -28,6 +28,8 @@ class Page extends React.Component {
         this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
+        this.onFocus = this.onFocus.bind(this);
+        this.reset = this.reset.bind(this);
 
         this.doLogInAction = this.doLogInAction.bind(this);
         this.dataSelectedAction = this.dataSelectedAction.bind(this);
@@ -35,16 +37,38 @@ class Page extends React.Component {
 
 
     componentDidMount() {
+        window.addEventListener("focus", this.onFocus)
+        window.addEventListener("visibilitychange", this.onFocus)
         this.loadData(null);
     }
+
+    componentWillUnmount() {
+        window.removeEventListener("focus", this.onFocus)
+        window.removeEventListener("visibilitychange", this.onFocus)
+    }
+
+    reset(override) {
+        this.updateState({
+            loading: false,
+            isValidForm: false,
+            data: [],
+            dataFiltered: [],
+            dataSelected: undefined,
+            isFocused: false,
+            inputSearch: '',
+            ...override
+        });
+    }
+
+    onFocus = () => { }
 
     async loadData(e) {
         e?.preventDefault();
         e?.stopPropagation();
         this.updateState({ loading: true });
         const userInfo = getTokenInfo();
-        find(userInfo.payload.keyid).then(result => {
-            this.updateState({ data: result.employees, dataFiltered: result.employees, loading: false });
+        findEmployees(userInfo.payload.keyid).then(result => {
+            this.updateState({ data: result, dataFiltered: result, loading: false });
         }).catch(err => {
             console.log(err.fileName, err);
             this.updateState({ loading: false });
@@ -148,14 +172,22 @@ class Page extends React.Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {this.state.dataFiltered.length === 0 && (<tr>
+
+                                                {this.state.loading && (<tr>
+                                                    <td className="text-color" colSpan={6}>
+                                                        <i className="fa-solid fa-circle-info no-found-icon"></i>
+                                                        <h1 className="no-found-text">Buscando datos...</h1>
+                                                    </td>
+                                                </tr>)}
+
+                                                {!this.state.loading && this.state.dataFiltered.length === 0 && (<tr>
                                                     <td className="text-color" colSpan={6}>
                                                         <i className="fa-solid fa-circle-exclamation no-found-icon"></i>
                                                         <h1 className="no-found-text">No hay datos</h1>
                                                     </td>
                                                 </tr>)}
 
-                                                {this.state.dataFiltered.length > 0 && this.state.dataFiltered.map((item, index) => {
+                                                {!this.state.loading && this.state.dataFiltered.length > 0 && this.state.dataFiltered.map((item, index) => {
                                                     return (<tr key={index}>
                                                         <td className="text-color">{item.firstName || JSON.stringify(item)}</td>
                                                         <td className="text-color">{item.lastName}</td>
@@ -180,7 +212,7 @@ class Page extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <CreateComponent navigate={this.props.navigate} location={this.props.location} addNotification={this.props.addNotification}></CreateComponent>
+                    <CreateComponent navigate={this.props.navigate} location={this.props.location} data={this.state.dataSelected} addNotification={this.props.addNotification}></CreateComponent>
                     <EditComponent navigate={this.props.navigate} location={this.props.location} data={this.state.dataSelected} addNotification={this.props.addNotification}></EditComponent>
                 </section>
             </Template>
