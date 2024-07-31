@@ -91,9 +91,22 @@ class Page extends React.Component {
     validateForm(key) { }
 
     setChangeInputEvent(key, event) {
-        this.updateState({ inputSearch: event.target.value });
-        this.validateForm(key);
+        this.state.inputSearch = event.target.value;
+        if (this.state.inputSearch) {
+            this.state.dataFiltered = this.state.data.filter(p => {
+                const str = JSON.stringify(p).toLowerCase();
+                if (str.includes(this.state.inputSearch.toLowerCase())) {
+                    return true;
+                }
+                return false;
+            });
+        } else {
+            this.state.dataFiltered = this.state.data;
+        }
+        this.updateState({ inputSearch: this.state.inputSearch, dataFiltered: this.state.dataFiltered });
     }
+
+
 
     propagateState() { }
 
