@@ -247,7 +247,7 @@ class Page extends React.Component {
 
                                                             {this.checkViewDeleteAction(item.recordStatus) && (<a
                                                                 href="#"
-                                                                style={{ marginLeft: '5px' }}
+                                                                style={{ marginLeft: '15px' }}
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#inlineFormRemoveTeam"
                                                                 onClick={(e) => this.dataSelectedAction(e, item)} >
