@@ -12,43 +12,37 @@ class LocalComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            loading: false,
-            isValidForm: false,
-            data: {
-                username: {
-                    value: '',
-                    errors: []
-                }
-            },
-            isSuccessfullyCreation: false,
-            errorMessage: undefined
-        };
+        this.state = this.defaultState();
+        this.defaultState = this.defaultState.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
-        this.onFocus = this.onFocus.bind(this);
-        this.reset = this.reset.bind(this);
+        this.loadFirstData = this.loadFirstData.bind(this);
+        this.loadData = this.loadData.bind(this);
+        this.addListeners = this.addListeners.bind(this);
+        this.removeListeners = this.removeListeners.bind(this);
+
 
         this.doInviteAction = this.doInviteAction.bind(this);
+        this.doGoBack = this.doGoBack.bind(this);
     }
+
+
 
 
     componentDidMount() {
-        window.addEventListener("focus", this.onFocus)
-        window.addEventListener("visibilitychange", this.onFocus)
-        //window.addEventListener("blur", this.onFocus)
+        this.resetData({});
+        this.addListeners();
     }
 
     componentWillUnmount() {
-        window.removeEventListener("focus", this.onFocus)
-        window.removeEventListener("visibilitychange", this.onFocus)
-        //window.removeEventListener("blur", this.onFocus)
+        this.resetData();
+        this.removeListeners();
     }
 
-    reset(override) {
-        this.updateState({
+    defaultState() {
+        return {
             loading: false,
             isValidForm: false,
             errorMessage: '',
@@ -57,15 +51,76 @@ class LocalComponent extends React.Component {
                 username: {
                     value: '',
                     errors: []
-                },
-            },
-            ...override
+                }
+            }
+        };
+    }
+
+    addListeners() {
+        window.addEventListener('click', (e) => {
+            const target = e.target || e.currentTarget;
+            const buttonTarget = target.parentElement.parentElement || target.parentElement;
+            const id = buttonTarget.id;
+            if (["btnTeamCreateNOKId", "btnTeamCreateCloseId", "btnTeamCreateCloseTagIId"].includes(id)) {
+                this.doGoBack();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            if (key === "Escape") {
+                this.doGoBack();
+            }
         });
     }
 
-    onFocus = () => {
-        this.reset({});
+    removeListeners() {
+        window.removeEventListener('click', () => { });
+        window.removeEventListener('keydown', () => { });
     }
+
+    resetData(override = {}) {
+        this.updateState({
+            ...this.defaultState(),
+            ...override
+        });
+
+        const element = document.getElementById("formTeamCreateId");
+        if (element) {
+            element.classList.remove("was-validated");
+            element.reset();
+        }
+    }
+
+
+    loadFirstData() { }
+
+    loadData(e) { }
+
+    validateForm(key) {
+        let isValidForm = false;
+        const data = this.state.data;
+        data[key].errors = Validator.validate(key, data[key].value);
+        if (Utils.isEmpty(data[key].errors)) {
+            isValidForm = true;
+        }
+        this.updateState({ isValidForm, data: data });
+    }
+
+    setChangeInputEvent(key, event) {
+        const { data } = this.state;
+        data[key].value = event.target.value;
+        this.updateState({ data: data });
+        this.validateForm(key);
+    }
+
+    propagateState() { }
+
+    updateState(payload) {
+        this.setState({ ...payload }, () => this.propagateState());
+    }
+
+
 
     /**
      * Invita a un usuario del sistema, para ser empleado o miembro del equipo.
@@ -85,42 +140,28 @@ class LocalComponent extends React.Component {
             const data = buildPayload(form, { username: "", recordStatus: 3 });
             associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
-                this.reset({ isSuccessfullyCreation: true })
+                this.resetData({ isSuccessfullyCreation: true });
+                if (this.props.handleAccept) {
+                    this.props.handleAccept();
+                }
             }).catch(err => {
                 console.log(err.fileName, err);
                 this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
                 this.props.addNotification({ typeToast: 'error', text: err.message, title: "ERROR" });
             });
         }
-        //form.classList.add('was-validated');
+        form.classList.add('was-validated');
     }
 
-    validateForm(key) {
-        let isValidForm = false;
-        const data = this.state.data;
-        data[key].errors = [];
-        const errorusernamee = Validator.validateFirstName(data.username.value);
-        if (Utils.isEmpty(errorusernamee)) {
-            isValidForm = true;
+
+
+    doGoBack(e) {
+        this.resetData();
+        if (this.props.handleGoBack) {
+            this.props.handleGoBack();
         }
-        if (!Utils.isEmpty(errorusernamee) && key === 'username') {
-            data.username.errors.push(errorusernamee);
-        }
-        this.updateState({ isValidForm, data: data });
     }
 
-    async setChangeInputEvent(key, event) {
-        const { data } = this.state;
-        data[key].value = event.target.value;
-        await this.updateState({ data: data });
-        this.validateForm(key);
-    }
-
-    propagateState() { }
-
-    async updateState(payload) {
-        this.setState({ ...payload }, () => this.propagateState());
-    }
 
     render() {
         return (
@@ -132,11 +173,12 @@ class LocalComponent extends React.Component {
                         <div className="modal-header">
                             <h4 className="modal-title" id="myModalLabel33">Invitar integrante</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
-                                aria-label="Close">
-                                <i data-feather="x"></i>
+                                aria-label="Close"
+                                id="btnTeamCreateCloseId">
+                                <i data-feather="x" id="btnTeamCreateCloseTagIId"></i>
                             </button>
                         </div>
-                        <form className="needs-validation" onSubmit={this.doInviteAction} noValidate>
+                        <form id="formTeamCreateId" className="needs-validation" onSubmit={this.doInviteAction} noValidate>
 
                             {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
@@ -203,7 +245,7 @@ class LocalComponent extends React.Component {
                                 </section>
                             </div>
                             <div className="modal-footer">
-                                <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
+                                <ButtonSecondary id="btnTeamCreateNOKId" text={'Regresar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
 
                                 <ButtonPrimary
                                     disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}

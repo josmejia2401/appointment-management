@@ -54,7 +54,7 @@ class LocalComponent extends React.Component {
     defaultState() {
         return {
             loading: false,
-            isValidForm: false,
+            isValidForm: true,
             errorMessage: '',
             isSuccessfullyCreation: false,
             data: {
@@ -70,14 +70,10 @@ class LocalComponent extends React.Component {
                     value: '',
                     errors: []
                 },
-                recordStatus: {
-                    value: '',
-                    errors: []
-                },
                 username: {
                     value: '',
                     errors: []
-                }
+                },
             }
         };
     }
@@ -87,7 +83,7 @@ class LocalComponent extends React.Component {
             const target = e.target || e.currentTarget;
             const buttonTarget = target.parentElement.parentElement || target.parentElement;
             const id = buttonTarget.id;
-            if (["btnTeamEditNOKId", "btnTeamEditCloseId", "btnTeamEditCloseTagIId"].includes(id)) {
+            if (["btnTeamRemoveNOKId", "btnTeamRemoveCloseId", "btnTeamRemoveCloseTagIId"].includes(id)) {
                 this.doGoBack();
             }
         });
@@ -111,7 +107,7 @@ class LocalComponent extends React.Component {
             ...override
         });
 
-        const element = document.getElementById("formTeamEditId");
+        const element = document.getElementById("formTeamRemoveId");
         if (element) {
             element.classList.remove("was-validated");
             element.reset();
@@ -127,7 +123,6 @@ class LocalComponent extends React.Component {
         data.id.value = dataFirst.id;
         data.firstName.value = dataFirst.firstName;
         data.lastName.value = dataFirst.lastName;
-        data.recordStatus.value = dataFirst.recordStatus;
         data.username.value = dataFirst.username;
         this.updateState({ data });
     }
@@ -171,11 +166,11 @@ class LocalComponent extends React.Component {
         if (isValid === true) {
             const userInfo = getTokenInfo();
             this.updateState({ loading: true, errorMessage: undefined });
-            const data = buildPayload(form, { username: this.state.data.username.value, recordStatus: 3 });
-            data.recordStatus = Number(data.recordStatus);
+            const data = buildPayload(form, { username: this.state.data.username.value, recordStatus: 4 });
+            data.recordStatus = 4;
             associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
-                this.updateState({ loading: false, isSuccessfullyCreation: true })
+                this.updateState({ loading: false, isSuccessfullyCreation: true });
                 if (this.props.handleAccept) {
                     this.props.handleAccept();
                 }
@@ -198,25 +193,25 @@ class LocalComponent extends React.Component {
 
     render() {
         return (
-            <div className="modal fade text-left" id="inlineFormEditTeam" tabIndex="-1" role="dialog"
-                aria-labelledby="modalLabelEdit" aria-hidden="true"
+            <div className="modal fade text-left" id="inlineFormRemoveTeam" tabIndex="-1" role="dialog"
+                aria-labelledby="modalLabelRemove" aria-hidden="true"
                 data-keyboard="false">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="modalLabelEdit">Modificar integrante</h4>
+                            <h4 className="modal-title" id="modalLabelRemove">Eliminar integrante</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
-                                aria-label="Close" id="btnTeamEditCloseId">
-                                <i data-feather="x" id='btnTeamEditCloseTagIId'></i>
+                                aria-label="Close" id="btnTeamRemoveCloseId">
+                                <i data-feather="x" id='btnTeamRemoveCloseTagIId'></i>
                             </button>
                         </div>
-                        <form id="formTeamEditId" className="needs-validation" onSubmit={this.doModifyAction} noValidate>
+                        <form id="formTeamRemoveId" className="needs-validation" onSubmit={this.doModifyAction} noValidate>
 
                             {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    ¡Usuario actualizado!
+                                    ¡Usuario eliminado!
                                 </div>
                             </div>}
 
@@ -233,7 +228,10 @@ class LocalComponent extends React.Component {
                                         <div className="col-12">
                                             <div className="card">
                                                 <div className="card-header">
-                                                    <h4 className="card-title">Información del integrante</h4>
+                                                    <div style={{ flexDirection: "column" }}>
+                                                        <h4 className="card-title">Precondiciones</h4>
+                                                        <h6>El usuario debe estar en estado PENDIENTE, ACTIVO O INACTIVO.</h6>
+                                                    </div>
                                                 </div>
                                                 <div className="card-content">
                                                     <div className="card-body">
@@ -290,32 +288,6 @@ class LocalComponent extends React.Component {
                                                                 </div>
                                                             </div>
 
-                                                            <div className="col-md-6 col-12">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="recordStatus" className="form-label">Estado</label>
-                                                                    <select
-                                                                        className="form-select"
-                                                                        id="recordStatus"
-                                                                        name='recordStatus'
-                                                                        value={this.state.data.recordStatus.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('recordStatus', event)}
-                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
-                                                                        <option value={null}>Seleccionar...</option>
-                                                                        {this.buildAndGetStatus().map((item, index) => {
-                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
-                                                                        })}
-                                                                    </select>
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.recordStatus.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.recordStatus.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -327,9 +299,9 @@ class LocalComponent extends React.Component {
                             <div className="modal-footer">
 
                                 <ButtonSecondary
-                                    id='btnTeamEditNOKId'
-                                    name='btnTeamEditNOKId'
-                                    key='btnTeamEditNOKId'
+                                    id='btnTeamRemoveNOKId'
+                                    name='btnTeamRemoveNOKId'
+                                    key='btnTeamRemoveNOKId'
                                     text={'Regresar'}
                                     type="button"
                                     data-bs-dismiss="modal"
@@ -344,7 +316,7 @@ class LocalComponent extends React.Component {
                                     type='submit'
                                     loading={this.state.loading}
                                     showText={false}
-                                    text='Actualizar'
+                                    text='Eliminar'
                                 />
                             </div>
                         </form>
