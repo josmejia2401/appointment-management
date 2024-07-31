@@ -50,6 +50,23 @@ export function findStatusById(id) {
     return status.filter(p => p.id === id)[0];
 }
 
+export function buildAndGetClassStatus(recordStatus) {
+    const key = findStatusById(recordStatus).id;
+    switch (key) {
+        case 1:
+            return "badge bg-success";
+        case 2:
+            return "badge bg-secondary";
+        case 3:
+            return "badge bg-warning";
+        case 4:
+            return "badge bg-danger";
+        default:
+            break;
+    }
+    return null;
+}
+
 
 export const genders = [
     {

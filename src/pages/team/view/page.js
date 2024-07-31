@@ -4,7 +4,7 @@ import Template from '../../../components/template';
 import CreateComponent from '../create';
 import EditComponent from '../edit';
 import RemoveComponent from '../remove';
-import { findStatusById } from '../../../lib/list_values';
+import { buildAndGetClassStatus, findStatusById } from '../../../lib/list_values';
 import ButtonIcon from '../../../components/button-icon';
 import { findEmployees } from '../../../api/users.services';
 import { getTokenInfo } from '../../../api/api.common';
@@ -22,6 +22,7 @@ class Page extends React.Component {
         this.updateState = this.updateState.bind(this);
         this.loadFirstData = this.loadFirstData.bind(this);
         this.loadData = this.loadData.bind(this);
+        this.loadMoreData = this.loadMoreData.bind(this);
         this.addListeners = this.addListeners.bind(this);
         this.removeListeners = this.removeListeners.bind(this);
         this.handleGoBack = this.handleGoBack.bind(this);
@@ -29,7 +30,6 @@ class Page extends React.Component {
 
 
         this.dataSelectedAction = this.dataSelectedAction.bind(this);
-        this.buildAndGetClassStatus = this.buildAndGetClassStatus.bind(this);
         this.checkViewDeleteAction = this.checkViewDeleteAction.bind(this);
         this.checkViewEditAction = this.checkViewEditAction.bind(this);
     }
@@ -50,6 +50,7 @@ class Page extends React.Component {
         return {
             loading: false,
             isValidForm: false,
+            thereIsMoreData: false,
             data: [],
             dataFiltered: [],
             dataSelected: undefined,
@@ -80,12 +81,21 @@ class Page extends React.Component {
         findEmployees(userInfo.payload.keyid).then(result => {
             // NO se debe mostrar los eliminados.
             const data = result.filter(p => [1, 2, 3].includes(p.recordStatus));
-            this.updateState({ data: data, dataFiltered: data, loading: false });
+            this.updateState({
+                data: data,
+                dataFiltered: data,
+                loading: false,
+                thereIsMoreData: false,
+            });
         }).catch(err => {
             console.log(err.fileName, err);
             this.updateState({ loading: false });
             this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
         });
+    }
+
+    loadMoreData(e) {
+
     }
 
     validateForm(key) { }
@@ -126,22 +136,6 @@ class Page extends React.Component {
         this.updateState({ dataSelected: item });
     }
 
-    buildAndGetClassStatus(recordStatus) {
-        const key = findStatusById(recordStatus).id;
-        switch (key) {
-            case 1:
-                return "badge bg-success";
-            case 2:
-                return "badge bg-secondary";
-            case 3:
-                return "badge bg-warning";
-            case 4:
-                return "badge bg-danger";
-            default:
-                break;
-        }
-        return null;
-    }
 
     checkViewDeleteAction(recordStatus) {
         const key = findStatusById(recordStatus).id;
@@ -235,7 +229,7 @@ class Page extends React.Component {
                                                         <td className="text-color">{item.lastName}</td>
                                                         <td className="text-color">{''}</td>
                                                         <td className="text-color">{item.documentNumber}</td>
-                                                        <td><span className={this.buildAndGetClassStatus(item.recordStatus)}>{findStatusById(item.recordStatus).name}</span></td>
+                                                        <td><span className={buildAndGetClassStatus(item.recordStatus)}>{findStatusById(item.recordStatus).name}</span></td>
                                                         <td>
                                                             {this.checkViewEditAction(item.recordStatus) && (<a
                                                                 href="#"
@@ -257,6 +251,19 @@ class Page extends React.Component {
                                                     </tr>);
                                                 })}
                                             </tbody>
+
+                                            {!this.state.loading && this.state.thereIsMoreData && <tfoot>
+                                                <tr>
+                                                    <td colSpan="6">
+                                                        <a
+                                                            href="#"
+                                                            className='center-text'
+                                                            onClick={(e) => this.loadMoreData(e)} >Cargar más
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>}
+
                                         </table>
                                     </div>
                                 </div>
