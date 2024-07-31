@@ -32,6 +32,7 @@ class Page extends React.Component {
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
         this.goToHome = this.goToHome.bind(this);
+        this.goToRegister = this.goToRegister.bind(this);
     }
 
     doRegisterAction = async (e) => {
@@ -91,6 +92,10 @@ class Page extends React.Component {
 
     goToHome() {
         this.props.navigate("/team/view");
+    }
+
+    goToRegister() {
+        this.props.navigate("/auth/register");
     }
 
 
@@ -174,7 +179,7 @@ class Page extends React.Component {
                             </form>
                             <div className="text-center mt-5 text-lg fs-4">
                                 <p className='text-gray-600'>¿No tienes cuenta?
-                                    <a href="/auth/register" className="font-bold" onClick={() => this.props.navigate("/auth/register")}> Registrarme</a>.</p>
+                                    <a href="" className="font-bold" onClick={this.goToRegister}> Registrarme</a>.</p>
                             </div>
                         </div>
                     </div>
