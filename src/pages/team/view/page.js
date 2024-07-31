@@ -91,9 +91,7 @@ class Page extends React.Component {
     validateForm(key) { }
 
     setChangeInputEvent(key, event) {
-        const { data } = this.state;
-        data[key].value = event.target.value;
-        this.updateState({ data: data });
+        this.updateState({ inputSearch: event.target.value });
         this.validateForm(key);
     }
 
