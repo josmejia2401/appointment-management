@@ -165,8 +165,15 @@ class LocalComponent extends React.Component {
 
     render() {
         return (
-            <div className="modal fade text-left" id="inlineFormCreateTeam" tabIndex="-1" role="dialog"
-                aria-labelledby="myModalLabel33" aria-hidden="true">
+            <div className="modal fade text-left"
+                id="inlineFormCreateTeam"
+                tabIndex="-1"
+                role="dialog"
+                aria-labelledby="myModalLabel33"
+                data-keyboard="false"
+                data-backdrop="static"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                     role="document">
                     <div className="modal-content">
