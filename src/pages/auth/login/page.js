@@ -174,7 +174,7 @@ class Page extends React.Component {
                             </form>
                             <div className="text-center mt-5 text-lg fs-4">
                                 <p className='text-gray-600'>¿No tienes cuenta?
-                                    <a href="#" className="font-bold" onClick={() => this.props.navigate("/auth/register")}> Registrarme</a>.</p>
+                                    <a href="/auth/register" className="font-bold" onClick={() => this.props.navigate("/auth/register")}> Registrarme</a>.</p>
                             </div>
                         </div>
                     </div>
