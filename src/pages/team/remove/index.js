@@ -252,7 +252,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Nombres"
                                                                         name="firstName"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.firstName.value}
                                                                         disabled={true}
                                                                         autoFocus={true}
@@ -278,7 +278,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Apellidos"
                                                                         name="lastName"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.lastName.value}
                                                                         disabled={true}
                                                                         autoComplete='off'

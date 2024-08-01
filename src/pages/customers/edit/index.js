@@ -235,7 +235,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Nombres"
                                                                         name="firstName"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.firstName.value}
                                                                         onChange={(event) => this.setChangeInputEvent('firstName', event)}
                                                                         disabled={this.state.loading}
@@ -262,7 +262,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Apellidos"
                                                                         name="lastName"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.lastName.value}
                                                                         onChange={(event) => this.setChangeInputEvent('lastName', event)}
                                                                         disabled={this.state.loading}
@@ -314,7 +314,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         name="documentNumber"
                                                                         placeholder="Número de documento"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.documentNumber.value}
                                                                         onChange={(event) => this.setChangeInputEvent('documentNumber', event)}
                                                                         disabled={this.state.loading}
@@ -368,7 +368,7 @@ class LocalComponent extends React.Component {
                                                                         id="birthday"
                                                                         name="birthday"
                                                                         placeholder="Fecha de nacimiento"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.birthday.value}
                                                                         onChange={(event) => this.setChangeInputEvent('birthday', event)}
                                                                         disabled={this.state.loading}
@@ -396,7 +396,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Número de celular"
                                                                         name="phoneNumber"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.phoneNumber.value}
                                                                         onChange={(event) => this.setChangeInputEvent('phoneNumber', event)}
                                                                         disabled={this.state.loading}
@@ -423,7 +423,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Correo"
                                                                         name="email"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.email.value}
                                                                         onChange={(event) => this.setChangeInputEvent('email', event)}
                                                                         disabled={this.state.loading}
@@ -451,7 +451,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Dirección"
                                                                         name="address"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.address.value}
                                                                         onChange={(event) => this.setChangeInputEvent('address', event)}
                                                                         disabled={this.state.loading}

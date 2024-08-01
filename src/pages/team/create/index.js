@@ -225,7 +225,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Ingrese el Usuario a invitar"
                                                                         name="username"
-                                                                        data-parsley-required="true"
+                                                                        required={true}
                                                                         value={this.state.data.username.value}
                                                                         onChange={(event) => this.setChangeInputEvent('username', event)}
                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}

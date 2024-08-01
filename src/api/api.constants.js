@@ -13,5 +13,12 @@ export default Object.freeze({
         associate_employee: `${API_BASE}//dev/api/core/users/associate-employee/:id`,
         find_employees: `${API_BASE}//dev/api/core/users/employees/:id`,
         find_invitations: `${API_BASE}//dev/api/core/users/invitations/:id`
+    },
+    services: {
+        create: `${API_BASE}/dev/api/core/services`,
+        delete: `${API_BASE}/dev/api/core/services/:id`,
+        update: `${API_BASE}/dev/api/core/services/:id`,
+        find: `${API_BASE}/dev/api/core/services/:id`,
+        filter: `${API_BASE}/dev/api/core/services`
     }
 });

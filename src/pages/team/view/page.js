@@ -225,7 +225,7 @@ class Page extends React.Component {
 
                                                 {!this.state.loading && this.state.dataFiltered.length > 0 && this.state.dataFiltered.map((item, index) => {
                                                     return (<tr key={index}>
-                                                        <td className="text-color">{item.firstName || JSON.stringify(item)}</td>
+                                                        <td className="text-color">{item.firstName}</td>
                                                         <td className="text-color">{item.lastName}</td>
                                                         <td className="text-color">{''}</td>
                                                         <td className="text-color">{item.documentNumber}</td>

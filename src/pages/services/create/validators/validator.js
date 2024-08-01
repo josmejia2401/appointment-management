@@ -2,99 +2,42 @@ import Utils from '../../../../lib/utils';
 
 export default class Validator {
 
-    static validateFirstName(value) {
+
+    static validate(key, value) {
+        switch (key) {
+            case 'name':
+                return Validator.validateName(value);
+            case 'description':
+                return Validator.validateDescription(value);
+            case 'duration':
+                return Validator.validateDuration(value);
+            default:
+                break;
+        }
+        return [];
+    }
+    static validateName(value) {
         if (Utils.isEmpty(value)) {
-            return '<<Nombres>> es requerido.'
+            return ['Campo es requerido.'];
         }
-        if (String(value).length > 75) {
-            return '<<Nombres>> debe tener máximo 75 carácteres.'
+        if (String(value).length > 50) {
+            return ['Campo debe ser inferior a 50 caracteres.'];
         }
-        return;
+        return [];
     }
-
-    static validateLastName(value) {
+    static validateDescription(value) {
         if (Utils.isEmpty(value)) {
-            return '<<Apellidos>> es requerido.'
+            return ['Campo es requerido.'];
         }
-        if (String(value).length > 75) {
-            return '<<Apellidos>> debe tener máximo 75 carácteres.'
+        if (String(value).length > 150) {
+            return ['Campo debe ser inferior a 150 caracteres.'];
         }
-        return;
+        return [];
     }
-
-    static validateDocumentType(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Tipo documento>> es requerido.'
+    static validateDuration(value) {
+        if (!Utils.isEmpty(value) && isNaN(Number(value))) {
+            return ['Duración no es válido.'];
         }
-        return;
+        return [];
     }
-
-    static validateDocumentNumber(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Número documento>> es requerido.'
-        }
-        return;
-    }
-
-    static validateGender(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Género>> es requerido.'
-        }
-        return;
-    }
-
-    static validateBirthday(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Fecha nacimiento>> es requerido.'
-        }
-        return;
-    }
-
-
-    static validatePhoneNumber(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Número de celular>> es requerido.'
-        }
-        return;
-    }
-
-    static validateEmail(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Correo electrónico>> es requerido.'
-        }
-        if (!String(value)
-            .toLowerCase()
-            .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            )) {
-            return '<<Correo electrónico>> no es válido.'
-        }
-        return;
-    }
-
-    static validateAddress(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Dirección>> es requerido.'
-        }
-        return;
-    }
-
-    static validateNotes(value) {
-        return;
-    }
-
-    static validateHistory(value) {
-        return;
-    }
-
-    static validateTermCond(value) {
-        if (Utils.isEmpty(value)) {
-            return '<<Términos y condiciones>> es requerido.';
-        }
-        if (value === 'false' || value === false) {
-            return '<<Términos y condiciones>> es requerido.';
-        }
-        return;
-    }
-
 }

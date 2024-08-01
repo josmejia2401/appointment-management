@@ -37,12 +37,13 @@ export const getTokenInfo = () => {
 }
 
 export const cleanAll = () => {
-    return Storage.clear();
+    Storage.clear();
+    window.location.reload();
 }
 
 export const buildAndThrowNewError = (error) => {
     if (error && error.response) {
-        if (error.response.status === 401) {
+        if (error.response.status === 401 || error.response.status === 403) {
             cleanAll();
         }
         console.error(error.response.data);
