@@ -225,11 +225,6 @@ class LocalComponent extends React.Component {
                                     <div className="row match-height">
                                         <div className="col-12">
                                             <div className="card">
-                                                <div className="card-header">
-                                                    <div style={{ flexDirection: "column" }}>
-                                                        <h4 className="card-title">Información del servicio</h4>
-                                                    </div>
-                                                </div>
                                                 <div className="card-content">
                                                     <div className="card-body">
                                                         <div className="row">

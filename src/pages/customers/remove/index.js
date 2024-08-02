@@ -198,7 +198,7 @@ class LocalComponent extends React.Component {
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="modalLabelRemove">Eliminar servicio</h4>
+                            <h4 className="modal-title" id="modalLabelRemove">Eliminar</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
                                 aria-label="Close" id="btnCustomerRemoveCloseId">
                                 <i data-feather="x" id='btnCustomerRemoveCloseTagIId'></i>
@@ -209,7 +209,7 @@ class LocalComponent extends React.Component {
                             {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    Servicio eliminado!
+                                    Cliente eliminado!
                                 </div>
                             </div>}
 
@@ -226,7 +226,11 @@ class LocalComponent extends React.Component {
                                         <div className="col-12">
                                             <div className="card">
                                                 <div className="card-header">
-                                                    <h4 className="card-title">Información del servicio</h4>
+                                                    <div style={{ flexDirection: "column" }}>
+                                                        <h4 className="card-title">IMPORTANTE</h4>
+                                                        <h6>Se realizará un eliminado lógico.</h6>
+                                                        <h6>NO se volverá a ver el cliente en procesos o asignaciones.</h6>
+                                                    </div>
                                                 </div>
                                                 <div className="card-content">
                                                     <div className="card-body">

@@ -216,14 +216,6 @@ class LocalComponent extends React.Component {
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                     role="document">
                     <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title" id="myModalLabel33">Crear servicio</h4>
-                            <button type="button" className="close btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"
-                                id="btnCustomerCreateCloseId">
-                                <i data-feather="x" id="btnCustomerCreateCloseTagIId"></i>
-                            </button>
-                        </div>
                         <form id="formCustomerCreateId" className="needs-validation" onSubmit={this.doInviteAction} noValidate>
 
                             {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
