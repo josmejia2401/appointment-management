@@ -29,7 +29,7 @@ class Component extends React.Component {
 
             {!loading && (<div>
                 <i className="bx bx-check d-block d-sm-none"></i>
-                <span className="d-none d-sm-block">{text}</span>
+                <span className="d-sm-block">{text}</span>
             </div>)}
         </button>);
     }

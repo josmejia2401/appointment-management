@@ -20,5 +20,12 @@ export default Object.freeze({
         update: `${API_BASE}/dev/api/core/services/:id`,
         find: `${API_BASE}/dev/api/core/services/:id`,
         filter: `${API_BASE}/dev/api/core/services`
+    },
+    customers: {
+        create: `${API_BASE}/dev/api/core/customers`,
+        delete: `${API_BASE}/dev/api/core/customers/:id`,
+        update: `${API_BASE}/dev/api/core/customers/:id`,
+        find: `${API_BASE}/dev/api/core/customers/:id`,
+        filter: `${API_BASE}/dev/api/core/customers`
     }
 });

@@ -112,6 +112,12 @@ class LocalComponent extends React.Component {
         if (Utils.isEmpty(data[key].errors)) {
             isValidForm = true;
         }
+        Object.keys(this.state.data).forEach(p => {
+            const errors = Validator.validate(p, data[p].value);
+            if (errors.length > 0) {
+                isValidForm = false;
+            }
+        });
         this.updateState({ isValidForm, data: data });
     }
 

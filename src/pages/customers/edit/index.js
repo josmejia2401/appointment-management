@@ -5,77 +5,38 @@ import Utils from '../../../lib/utils';
 import Validator from './validators/validator';
 import ButtonPrimary from '../../../components/button-primary';
 import ButtonSecondary from '../../../components/button-secondary';
-import { documentTypes, genders } from '../../../lib/list_values';
+import { documentTypes, genders, status } from '../../../lib/list_values';
+import { update } from '../../../api/customers.services';
 
 class LocalComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            loading: false,
-            isValidForm: false,
-            data: {
-                firstName: {
-                    value: '',
-                    errors: []
-                },
-                lastName: {
-                    value: '',
-                    errors: []
-                },
-
-                documentType: {
-                    value: '',
-                    errors: []
-                },
-                documentNumber: {
-                    value: '',
-                    errors: []
-                },
-
-                gender: {
-                    value: '',
-                    errors: []
-                },
-                birthday: {
-                    value: '',
-                    errors: []
-                },
-
-                phoneNumber: {
-                    value: '',
-                    errors: []
-                },
-                email: {
-                    value: '',
-                    errors: []
-                },
-
-                address: {
-                    value: '',
-                    errors: []
-                },
-
-                notes: {
-                    value: '',
-                    errors: []
-                },
-            },
-        };
-
-        this.doLogInAction = this.doLogInAction.bind(this);
+        this.state = this.defaultState();
+        this.defaultState = this.defaultState.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.setChangeInputEvent = this.setChangeInputEvent.bind(this);
         this.propagateState = this.propagateState.bind(this);
         this.updateState = this.updateState.bind(this);
         this.loadFirstData = this.loadFirstData.bind(this);
+        this.loadData = this.loadData.bind(this);
+        this.addListeners = this.addListeners.bind(this);
+        this.removeListeners = this.removeListeners.bind(this);
 
-        this.delay = this.delay.bind(this);
+        //own
+        this.doModifyAction = this.doModifyAction.bind(this);
+        this.doGoBack = this.doGoBack.bind(this);
+        this.buildAndGetStatus = this.buildAndGetStatus.bind(this);
+
     }
 
 
     componentDidMount() {
-        console.log(this.props.data);
+        this.resetData({});
+        this.addListeners();
+        if (this.props.data) {
+            this.loadFirstData(this.props.data);
+        }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -84,162 +45,249 @@ class LocalComponent extends React.Component {
         }
     }
 
-    delay(ms) {
-        return new Promise(res => setTimeout(res, ms));
+    componentWillUnmount() {
+        this.resetData();
+        this.removeListeners();
+    }
+
+    defaultState() {
+        return {
+            loading: false,
+            isValidForm: false,
+            errorMessage: '',
+            isSuccessfullyCreation: false,
+            data: {
+                id: {
+                    value: '',
+                    errors: []
+                },
+                firstName: {
+                    value: '',
+                    errors: []
+                },
+                lastName: {
+                    value: '',
+                    errors: []
+                },
+                documentType: {
+                    value: '',
+                    errors: []
+                },
+                documentNumber: {
+                    value: '',
+                    errors: []
+                },
+                gender: {
+                    value: '',
+                    errors: []
+                },
+                email: {
+                    value: '',
+                    errors: []
+                },
+                phoneNumber: {
+                    value: '',
+                    errors: []
+                },
+                birthday: {
+                    value: '',
+                    errors: []
+                }
+            }
+        };
+    }
+
+    addListeners() {
+        window.addEventListener('click', (e) => {
+            const target = e.target || e.currentTarget;
+            const buttonTarget = target.parentElement.parentElement || target.parentElement;
+            const id = buttonTarget.id;
+            if (["btnCustomerEditNOKId", "btnCustomerEditCloseId", "btnCustomerEditCloseTagIId"].includes(id)) {
+                this.doGoBack();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+            if (key === "Escape") {
+                this.doGoBack();
+            }
+        });
+    }
+
+    removeListeners() {
+        window.removeEventListener('click', () => { });
+        window.removeEventListener('keydown', () => { });
+    }
+
+    resetData(override = {}) {
+        this.updateState({
+            ...this.defaultState(),
+            ...override
+        });
+
+        const element = document.getElementById("formCustomerEditId");
+        if (element) {
+            element.classList.remove("was-validated");
+            element.reset();
+        }
     }
 
 
     loadFirstData(dataFirst) {
+        if (Utils.isEmpty(dataFirst)) {
+            return;
+        }
         const { data } = this.state;
+
+        data.id.value = dataFirst.id;
         data.firstName.value = dataFirst.firstName;
         data.lastName.value = dataFirst.lastName;
         data.documentType.value = dataFirst.documentType;
         data.documentNumber.value = dataFirst.documentNumber;
+
         data.gender.value = dataFirst.gender;
-        data.birthday.value = new Date(dataFirst.birthday).toISOString().split("T")[0];
-        data.phoneNumber.value = dataFirst.phoneNumber;
-        data.address.value = dataFirst.address;
         data.email.value = dataFirst.email;
-        data.notes.value = dataFirst.notes;
-        this.updateState({ data: data });
+        data.phoneNumber.value = dataFirst.phoneNumber;
+        data.birthday.value = dataFirst.birthday;
 
+        this.updateState({ data });
     }
 
-    doLogInAction = async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const form = e.target;
-        const isValid = form.checkValidity();
-        if (isValid === true) {
-            this.setState({ loading: true });
-            const data = buildPayload(form, { username: "", password: "" });
-            console.log(data);
-            await this.delay(3000);
-            /*signIn(data).then(_result => {
-                form.reset();
-                this.props.navigate("/home");
-            }).catch(err => {
-                console.log(err.fileName, err);
-                this.props.addNotification({ typeToast: 'error', text: err.message, title: "ERROR" });
-            }).finally(() => this.setState({ loading: false }));*/
-        }
-        form.classList.add('was-validated');
-    }
+    loadData(e) { }
 
     validateForm(key) {
         let isValidForm = false;
         const data = this.state.data;
-        data[key].errors = [];
-        const errorfirstName = Validator.validateFirstName(data.firstName.value);
-        const errorlastName = Validator.validateLastName(data.lastName.value);
-        const errordocumentType = Validator.validateDocumentType(data.documentType.value);
-        const errordocumentNumber = Validator.validateDocumentNumber(data.documentNumber.value);
-        const errorgender = Validator.validateGender(data.gender.value);
-        const errorbirthday = Validator.validateBirthday(data.birthday.value);
-        const errorphoneNumber = Validator.validatePhoneNumber(data.phoneNumber.value);
-        const erroremail = Validator.validateEmail(data.email.value);
-        const erroraddress = Validator.validateAddress(data.address.value);
-        const errornotes = Validator.validateNotes(data.notes.value);
-
-        if (Utils.isEmpty(errorfirstName) &&
-            Utils.isEmpty(errorlastName) &&
-            Utils.isEmpty(errordocumentType) &&
-            Utils.isEmpty(errordocumentNumber) &&
-            Utils.isEmpty(errorgender) &&
-            Utils.isEmpty(errorbirthday) &&
-            Utils.isEmpty(errorphoneNumber) &&
-            Utils.isEmpty(erroremail) &&
-            Utils.isEmpty(erroraddress) &&
-            Utils.isEmpty(errornotes)) {
+        data[key].errors = Validator.validate(key, data[key].value);
+        if (Utils.isEmpty(data[key].errors)) {
             isValidForm = true;
-        }
-        if (!Utils.isEmpty(errorfirstName) && key === 'firstName') {
-            data.firstName.errors.push(errorfirstName);
-        }
-        if (!Utils.isEmpty(errorlastName) && key === 'lastName') {
-            data.lastName.errors.push(errorlastName);
-        }
-        if (!Utils.isEmpty(errordocumentType) && key === 'documentType') {
-            data.documentType.errors.push(errordocumentType);
-        }
-        if (!Utils.isEmpty(errordocumentNumber) && key === 'documentNumber') {
-            data.documentNumber.errors.push(errordocumentNumber);
-        }
-        if (!Utils.isEmpty(errorgender) && key === 'gender') {
-            data.gender.errors.push(errorgender);
-        }
-        if (!Utils.isEmpty(errorbirthday) && key === 'birthday') {
-            data.birthday.errors.push(errorbirthday);
-        }
-        if (!Utils.isEmpty(errorphoneNumber) && key === 'phoneNumber') {
-            data.phoneNumber.errors.push(errorphoneNumber);
-        }
-        if (!Utils.isEmpty(erroremail) && key === 'email') {
-            data.email.errors.push(erroremail);
-        }
-        if (!Utils.isEmpty(erroraddress) && key === 'address') {
-            data.address.errors.push(erroraddress);
-        }
-        if (!Utils.isEmpty(errornotes) && key === 'notes') {
-            data.notes.errors.push(errornotes);
         }
         this.updateState({ isValidForm, data: data });
     }
 
-    async setChangeInputEvent(key, event) {
+    setChangeInputEvent(key, event) {
         const { data } = this.state;
-        data[key].value = key === 'termCond' ? !this.state.data.termCond.value : event.target.value;
-        await this.updateState({ data: data });
+        data[key].value = event.target.value;
+        this.updateState({ data: data });
         this.validateForm(key);
     }
 
     propagateState() { }
 
-    async updateState(payload) {
+    updateState(payload) {
         this.setState({ ...payload }, () => this.propagateState());
     }
 
+    buildAndGetStatus() {
+        return status.filter(p => [1, 2].includes(p.id));
+    }
+
+
+
+    doModifyAction = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const form = e.target;
+        const isValid = form.checkValidity();
+        if (isValid === true) {
+            this.updateState({ loading: true, errorMessage: undefined });
+            const data = buildPayload(form, {
+                name: '',
+                description: '',
+                duration: 0,
+                recordStatus: 1
+            });
+            data.recordStatus = Number(data.recordStatus);
+            update(this.state.data.id.value, data).then(_result => {
+                form.reset();
+                this.updateState({ loading: false, isSuccessfullyCreation: true })
+                if (this.props.handleAccept) {
+                    this.props.handleAccept();
+                }
+            }).catch(err => {
+                console.log(err.fileName, err);
+                this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
+                this.props.addNotification({ typeToast: 'error', text: err.message, title: "ERROR" });
+            });
+        }
+        form.classList.add('was-validated');
+    }
+
+
+    doGoBack(e) {
+        this.resetData();
+        if (this.props.handleGoBack) {
+            this.props.handleGoBack();
+        }
+        document.getElementById("btnCustomerEditNOKId").click();
+    }
 
     render() {
         return (
-            <div className="modal fade text-left" id="inlineFormEditCustomer" tabIndex="-1" role="dialog"
-                aria-labelledby="modalLabelEdit" aria-hidden="true">
+            <div className="modal fade text-left"
+                id="inlineFormEditCustomer"
+                tabIndex="-1" r
+                ole="dialog"
+                aria-labelledby="modalLabelEdit"
+                aria-hidden="true"
+                data-keyboard="false"
+                data-backdrop="static"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false">
                 <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="modalLabelEdit">Modificar cliente</h4>
+                            <h4 className="modal-title" id="modalLabelEdit">Modificar servicio</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
-                                aria-label="Close">
-                                <i data-feather="x"></i>
+                                aria-label="Close" id="btnCustomerEditCloseId">
+                                <i data-feather="x" id='btnCustomerEditCloseTagIId'></i>
                             </button>
                         </div>
-                        <form className="needs-validation" onSubmit={this.doLogInAction} noValidate>
+                        <form id="formCustomerEditId" className="needs-validation" onSubmit={this.doModifyAction} noValidate>
+
+                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
+                                <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
+                                <div>
+                                    Actualización exitosa!
+                                </div>
+                            </div>}
+
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                                <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
+                                <div>
+                                    {this.state.errorMessage}
+                                </div>
+                            </div>}
+
                             <div className="modal-body">
                                 <section id="multiple-column-form">
                                     <div className="row match-height">
                                         <div className="col-12">
                                             <div className="card">
                                                 <div className="card-header">
-                                                    <h4 className="card-title">Información del cliente o persona</h4>
+                                                    <div style={{ flexDirection: "column" }}>
+                                                        <h4 className="card-title">Información del cliente</h4>
+                                                    </div>
                                                 </div>
                                                 <div className="card-content">
                                                     <div className="card-body">
                                                         <div className="row">
-                                                            <div className="col-md-6 col-12">
+                                                            <div className="col-md-12 col-12">
                                                                 <div className="form-group mandatory">
-                                                                    <label htmlFor="firstName" className="form-label">Nombres</label>
+                                                                    <label htmlFor="firstName" className="form-label">Nombres *</label>
                                                                     <input
                                                                         type="text"
                                                                         id="firstName"
                                                                         className="form-control"
-                                                                        placeholder="Nombres"
+                                                                        placeholder="Ingrese su nombre"
                                                                         name="firstName"
                                                                         required={true}
                                                                         value={this.state.data.firstName.value}
                                                                         onChange={(event) => this.setChangeInputEvent('firstName', event)}
-                                                                        disabled={this.state.loading}
-                                                                        autoFocus={true}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+
                                                                         autoComplete='off'
                                                                     />
 
@@ -253,19 +301,22 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6 col-12">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="lastName" className="form-label">Apellidos</label>
+                                                        </div>
+
+                                                        <div className="row">
+                                                            <div className="col-md-12 col-12">
+                                                                <div className="form-group mandatory">
+                                                                    <label htmlFor="lastName" className="form-label">Apellidos *</label>
                                                                     <input
                                                                         type="text"
                                                                         id="lastName"
                                                                         className="form-control"
-                                                                        placeholder="Apellidos"
+                                                                        placeholder="Ingrese sus apellidos"
                                                                         name="lastName"
-                                                                        required={true}
+                                                                        required={false}
                                                                         value={this.state.data.lastName.value}
                                                                         onChange={(event) => this.setChangeInputEvent('lastName', event)}
-                                                                        disabled={this.state.loading}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
                                                                         autoComplete='off'
                                                                     />
 
@@ -279,16 +330,21 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6 col-12">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="documentType" className="form-label">Tipo documento</label>
+                                                        </div>
+
+
+
+                                                        <div className="row">
+                                                            <div className="col-12 col-md-6">
+                                                                <div className="form-group mandatory">
+                                                                    <label htmlFor="documentType" className="form-label">Tipo documento *</label>
                                                                     <select
                                                                         className="form-select"
                                                                         id="documentType"
                                                                         name='documentType'
                                                                         value={this.state.data.documentType.value}
                                                                         onChange={(event) => this.setChangeInputEvent('documentType', event)}
-                                                                        disabled={this.state.loading}>
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
                                                                         <option value={null}>Seleccionar...</option>
                                                                         {documentTypes.map((item, index) => {
                                                                             return (<option value={item.id} key={index}>{item.name}</option>);
@@ -305,19 +361,22 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6 col-12">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="documentNumber" className="form-label">Número de documento</label>
+
+
+                                                            <div className="col-12 col-md-6">
+                                                                <div className="form-group mandatory">
+                                                                    <label htmlFor="documentNumber" className="form-label">Número documento *</label>
                                                                     <input
                                                                         type="text"
                                                                         id="documentNumber"
                                                                         className="form-control"
+                                                                        placeholder="Ingrese su número de documento"
                                                                         name="documentNumber"
-                                                                        placeholder="Número de documento"
                                                                         required={true}
                                                                         value={this.state.data.documentNumber.value}
                                                                         onChange={(event) => this.setChangeInputEvent('documentNumber', event)}
-                                                                        disabled={this.state.loading}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+
                                                                         autoComplete='off'
                                                                     />
 
@@ -331,23 +390,28 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6 col-12">
-                                                                <div className="form-group">
-                                                                    <label htmlFor="gender" className="form-label">Género</label>
+                                                        </div>
+
+
+
+
+                                                        <div className="row">
+                                                            <div className="col-12 col-md-6">
+                                                                <div className="form-group mandatory">
+                                                                    <label htmlFor="gender" className="form-label">Género *</label>
                                                                     <select
                                                                         className="form-select"
                                                                         id="gender"
                                                                         name='gender'
                                                                         value={this.state.data.gender.value}
+                                                                        required={true}
                                                                         onChange={(event) => this.setChangeInputEvent('gender', event)}
-                                                                        disabled={this.state.loading}>
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
                                                                         <option value={null}>Seleccionar...</option>
                                                                         {genders.map((item, index) => {
                                                                             return (<option value={item.id} key={index}>{item.name}</option>);
                                                                         })}
                                                                     </select>
-
-
 
                                                                     <div
                                                                         className="invalid-feedback"
@@ -359,22 +423,23 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6 col-12">
+
+
+                                                            <div className="col-12 col-md-6">
                                                                 <div className="form-group mandatory">
-                                                                    <label htmlFor="birthday" className="form-label">Fecha de nacimiento</label>
+                                                                    <label htmlFor="birthday" className="form-label">Fecha nacimiento *</label>
                                                                     <input
                                                                         type="date"
-                                                                        className="form-control mb-3 flatpickr-no-config"
                                                                         id="birthday"
+                                                                        className="form-control"
+                                                                        placeholder="Ingrese su fecha de nacimiento"
                                                                         name="birthday"
-                                                                        placeholder="Fecha de nacimiento"
                                                                         required={true}
                                                                         value={this.state.data.birthday.value}
                                                                         onChange={(event) => this.setChangeInputEvent('birthday', event)}
-                                                                        disabled={this.state.loading}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
                                                                         autoComplete='off'
                                                                     />
-
 
                                                                     <div
                                                                         className="invalid-feedback"
@@ -386,20 +451,27 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
+                                                        </div>
 
-                                                            <div className="col-md-6 col-12">
+
+
+
+
+                                                        <div className="row">
+                                                            <div className="col-12 col-md-6">
                                                                 <div className="form-group mandatory">
                                                                     <label htmlFor="phoneNumber" className="form-label">Celular</label>
                                                                     <input
                                                                         type="text"
                                                                         id="phoneNumber"
                                                                         className="form-control"
-                                                                        placeholder="Número de celular"
+                                                                        placeholder="Ingrese su celular"
                                                                         name="phoneNumber"
-                                                                        required={true}
+                                                                        required={false}
                                                                         value={this.state.data.phoneNumber.value}
                                                                         onChange={(event) => this.setChangeInputEvent('phoneNumber', event)}
-                                                                        disabled={this.state.loading}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+
                                                                         autoComplete='off'
                                                                     />
 
@@ -411,22 +483,25 @@ class LocalComponent extends React.Component {
                                                                         {this.state.data.phoneNumber.errors[0]}
                                                                     </div>
 
+
                                                                 </div>
                                                             </div>
 
-                                                            <div className="col-md-6 col-12">
-                                                                <div className="form-group">
+
+                                                            <div className="col-12 col-md-6">
+                                                                <div className="form-group mandatory">
                                                                     <label htmlFor="email" className="form-label">Correo electrónico</label>
                                                                     <input
-                                                                        type="email"
+                                                                        type="text"
                                                                         id="email"
                                                                         className="form-control"
-                                                                        placeholder="Correo"
+                                                                        placeholder="Ingrese su email"
                                                                         name="email"
-                                                                        required={true}
+                                                                        required={false}
                                                                         value={this.state.data.email.value}
                                                                         onChange={(event) => this.setChangeInputEvent('email', event)}
-                                                                        disabled={this.state.loading}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+
                                                                         autoComplete='off'
                                                                     />
 
@@ -441,76 +516,28 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-
-                                                            <div className="col-md-12 col-12">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="address" className="form-label">Dirección</label>
-                                                                    <input
-                                                                        type="text"
-                                                                        id="address"
-                                                                        className="form-control"
-                                                                        placeholder="Dirección"
-                                                                        name="address"
-                                                                        required={true}
-                                                                        value={this.state.data.address.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('address', event)}
-                                                                        disabled={this.state.loading}
-                                                                        autoComplete='off'
-                                                                    />
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.address.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.address.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="col-md-12 col-12">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="notes" className="form-label">Notas</label>
-                                                                    <textarea
-                                                                        className="form-control"
-                                                                        id="notes"
-                                                                        name='notes'
-                                                                        rows="3"
-                                                                        data-parsley-required="false"
-                                                                        value={this.state.data.notes.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('notes', event)}
-                                                                        disabled={this.state.loading}
-                                                                        autoComplete='off'
-                                                                    />
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.notes.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.notes.errors[0]}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                         </div>
+
+
+
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </section>
-                            </div> 
+                            </div>
                             <div className="modal-footer">
-
-                                <ButtonSecondary text={'Cancelar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
+                                <ButtonSecondary id="btnCustomerEditNOKId" text={'Regresar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
 
                                 <ButtonPrimary
-                                    disabled={!this.state.isValidForm || this.state.loading}
+                                    disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
                                     className="btn-block btn-lg background-color-primary"
                                     type='submit'
                                     loading={this.state.loading}
-                                    showText={false}
+                                    showText={true}
+                                    textLoading={'Actualizando...'}
                                     text='Actualizar'
                                 />
                             </div>

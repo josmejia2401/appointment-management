@@ -38,7 +38,12 @@ export const getTokenInfo = () => {
 
 export const cleanAll = () => {
     Storage.clear();
-    window.location.reload();
+    // similar behavior as an HTTP redirect
+    //window.location.replace("http://stackoverflow.com");
+    // similar behavior as clicking on a link
+    if (!window.location.pathname.includes("auth")){
+        window.location.href = "/auth/login";
+    }
 }
 
 export const buildAndThrowNewError = (error) => {
