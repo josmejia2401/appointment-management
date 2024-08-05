@@ -22,7 +22,7 @@ export const documentTypes = [
 ];
 
 export function findDocumentTypeById(id) {
-    return documentTypes.filter(p => p.id === Number(id))[0] || { id: 0, name: " "};
+    return documentTypes.filter(p => p.id === Number(id || 0))[0] || { id: 0, name: " "};
 }
 
 
@@ -47,7 +47,7 @@ export const status = [
 ];
 
 export function findStatusById(id) {
-    return status.filter(p => p.id === Number(id))[0] || { id: 0, name: " "};
+    return status.filter(p => p.id === Number(id|| 0))[0] || { id: 0, name: " "};
 }
 
 export function buildAndGetClassStatus(recordStatus) {
@@ -88,7 +88,7 @@ export const genders = [
 ];
 
 export function findGenderById(id) {
-    return status.filter(p => p.id === Number(id))[0] || { id: 0, name: " "};
+    return status.filter(p => p.id === Number(id|| 0))[0] || { id: 0, name: " "};
 }
 
 
@@ -116,5 +116,5 @@ export const maritalStatus = [
 ];
 
 export function findMaritalStatusById(id) {
-    return maritalStatus.filter(p => p.id === Number(id))[0] || { id: 0, name: " "};
+    return maritalStatus.filter(p => p.id === Number(id|| 0))[0] || { id: 0, name: " "};
 }

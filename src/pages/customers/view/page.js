@@ -230,15 +230,15 @@ class Page extends React.Component {
                                                     return (<tr key={index}>
                                                         <td className="text-color">{item.firstName}</td>
                                                         <td className="text-color">{item.lastName}</td>
-                                                        <td className="text-color">{findDocumentTypeById(item.documentType).name}</td>
+                                                        <td className="text-color">{findDocumentTypeById(item?.documentType).name}</td>
                                                         <td className="text-color">{item.documentNumber}</td>
-                                                        <td><span className={buildAndGetClassStatus(item.recordStatus)}>{findStatusById(item.recordStatus).name}</span></td>
+                                                        <td><span className={buildAndGetClassStatus(item?.recordStatus)}>{findStatusById(item?.recordStatus).name}</span></td>
                                                         <td>
                                                             {this.checkViewEditAction(item.recordStatus) && (<a href="#">
                                                                 <i className="fa-regular fa-pen-to-square primary-color" onClick={() => this.showDialog('edit', item)}></i>
                                                             </a>)}
 
-                                                            {this.checkViewDeleteAction(item.recordStatus) && (<a href="#" style={{ marginLeft: '15px' }}>
+                                                            {this.checkViewDeleteAction(item?.recordStatus) && (<a href="#" style={{ marginLeft: '15px' }}>
                                                                 <i className="fa-solid fa-trash primary-color" onClick={() => this.showDialog('remove', item)}></i>
                                                             </a>)}
                                                         </td>
