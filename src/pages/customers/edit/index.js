@@ -2,10 +2,10 @@ import * as React from 'react';
 import "./styles.css";
 import { buildPayload } from '../../../lib/form';
 import Utils from '../../../lib/utils';
-import Validator from './validators/validator';
+import Validator from '../validators/validator';
 import ButtonPrimary from '../../../components/button-primary';
 import ButtonSecondary from '../../../components/button-secondary';
-import { documentTypes, genders, status } from '../../../lib/list_values';
+import { documentTypes, genders, maritalStatus, status } from '../../../lib/list_values';
 import { update } from '../../../api/customers.services';
 
 class LocalComponent extends React.Component {
@@ -90,6 +90,22 @@ class LocalComponent extends React.Component {
                     errors: []
                 },
                 birthday: {
+                    value: '',
+                    errors: []
+                },
+                maritalStatus: {
+                    value: '',
+                    errors: []
+                },
+                occupation: {
+                    value: '',
+                    errors: []
+                },
+                address: {
+                    value: '',
+                    errors: []
+                },
+                notes: {
                     value: '',
                     errors: []
                 }
@@ -235,17 +251,18 @@ class LocalComponent extends React.Component {
                 data-backdrop="static"
                 data-bs-backdrop="static"
                 data-bs-keyboard="false">
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-xl"
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="modalLabelEdit">Modificar servicio</h4>
+                            <h4 className="modal-title" id='myModalLabel33'>Modificar un cliente</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
-                                aria-label="Close" id="btnCustomerEditCloseId">
-                                <i data-feather="x" id='btnCustomerEditCloseTagIId'></i>
+                                aria-label="Close"
+                                id="btnCustomerCreateCloseId">
+                                <i data-feather="x" id="btnCustomerCreateCloseTagIId"></i>
                             </button>
                         </div>
-                        <form id="formCustomerEditId" className="needs-validation" onSubmit={this.doModifyAction} noValidate>
+                        <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
 
                             {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
@@ -268,10 +285,13 @@ class LocalComponent extends React.Component {
                                             <div className="card">
                                                 <div className="card-content">
                                                     <div className="card-body">
-                                                        <div className="row">
-                                                            <div className="col-md-12 col-12">
+                                                        
+
+
+                                                    <div className="row">
+                                                            <div className="col-12 col-md-6">
                                                                 <div className="form-group mandatory">
-                                                                    <label htmlFor="firstName" className="form-label">Nombres *</label>
+                                                                    <label htmlFor="firstName" className="form-label">Nombres</label>
                                                                     <input
                                                                         type="text"
                                                                         id="firstName"
@@ -296,12 +316,10 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div className="row">
-                                                            <div className="col-md-12 col-12">
+                                                            <div className="col-12 col-md-6">
                                                                 <div className="form-group mandatory">
-                                                                    <label htmlFor="lastName" className="form-label">Apellidos *</label>
+                                                                    <label htmlFor="lastName" className="form-label">Apellidos</label>
                                                                     <input
                                                                         type="text"
                                                                         id="lastName"
@@ -325,128 +343,10 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
+
                                                         </div>
 
 
-
-                                                        <div className="row">
-                                                            <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="documentType" className="form-label">Tipo documento *</label>
-                                                                    <select
-                                                                        className="form-select"
-                                                                        id="documentType"
-                                                                        name='documentType'
-                                                                        value={this.state.data.documentType.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('documentType', event)}
-                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
-                                                                        <option value={null}>Seleccionar...</option>
-                                                                        {documentTypes.map((item, index) => {
-                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
-                                                                        })}
-                                                                    </select>
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.documentType.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.documentType.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="documentNumber" className="form-label">Número documento *</label>
-                                                                    <input
-                                                                        type="text"
-                                                                        id="documentNumber"
-                                                                        className="form-control"
-                                                                        placeholder="Ingrese su número de documento"
-                                                                        name="documentNumber"
-                                                                        required={true}
-                                                                        value={this.state.data.documentNumber.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('documentNumber', event)}
-                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
-
-                                                                        autoComplete='off'
-                                                                    />
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.documentNumber.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.documentNumber.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-
-
-                                                        <div className="row">
-                                                            <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="gender" className="form-label">Género *</label>
-                                                                    <select
-                                                                        className="form-select"
-                                                                        id="gender"
-                                                                        name='gender'
-                                                                        value={this.state.data.gender.value}
-                                                                        required={true}
-                                                                        onChange={(event) => this.setChangeInputEvent('gender', event)}
-                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
-                                                                        <option value={null}>Seleccionar...</option>
-                                                                        {genders.map((item, index) => {
-                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
-                                                                        })}
-                                                                    </select>
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.gender.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.gender.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="birthday" className="form-label">Fecha nacimiento *</label>
-                                                                    <input
-                                                                        type="date"
-                                                                        id="birthday"
-                                                                        className="form-control"
-                                                                        placeholder="Ingrese su fecha de nacimiento"
-                                                                        name="birthday"
-                                                                        required={true}
-                                                                        value={this.state.data.birthday.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('birthday', event)}
-                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
-                                                                        autoComplete='off'
-                                                                    />
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.birthday.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.birthday.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
 
 
 
@@ -512,6 +412,273 @@ class LocalComponent extends React.Component {
                                                                 </div>
                                                             </div>
                                                         </div>
+
+
+
+
+
+
+
+
+                                                        <div className="accordion" id="accordionExample" style={{ marginTop: '15px' }}>
+                                                            <div className="accordion-item">
+                                                                <h2 className="accordion-header" id="headingOne">
+                                                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                        Información adicional
+                                                                    </button>
+                                                                </h2>
+                                                                <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                                    <div className="accordion-body">
+                                                                        <div className="row">
+                                                                            <div className="col-12 col-md-6">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="documentType" className="form-label">Tipo documento</label>
+                                                                                    <select
+                                                                                        className="form-select"
+                                                                                        id="documentType"
+                                                                                        name='documentType'
+                                                                                        value={this.state.data.documentType.value}
+                                                                                        onChange={(event) => this.setChangeInputEvent('documentType', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
+                                                                                        <option value={null}>Seleccionar...</option>
+                                                                                        {documentTypes.map((item, index) => {
+                                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
+                                                                                        })}
+                                                                                    </select>
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.documentType.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.documentType.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            <div className="col-12 col-md-6">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="documentNumber" className="form-label">Número documento</label>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        id="documentNumber"
+                                                                                        className="form-control"
+                                                                                        placeholder="Ingrese su número de documento"
+                                                                                        name="documentNumber"
+                                                                                        required={true}
+                                                                                        value={this.state.data.documentNumber.value}
+                                                                                        onChange={(event) => this.setChangeInputEvent('documentNumber', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+
+                                                                                        autoComplete='off'
+                                                                                    />
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.documentNumber.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.documentNumber.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                        <div className="row">
+                                                                            <div className="col-12 col-md-6">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="gender" className="form-label">Género</label>
+                                                                                    <select
+                                                                                        className="form-select"
+                                                                                        id="gender"
+                                                                                        name='gender'
+                                                                                        value={this.state.data.gender.value}
+                                                                                        required={true}
+                                                                                        onChange={(event) => this.setChangeInputEvent('gender', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
+                                                                                        <option value={null}>Seleccionar...</option>
+                                                                                        {genders.map((item, index) => {
+                                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
+                                                                                        })}
+                                                                                    </select>
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.gender.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.gender.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            <div className="col-12 col-md-6">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="birthday" className="form-label">Fecha nacimiento</label>
+                                                                                    <input
+                                                                                        type="date"
+                                                                                        id="birthday"
+                                                                                        className="form-control"
+                                                                                        placeholder="Ingrese su fecha de nacimiento"
+                                                                                        name="birthday"
+                                                                                        required={true}
+                                                                                        value={this.state.data.birthday.value}
+                                                                                        onChange={(event) => this.setChangeInputEvent('birthday', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                                                        autoComplete='off'
+                                                                                    />
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.birthday.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.birthday.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+
+                                                                        <div className="row">
+                                                                            <div className="col-12 col-md-6">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="maritalStatus" className="form-label">Estado civil</label>
+                                                                                    <select
+                                                                                        className="form-select"
+                                                                                        id="maritalStatus"
+                                                                                        name='maritalStatus'
+                                                                                        value={this.state.data.maritalStatus.value}
+                                                                                        required={true}
+                                                                                        onChange={(event) => this.setChangeInputEvent('maritalStatus', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
+                                                                                        <option value={null}>Seleccionar...</option>
+                                                                                        {maritalStatus.map((item, index) => {
+                                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
+                                                                                        })}
+                                                                                    </select>
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.maritalStatus.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.maritalStatus.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            <div className="col-12 col-md-6">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="occupation" className="form-label">Ocupación</label>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        id="occupation"
+                                                                                        className="form-control"
+                                                                                        placeholder="Ingrese su ocupación"
+                                                                                        name="occupation"
+                                                                                        required={true}
+                                                                                        value={this.state.data.occupation.value}
+                                                                                        onChange={(event) => this.setChangeInputEvent('occupation', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                                                        autoComplete='off'
+                                                                                    />
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.occupation.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.occupation.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                        <div className="row">
+                                                                            <div className="col-12 col-md-12">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="address" className="form-label">Dirección</label>
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        id="address"
+                                                                                        className="form-control"
+                                                                                        placeholder="Ingrese su dirección"
+                                                                                        name="address"
+                                                                                        required={true}
+                                                                                        value={this.state.data.address.value}
+                                                                                        onChange={(event) => this.setChangeInputEvent('address', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                                                        autoComplete='off'
+                                                                                    />
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.address.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.address.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div className="row">
+                                                                            <div className="col-12 col-md-12">
+                                                                                <div className="form-group mandatory">
+                                                                                    <label htmlFor="notes" className="form-label">Notas</label>
+
+                                                                                    <textarea
+                                                                                        id="notes"
+                                                                                        className="form-control"
+                                                                                        placeholder="Ingrese su ocupación"
+                                                                                        name="notes"
+                                                                                        required={true}
+                                                                                        value={this.state.data.notes.value}
+                                                                                        onChange={(event) => this.setChangeInputEvent('notes', event)}
+                                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                                                        autoComplete='off'
+                                                                                        rows="3"></textarea>
+
+
+                                                                                    <div
+                                                                                        className="invalid-feedback"
+                                                                                        style={{
+                                                                                            display: this.state.data.notes.errors.length > 0 ? 'block' : 'none'
+                                                                                        }}>
+                                                                                        {this.state.data.notes.errors[0]}
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
 
 
 

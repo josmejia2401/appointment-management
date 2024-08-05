@@ -2,7 +2,7 @@ import * as React from 'react';
 import "./styles.css";
 import { buildPayload } from '../../../lib/form';
 import Utils from '../../../lib/utils';
-import Validator from './validators/validator';
+import Validator from '../validators/validator';
 import ButtonPrimary from '../../../components/button-primary';
 import ButtonSecondary from '../../../components/button-secondary';
 import { create } from '../../../api/customers.services';
@@ -234,7 +234,7 @@ class LocalComponent extends React.Component {
                     <div className="modal-content">
 
                         <div className="modal-header">
-                            <h4 className="modal-title" id='myModalLabel33'>Invitar integrante</h4>
+                            <h4 className="modal-title" id='myModalLabel33'>Crear un cliente</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"
                                 id="btnCustomerCreateCloseId">
