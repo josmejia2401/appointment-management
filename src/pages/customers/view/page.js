@@ -22,27 +22,22 @@ class Page extends React.Component {
         this.loadFirstData = this.loadFirstData.bind(this);
         this.loadData = this.loadData.bind(this);
         this.loadMoreData = this.loadMoreData.bind(this);
-        this.addListeners = this.addListeners.bind(this);
-        this.removeListeners = this.removeListeners.bind(this);
-        this.handleGoBack = this.handleGoBack.bind(this);
-        this.handleAccept = this.handleAccept.bind(this);
+        this.afterClosedDialog = this.afterClosedDialog.bind(this);
+        this.showDialog = this.showDialog.bind(this);
+        this.hideDialog = this.hideDialog.bind(this);
 
 
-        this.dataSelectedAction = this.dataSelectedAction.bind(this);
         this.checkViewDeleteAction = this.checkViewDeleteAction.bind(this);
         this.checkViewEditAction = this.checkViewEditAction.bind(this);
     }
 
 
     componentDidMount() {
-        this.resetData({});
-        this.addListeners();
         this.loadData();
     }
 
     componentWillUnmount() {
         this.resetData();
-        this.removeListeners();
     }
 
     defaultState() {
@@ -54,13 +49,14 @@ class Page extends React.Component {
             dataFiltered: [],
             dataSelected: undefined,
             isFocused: false,
-            inputSearch: ''
+            inputSearch: '',
+            dialog: {
+                create: false,
+                edit: false,
+                remove: false
+            }
         };
     }
-
-    addListeners() { }
-
-    removeListeners() { }
 
     resetData(override = {}) {
         this.updateState({
@@ -77,9 +73,7 @@ class Page extends React.Component {
         e?.stopPropagation();
         this.updateState({ loading: true });
         filter(null).then(result => {
-
             result.results.sort((a, b) => (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0));
-
             this.updateState({
                 data: result.results,
                 dataFiltered: result.results,
@@ -95,6 +89,24 @@ class Page extends React.Component {
 
     loadMoreData(e) {
 
+    }
+
+    showDialog(key, item = null) {
+        this.updateState({ dataSelected: item });
+        setTimeout(() => {
+            Object.keys(this.state.dialog).forEach(p => {
+                this.state.dialog[p] = false;
+            });
+            this.state.dialog[key] = true;
+            this.updateState({ dialog: this.state.dialog });
+        }, 100);
+    }
+
+    hideDialog() {
+        Object.keys(this.state.dialog).forEach(p => {
+            this.state.dialog[p] = false;
+        });
+        this.updateState({ dialog: this.state.dialog });
     }
 
     validateForm(key) { }
@@ -123,18 +135,11 @@ class Page extends React.Component {
         this.setState({ ...payload }, () => this.propagateState());
     }
 
-    handleGoBack() {
-
+    afterClosedDialog(reloadData = false) {
+        if (reloadData === true) {
+            this.loadData();
+        }
     }
-
-    handleAccept() {
-        this.loadData();
-    }
-
-    dataSelectedAction(e, item) {
-        this.updateState({ dataSelected: item });
-    }
-
 
     checkViewDeleteAction(recordStatus) {
         const key = findStatusById(recordStatus).id;
@@ -159,15 +164,14 @@ class Page extends React.Component {
                                     <div className='btn-create-customer'>
                                         <ButtonIcon type="button"
                                             className="btn icon btn-primary-custom btn-create-customer"
-                                            onClick={this.loadData}>
+                                            onClick={() => this.loadData()}>
                                             <i className="fa-solid fa-rotate-right"></i>
                                         </ButtonIcon>
 
                                         <ButtonIcon type="button"
                                             className="btn icon btn-primary-custom btn-create-customer"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#inlineFormCreateCustomer"
-                                            style={{ marginLeft: '5px' }}>
+                                            style={{ marginLeft: '5px' }}
+                                            onClick={() => this.showDialog('create')}>
                                             <i className="fa-solid fa-plus"></i>
                                         </ButtonIcon>
 
@@ -226,25 +230,16 @@ class Page extends React.Component {
                                                     return (<tr key={index}>
                                                         <td className="text-color">{item.firstName}</td>
                                                         <td className="text-color">{item.lastName}</td>
-                                                        <td className="text-color">{findDocumentTypeById(item.documentType).name}</td>
+                                                        <td className="text-color">{findDocumentTypeById(item.documentType)?.name || ""}</td>
                                                         <td className="text-color">{item.documentNumber}</td>
-                                                        <td><span className={buildAndGetClassStatus(item.recordStatus)}>{findStatusById(item.recordStatus).name}</span></td>
+                                                        <td><span className={buildAndGetClassStatus(item.recordStatus)}>{findStatusById(item.recordStatus)?.name || ""}</span></td>
                                                         <td>
-                                                            {this.checkViewEditAction(item.recordStatus) && (<a
-                                                                href="#"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#inlineFormEditCustomer"
-                                                                onClick={(e) => this.dataSelectedAction(e, item)} >
-                                                                <i className="fa-regular fa-pen-to-square primary-color" onClick={(e) => this.dataSelectedAction(e, item)}></i>
+                                                            {this.checkViewEditAction(item.recordStatus) && (<a href="#">
+                                                                <i className="fa-regular fa-pen-to-square primary-color" onClick={() => this.showDialog('edit', item)}></i>
                                                             </a>)}
 
-                                                            {this.checkViewDeleteAction(item.recordStatus) && (<a
-                                                                href="#"
-                                                                style={{ marginLeft: '15px' }}
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#inlineFormRemoveCustomer"
-                                                                onClick={(e) => this.dataSelectedAction(e, item)} >
-                                                                <i className="fa-solid fa-trash primary-color" onClick={(e) => this.dataSelectedAction(e, item)}></i>
+                                                            {this.checkViewDeleteAction(item.recordStatus) && (<a href="#" style={{ marginLeft: '15px' }}>
+                                                                <i className="fa-solid fa-trash primary-color" onClick={() => this.showDialog('remove', item)}></i>
                                                             </a>)}
                                                         </td>
                                                     </tr>);
@@ -269,27 +264,27 @@ class Page extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <CreateComponent
+                    {this.state.dialog.create && <CreateComponent
                         navigate={this.props.navigate}
                         location={this.props.location}
                         data={this.state.dataSelected}
                         addNotification={this.props.addNotification}
-                        handleGoBack={this.handleGoBack}
-                        handleAccept={this.handleAccept}></CreateComponent>
-                    <EditComponent
+                        afterClosedDialog={this.afterClosedDialog}
+                        hideDialog={this.hideDialog}></CreateComponent>}
+                    {this.state.dialog.edit && <EditComponent
                         navigate={this.props.navigate}
                         location={this.props.location}
                         data={this.state.dataSelected}
                         addNotification={this.props.addNotification}
-                        handleGoBack={this.handleGoBack}
-                        handleAccept={this.handleAccept}></EditComponent>
-                    <RemoveComponent
+                        afterClosedDialog={this.afterClosedDialog}
+                        hideDialog={this.hideDialog}></EditComponent>}
+                    {this.state.dialog.remove && <RemoveComponent
                         navigate={this.props.navigate}
                         location={this.props.location}
                         data={this.state.dataSelected}
                         addNotification={this.props.addNotification}
-                        handleGoBack={this.handleGoBack}
-                        handleAccept={this.handleAccept}></RemoveComponent>
+                        afterClosedDialog={this.afterClosedDialog}
+                        hideDialog={this.hideDialog}></RemoveComponent>}
                 </section>
             </Template>
 

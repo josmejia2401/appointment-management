@@ -20,12 +20,11 @@ class LocalComponent extends React.Component {
         this.updateState = this.updateState.bind(this);
         this.loadFirstData = this.loadFirstData.bind(this);
         this.loadData = this.loadData.bind(this);
-        this.addListeners = this.addListeners.bind(this);
-        this.removeListeners = this.removeListeners.bind(this);
+        this.showAccordion = this.showAccordion.bind(this);
+        this.hideAccordion = this.hideAccordion.bind(this);
 
         //own
         this.doModifyAction = this.doModifyAction.bind(this);
-        this.doGoBack = this.doGoBack.bind(this);
         this.buildAndGetStatus = this.buildAndGetStatus.bind(this);
 
     }
@@ -33,21 +32,11 @@ class LocalComponent extends React.Component {
 
     componentDidMount() {
         this.resetData({});
-        this.addListeners();
-        if (this.props.data) {
-            this.loadFirstData(this.props.data);
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.data !== prevProps.data) {
-            this.loadFirstData(this.props.data);
-        }
+        this.loadFirstData(this.props.data);
     }
 
     componentWillUnmount() {
         this.resetData();
-        this.removeListeners();
     }
 
     defaultState() {
@@ -109,32 +98,13 @@ class LocalComponent extends React.Component {
                     value: '',
                     errors: []
                 }
+            },
+            accordion: {
+                item1: false,
             }
         };
     }
 
-    addListeners() {
-        window.addEventListener('click', (e) => {
-            const target = e.target || e.currentTarget;
-            const buttonTarget = target.parentElement.parentElement || target.parentElement;
-            const id = buttonTarget.id;
-            if (["btnCustomerEditNOKId", "btnCustomerEditCloseId", "btnCustomerEditCloseTagIId"].includes(id)) {
-                this.doGoBack();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            const key = e.key;
-            if (key === "Escape") {
-                this.doGoBack();
-            }
-        });
-    }
-
-    removeListeners() {
-        window.removeEventListener('click', () => { });
-        window.removeEventListener('keydown', () => { });
-    }
 
     resetData(override = {}) {
         this.updateState({
@@ -148,7 +118,6 @@ class LocalComponent extends React.Component {
             element.reset();
         }
     }
-
 
     loadFirstData(dataFirst) {
         if (Utils.isEmpty(dataFirst)) {
@@ -166,6 +135,12 @@ class LocalComponent extends React.Component {
         data.email.value = dataFirst.email;
         data.phoneNumber.value = dataFirst.phoneNumber;
         data.birthday.value = dataFirst.birthday;
+
+
+        data.maritalStatus.value = dataFirst.maritalStatus;
+        data.occupation.value = dataFirst.occupation;
+        data.address.value = dataFirst.address;
+        data.notes.value = dataFirst.notes;
 
         this.updateState({ data });
     }
@@ -200,7 +175,6 @@ class LocalComponent extends React.Component {
     }
 
 
-
     doModifyAction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -218,9 +192,7 @@ class LocalComponent extends React.Component {
             update(this.state.data.id.value, data).then(_result => {
                 form.reset();
                 this.updateState({ loading: false, isSuccessfullyCreation: true })
-                if (this.props.handleAccept) {
-                    this.props.handleAccept();
-                }
+                this.props.afterClosedDialog(true);
             }).catch(err => {
                 console.log(err.fileName, err);
                 this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
@@ -231,35 +203,41 @@ class LocalComponent extends React.Component {
     }
 
 
-    doGoBack(e) {
-        this.resetData();
-        if (this.props.handleGoBack) {
-            this.props.handleGoBack();
-        }
-        document.getElementById("btnCustomerEditNOKId").click();
+    showAccordion(key) {
+        const realStatus = !this.state.accordion[key];
+        Object.keys(this.state.accordion).forEach(p => {
+            this.state.accordion[p] = false;
+        });
+        this.state.accordion[key] = realStatus;
+        this.updateState({ accordion: this.state.accordion });
     }
+
+    hideAccordion() {
+        Object.keys(this.state.accordion).forEach(p => {
+            this.state.accordion[p] = false;
+        });
+        this.updateState({ accordion: this.state.accordion });
+    }
+
 
     render() {
         return (
-            <div className="modal fade text-left"
-                id="inlineFormEditCustomer"
+            <div className="modal fade text-left show"
+                style={{ display: 'block' }}
                 tabIndex="-1" r
                 ole="dialog"
-                aria-labelledby="modalLabelEdit"
                 aria-hidden="true"
                 data-keyboard="false"
                 data-backdrop="static"
                 data-bs-backdrop="static"
                 data-bs-keyboard="false">
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-xl"
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl"
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id='myModalLabel33'>Modificar un cliente</h4>
-                            <button type="button" className="close btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"
-                                id="btnCustomerCreateCloseId">
-                                <i data-feather="x" id="btnCustomerCreateCloseTagIId"></i>
+                            <h4 className="modal-title">Modificar un cliente</h4>
+                            <button type="button" className="close btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.props.hideDialog}>
+                                <i data-feather="x"></i>
                             </button>
                         </div>
                         <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
@@ -285,10 +263,10 @@ class LocalComponent extends React.Component {
                                             <div className="card">
                                                 <div className="card-content">
                                                     <div className="card-body">
-                                                        
 
 
-                                                    <div className="row">
+
+                                                        <div className="row">
                                                             <div className="col-12 col-md-6">
                                                                 <div className="form-group mandatory">
                                                                     <label htmlFor="firstName" className="form-label">Nombres</label>
@@ -326,7 +304,7 @@ class LocalComponent extends React.Component {
                                                                         className="form-control"
                                                                         placeholder="Ingrese sus apellidos"
                                                                         name="lastName"
-                                                                        required={false}
+                                                                        required={true}
                                                                         value={this.state.data.lastName.value}
                                                                         onChange={(event) => this.setChangeInputEvent('lastName', event)}
                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}
@@ -415,19 +393,14 @@ class LocalComponent extends React.Component {
 
 
 
-
-
-
-
-
-                                                        <div className="accordion" id="accordionExample" style={{ marginTop: '15px' }}>
+                                                        <div className="accordion" style={{ marginTop: '15px' }}>
                                                             <div className="accordion-item">
-                                                                <h2 className="accordion-header" id="headingOne">
-                                                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                                <h2 className="accordion-header" onClick={() => this.showAccordion('item1')}>
+                                                                    <button className={`${this.state.accordion.item1 !== true ? 'collapsed' : ''} accordion-button`} type="button">
                                                                         Información adicional
                                                                     </button>
                                                                 </h2>
-                                                                <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                                <div id="collapseOne" className={`${this.state.accordion.item1 === true ? 'show' : ''} accordion-collapse collapse`}>
                                                                     <div className="accordion-body">
                                                                         <div className="row">
                                                                             <div className="col-12 col-md-6">
@@ -438,6 +411,7 @@ class LocalComponent extends React.Component {
                                                                                         id="documentType"
                                                                                         name='documentType'
                                                                                         value={this.state.data.documentType.value}
+                                                                                        required={false}
                                                                                         onChange={(event) => this.setChangeInputEvent('documentType', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}>
                                                                                         <option value={null}>Seleccionar...</option>
@@ -467,7 +441,7 @@ class LocalComponent extends React.Component {
                                                                                         className="form-control"
                                                                                         placeholder="Ingrese su número de documento"
                                                                                         name="documentNumber"
-                                                                                        required={true}
+                                                                                        required={false}
                                                                                         value={this.state.data.documentNumber.value}
                                                                                         onChange={(event) => this.setChangeInputEvent('documentNumber', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}
@@ -499,7 +473,7 @@ class LocalComponent extends React.Component {
                                                                                         id="gender"
                                                                                         name='gender'
                                                                                         value={this.state.data.gender.value}
-                                                                                        required={true}
+                                                                                        required={false}
                                                                                         onChange={(event) => this.setChangeInputEvent('gender', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}>
                                                                                         <option value={null}>Seleccionar...</option>
@@ -529,7 +503,7 @@ class LocalComponent extends React.Component {
                                                                                         className="form-control"
                                                                                         placeholder="Ingrese su fecha de nacimiento"
                                                                                         name="birthday"
-                                                                                        required={true}
+                                                                                        required={false}
                                                                                         value={this.state.data.birthday.value}
                                                                                         onChange={(event) => this.setChangeInputEvent('birthday', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}
@@ -559,7 +533,7 @@ class LocalComponent extends React.Component {
                                                                                         id="maritalStatus"
                                                                                         name='maritalStatus'
                                                                                         value={this.state.data.maritalStatus.value}
-                                                                                        required={true}
+                                                                                        required={false}
                                                                                         onChange={(event) => this.setChangeInputEvent('maritalStatus', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}>
                                                                                         <option value={null}>Seleccionar...</option>
@@ -589,7 +563,7 @@ class LocalComponent extends React.Component {
                                                                                         className="form-control"
                                                                                         placeholder="Ingrese su ocupación"
                                                                                         name="occupation"
-                                                                                        required={true}
+                                                                                        required={false}
                                                                                         value={this.state.data.occupation.value}
                                                                                         onChange={(event) => this.setChangeInputEvent('occupation', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}
@@ -621,7 +595,7 @@ class LocalComponent extends React.Component {
                                                                                         className="form-control"
                                                                                         placeholder="Ingrese su dirección"
                                                                                         name="address"
-                                                                                        required={true}
+                                                                                        required={false}
                                                                                         value={this.state.data.address.value}
                                                                                         onChange={(event) => this.setChangeInputEvent('address', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}
@@ -651,7 +625,7 @@ class LocalComponent extends React.Component {
                                                                                         className="form-control"
                                                                                         placeholder="Ingrese su ocupación"
                                                                                         name="notes"
-                                                                                        required={true}
+                                                                                        required={false}
                                                                                         value={this.state.data.notes.value}
                                                                                         onChange={(event) => this.setChangeInputEvent('notes', event)}
                                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}
@@ -691,7 +665,7 @@ class LocalComponent extends React.Component {
                                 </section>
                             </div>
                             <div className="modal-footer">
-                                <ButtonSecondary id="btnCustomerEditNOKId" text={'Regresar'} type="button" data-bs-dismiss="modal"></ButtonSecondary>
+                                <ButtonSecondary id="btnCustomerEditNOKId" text={'Regresar'} type="button" onClick={this.props.hideDialog}></ButtonSecondary>
 
                                 <ButtonPrimary
                                     disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
