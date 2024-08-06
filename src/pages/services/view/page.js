@@ -7,6 +7,7 @@ import RemoveComponent from '../remove';
 import { buildAndGetClassStatus, findStatusById } from '../../../lib/list_values';
 import ButtonIcon from '../../../components/button-icon';
 import { filter } from '../../../api/services.services';
+import Utils from '../../../lib/utils';
 
 
 class Page extends React.Component {
@@ -50,6 +51,7 @@ class Page extends React.Component {
             dataSelected: undefined,
             isFocused: false,
             inputSearch: '',
+            lastEvaluatedKey: undefined,
             dialog: {
                 create: false,
                 edit: false,
@@ -74,11 +76,16 @@ class Page extends React.Component {
         this.updateState({ loading: true });
         filter(null).then(result => {
             result.results.sort((a, b) => (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0));
+            let thereIsMoreData = false;
+            if (!Utils.isEmpty(result.lastEvaluatedKey)) {
+                thereIsMoreData = true;
+            }
             this.updateState({
                 data: result.results,
                 dataFiltered: result.results,
                 loading: false,
-                thereIsMoreData: false,
+                thereIsMoreData: thereIsMoreData,
+                lastEvaluatedKey: result.lastEvaluatedKey
             });
         }).catch(err => {
             console.log(err.fileName, err);
@@ -88,7 +95,29 @@ class Page extends React.Component {
     }
 
     loadMoreData(e) {
-
+        e?.preventDefault();
+        e?.stopPropagation();
+        this.updateState({ loading: true });
+        filter(this.state.lastEvaluatedKey).then(result => {
+            result.results.sort((a, b) => (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0));
+            let thereIsMoreData = false;
+            if (!Utils.isEmpty(result.lastEvaluatedKey)) {
+                thereIsMoreData = true;
+            }
+            this.state.data.push(...result.results);
+            this.state.dataFiltered.push(...result.results);
+            this.updateState({
+                data: this.state.data,
+                dataFiltered: this.state.dataFiltered,
+                loading: false,
+                thereIsMoreData: thereIsMoreData,
+                lastEvaluatedKey: result.lastEvaluatedKey
+            });
+        }).catch(err => {
+            console.log(err.fileName, err);
+            this.updateState({ loading: false });
+            this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
+        });
     }
 
     showDialog(key, item = null) {
