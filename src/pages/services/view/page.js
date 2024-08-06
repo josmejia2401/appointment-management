@@ -153,7 +153,7 @@ class Page extends React.Component {
                 return false;
             });
         } else {
-            this.state.dataFiltered = this.state.data;
+            this.state.dataFiltered = this.state.data.map(clone => ({ ...clone }));
         }
         this.updateState({ inputSearch: this.state.inputSearch, dataFiltered: this.state.dataFiltered });
     }
