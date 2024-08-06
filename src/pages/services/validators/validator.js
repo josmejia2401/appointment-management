@@ -1,4 +1,4 @@
-import { findDocumentTypeById, findGenderById, findMaritalStatusById } from '../../../lib/list_values';
+import { findDocumentTypeById, findGenderById, findMaritalStatusById, findStatusById } from '../../../lib/list_values';
 import Utils from '../../../lib/utils';
 
 export default class Validator {
@@ -12,6 +12,8 @@ export default class Validator {
             case 'duration':
                 return Validator.validateDuration(value);
             case 'pricing':
+                return Validator.validatePricing(value);
+            case 'recordStatus':
                 return Validator.validatePricing(value);
             default:
                 break;
@@ -53,4 +55,13 @@ export default class Validator {
         return [];
     }
 
+    static validateRecordStatus(value) {
+        if (Utils.isEmpty(value)) {
+            return ['Campo es requerido.'];
+        }
+        if (!Utils.isEmpty(value) && Utils.isEmpty(findStatusById(value))) {
+            return ['Campo no es válido.'];
+        }
+        return [];
+    }
 }

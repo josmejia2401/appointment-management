@@ -98,13 +98,13 @@ class Page extends React.Component {
         e?.stopPropagation();
         this.updateState({ loading: true });
         filter(this.state.lastEvaluatedKey).then(result => {
-            result.results.sort((a, b) => (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0));
             let thereIsMoreData = false;
             if (!Utils.isEmpty(result.lastEvaluatedKey)) {
                 thereIsMoreData = true;
             }
             this.state.data.push(...result.results);
             this.state.dataFiltered.push(...result.results);
+            this.state.dataFiltered.sort((a, b) => (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0));
             this.updateState({
                 data: this.state.data,
                 dataFiltered: this.state.dataFiltered,

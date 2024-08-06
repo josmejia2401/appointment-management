@@ -205,8 +205,8 @@ class LocalComponent extends React.Component {
 
                                                         <div className="row">
                                                             <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="name" className="form-label">Nombre (*)</label>
+                                                                <div className="form-group mandatory required">
+                                                                    <label htmlFor="name" className="form-label control-label">Nombre</label>
                                                                     <input
                                                                         type="text"
                                                                         id="name"
@@ -232,8 +232,8 @@ class LocalComponent extends React.Component {
                                                             </div>
 
                                                             <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="recordStatus" className="form-label">Estado</label>
+                                                                <div className="form-group mandatory required">
+                                                                    <label htmlFor="recordStatus" className="form-label control-label">Estado</label>
                                                                     <select
                                                                         className="form-select"
                                                                         id="recordStatus"

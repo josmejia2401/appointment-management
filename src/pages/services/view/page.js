@@ -26,6 +26,7 @@ class Page extends React.Component {
         this.afterClosedDialog = this.afterClosedDialog.bind(this);
         this.showDialog = this.showDialog.bind(this);
         this.hideDialog = this.hideDialog.bind(this);
+        this.sortTableByColumn = this.sortTableByColumn.bind(this);
 
 
         this.checkViewDeleteAction = this.checkViewDeleteAction.bind(this);
@@ -52,6 +53,7 @@ class Page extends React.Component {
             isFocused: false,
             inputSearch: '',
             lastEvaluatedKey: undefined,
+            filterType: false,
             dialog: {
                 create: false,
                 edit: false,
@@ -99,7 +101,7 @@ class Page extends React.Component {
         e?.stopPropagation();
         this.updateState({ loading: true });
         filter(this.state.lastEvaluatedKey).then(result => {
-            result.results.sort((a, b) => (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0));
+
             let thereIsMoreData = false;
             if (!Utils.isEmpty(result.lastEvaluatedKey)) {
                 thereIsMoreData = true;
@@ -180,6 +182,53 @@ class Page extends React.Component {
         return [1, 2].includes(key);
     }
 
+    sortTableByColumn(columnName) {
+        switch (columnName) {
+            case 'name':
+                this.state.dataFiltered.sort((a, b) => {
+                    if (this.state.filterType === true) {
+                        return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);
+                    } else {
+                        return (a.name < b.name) ? 1 : ((b.name < a.name) ? -1 : 0)
+                    }
+                });
+                break;
+            case 'recordStatus':
+                this.state.dataFiltered.sort((a, b) => {
+                    if (this.state.filterType === true) {
+                        return (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0);
+                    } else {
+                        return (a.recordStatus < b.recordStatus) ? 1 : ((b.recordStatus < a.recordStatus) ? -1 : 0)
+                    }
+                });
+                break;
+            case 'pricing':
+                this.state.dataFiltered.sort((a, b) => {
+                    if (this.state.filterType === true) {
+                        return (a.pricing > b.pricing) ? 1 : ((b.pricing > a.pricing) ? -1 : 0);
+                    } else {
+                        return (a.pricing < b.pricing) ? 1 : ((b.pricing < a.pricing) ? -1 : 0)
+                    }
+                });
+                break;
+            case 'duration':
+                this.state.dataFiltered.sort((a, b) => {
+                    if (this.state.filterType === true) {
+                        return (a.duration > b.duration) ? 1 : ((b.duration > a.duration) ? -1 : 0);
+                    } else {
+                        return (a.duration < b.duration) ? 1 : ((b.duration < a.duration) ? -1 : 0)
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+        this.updateState({
+            dataFiltered: this.state.dataFiltered,
+            filterType: !this.state.filterType
+        });
+    }
+
     render() {
         return (
             <Template title={'Servicios'} navigate={this.props.navigate} location={this.props.location}>
@@ -227,11 +276,11 @@ class Page extends React.Component {
                                                     </th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Nombre</th>
+                                                    <th><b>Nombre</b> <i className="fa fa-fw fa-sort" onClick={() => this.sortTableByColumn('name')}></i></th>
                                                     <th>Descripción</th>
-                                                    <th>Duración</th>
-                                                    <th>Precio</th>
-                                                    <th>Estado</th>
+                                                    <th><b>Duración</b> <i className="fa fa-fw fa-sort" onClick={() => this.sortTableByColumn('duration')}></i></th>
+                                                    <th><b>Precio</b> <i className="fa fa-fw fa-sort" onClick={() => this.sortTableByColumn('pricing')}></i></th>
+                                                    <th><b>Estado</b> <i className="fa fa-fw fa-sort" onClick={() => this.sortTableByColumn('recordStatus')}></i></th>
                                                     <th>Acción</th>
                                                 </tr>
                                             </thead>

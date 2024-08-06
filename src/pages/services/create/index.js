@@ -181,8 +181,8 @@ class LocalComponent extends React.Component {
                                                     <div className="card-body">
                                                         <div className="row">
                                                             <div className="col-12 col-md-12">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="name" className="form-label">Nombre (*)</label>
+                                                                <div className="form-group mandatory required">
+                                                                    <label htmlFor="name" className="form-label control-label">Nombre</label>
                                                                     <input
                                                                         type="text"
                                                                         id="name"

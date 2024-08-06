@@ -262,8 +262,8 @@ class LocalComponent extends React.Component {
 
                                                         <div className="row">
                                                             <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="firstName" className="form-label">Nombres</label>
+                                                                <div className="form-group mandatory required">
+                                                                    <label htmlFor="firstName" className="form-label control-label">Nombres</label>
                                                                     <input
                                                                         type="text"
                                                                         id="firstName"
@@ -290,8 +290,8 @@ class LocalComponent extends React.Component {
                                                             </div>
 
                                                             <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="lastName" className="form-label">Apellidos</label>
+                                                                <div className="form-group mandatory required">
+                                                                    <label htmlFor="lastName" className="form-label control-label">Apellidos</label>
                                                                     <input
                                                                         type="text"
                                                                         id="lastName"
@@ -617,7 +617,7 @@ class LocalComponent extends React.Component {
                                                                                     <textarea
                                                                                         id="notes"
                                                                                         className="form-control"
-                                                                                        placeholder="Ingrese su ocupación"
+                                                                                        placeholder="Ingrese una nota"
                                                                                         name="notes"
                                                                                         required={false}
                                                                                         value={this.state.data.notes.value}
