@@ -1,13 +1,12 @@
 import * as React from 'react';
 import "./styles.css";
-import { buildPayload } from '../../../lib/form';
 import Utils from '../../../lib/utils';
-import Validator from './validators/validator';
+import Validator from '../validators/validator';
 import ButtonPrimary from '../../../components/button-primary';
 import ButtonSecondary from '../../../components/button-secondary';
-import { status } from '../../../lib/list_values';
-import { getTokenInfo } from '../../../api/api.common';
 import { associateEmployee } from '../../../api/users.services';
+import { getTokenInfo } from '../../../api/api.common';
+import { buildPayload } from '../../../lib/form';
 
 class LocalComponent extends React.Component {
 
@@ -21,34 +20,21 @@ class LocalComponent extends React.Component {
         this.updateState = this.updateState.bind(this);
         this.loadFirstData = this.loadFirstData.bind(this);
         this.loadData = this.loadData.bind(this);
-        this.addListeners = this.addListeners.bind(this);
-        this.removeListeners = this.removeListeners.bind(this);
+
 
         //own
         this.doModifyAction = this.doModifyAction.bind(this);
-        this.doGoBack = this.doGoBack.bind(this);
-        this.buildAndGetStatus = this.buildAndGetStatus.bind(this);
 
     }
 
 
     componentDidMount() {
         this.resetData({});
-        this.addListeners();
-        if (this.props.data) {
-            this.loadFirstData(this.props.data);
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.data !== prevProps.data) {
-            this.loadFirstData(this.props.data);
-        }
+        this.loadFirstData(this.props.data);
     }
 
     componentWillUnmount() {
         this.resetData();
-        this.removeListeners();
     }
 
     defaultState() {
@@ -73,57 +59,30 @@ class LocalComponent extends React.Component {
                 username: {
                     value: '',
                     errors: []
-                },
+                }
             }
         };
     }
 
-    addListeners() {
-        window.addEventListener('click', (e) => {
-            const target = e.target || e.currentTarget;
-            const buttonTarget = target.parentElement.parentElement || target.parentElement;
-            const id = buttonTarget.id;
-            if (["btnTeamRemoveNOKId", "btnTeamRemoveCloseId", "btnTeamRemoveCloseTagIId"].includes(id)) {
-                this.doGoBack();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            const key = e.key;
-            if (key === "Escape") {
-                this.doGoBack();
-            }
-        });
-    }
-
-    removeListeners() {
-        window.removeEventListener('click', () => { });
-        window.removeEventListener('keydown', () => { });
-    }
 
     resetData(override = {}) {
         this.updateState({
             ...this.defaultState(),
             ...override
         });
-
-        const element = document.getElementById("formTeamRemoveId");
-        if (element) {
-            element.classList.remove("was-validated");
-            element.reset();
-        }
     }
-
 
     loadFirstData(dataFirst) {
         if (Utils.isEmpty(dataFirst)) {
             return;
         }
         const { data } = this.state;
+
         data.id.value = dataFirst.id;
         data.firstName.value = dataFirst.firstName;
         data.lastName.value = dataFirst.lastName;
         data.username.value = dataFirst.username;
+
         this.updateState({ data });
     }
 
@@ -152,12 +111,6 @@ class LocalComponent extends React.Component {
         this.setState({ ...payload }, () => this.propagateState());
     }
 
-    buildAndGetStatus() {
-        return status.filter(p => [1, 2].includes(p.id));
-    }
-
-
-
     doModifyAction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -165,15 +118,13 @@ class LocalComponent extends React.Component {
         const isValid = form.checkValidity();
         if (isValid === true) {
             const userInfo = getTokenInfo();
-            this.updateState({ loading: true, errorMessage: undefined });
+            this.updateState({ loading: true });
             const data = buildPayload(form, { username: this.state.data.username.value, recordStatus: 4 });
             data.recordStatus = 4;
             associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
                 this.updateState({ loading: false, isSuccessfullyCreation: true });
-                if (this.props.handleAccept) {
-                    this.props.handleAccept();
-                }
+                this.props.afterClosedDialog(true);
             }).catch(err => {
                 console.log(err.fileName, err);
                 this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
@@ -184,20 +135,12 @@ class LocalComponent extends React.Component {
     }
 
 
-    doGoBack(e) {
-        this.resetData();
-        if (this.props.handleGoBack) {
-            this.props.handleGoBack();
-        }
-    }
-
     render() {
         return (
-            <div className="modal fade text-left"
-                id="inlineFormRemoveTeam"
+            <div className="modal fade text-left show"
+                style={{ display: 'block' }}
                 tabIndex="-1"
                 role="dialog"
-                aria-labelledby="modalLabelRemove"
                 aria-hidden="true"
                 data-keyboard="false"
                 data-backdrop="static"
@@ -207,18 +150,17 @@ class LocalComponent extends React.Component {
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title" id="modalLabelRemove">Eliminar integrante</h4>
-                            <button type="button" className="close btn-close" data-bs-dismiss="modal"
-                                aria-label="Close" id="btnTeamRemoveCloseId">
-                                <i data-feather="x" id='btnTeamRemoveCloseTagIId'></i>
+                            <h4 className="modal-title">Eliminar un empleado</h4>
+                            <button type="button" className="close btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.props.hideDialog}>
+                                <i data-feather="x"></i>
                             </button>
                         </div>
-                        <form id="formTeamRemoveId" className="needs-validation" onSubmit={this.doModifyAction} noValidate>
+                        <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
 
                             {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    ¡Usuario eliminado!
+                                    Eliminación exitosa!
                                 </div>
                             </div>}
 
@@ -234,28 +176,34 @@ class LocalComponent extends React.Component {
                                     <div className="row match-height">
                                         <div className="col-12">
                                             <div className="card">
+
                                                 <div className="card-header">
                                                     <div style={{ flexDirection: "column" }}>
-                                                        <h4 className="card-title">Precondiciones</h4>
-                                                        <h6>El usuario debe estar en estado PENDIENTE, ACTIVO O INACTIVO.</h6>
+                                                        <h4 className="card-title">IMPORTANTE</h4>
+                                                        <h6>Se realizará un eliminado lógico.</h6>
+                                                        <h6>NO se volverá a ver en procesos o asignaciones.</h6>
                                                     </div>
                                                 </div>
+
                                                 <div className="card-content">
                                                     <div className="card-body">
+
+
+
                                                         <div className="row">
-                                                            <div className="col-md-6 col-12">
+                                                            <div className="col-12 col-md-6">
                                                                 <div className="form-group mandatory">
                                                                     <label htmlFor="firstName" className="form-label">Nombres</label>
                                                                     <input
                                                                         type="text"
                                                                         id="firstName"
                                                                         className="form-control"
-                                                                        placeholder="Nombres"
+                                                                        placeholder="Ingrese su nombre"
                                                                         name="firstName"
                                                                         required={true}
                                                                         value={this.state.data.firstName.value}
+                                                                        onChange={(event) => this.setChangeInputEvent('firstName', event)}
                                                                         disabled={true}
-                                                                        autoFocus={true}
                                                                         autoComplete='off'
                                                                     />
 
@@ -269,17 +217,19 @@ class LocalComponent extends React.Component {
 
                                                                 </div>
                                                             </div>
-                                                            <div className="col-md-6 col-12">
-                                                                <div className="form-group">
+
+                                                            <div className="col-12 col-md-6">
+                                                                <div className="form-group mandatory">
                                                                     <label htmlFor="lastName" className="form-label">Apellidos</label>
                                                                     <input
                                                                         type="text"
                                                                         id="lastName"
                                                                         className="form-control"
-                                                                        placeholder="Apellidos"
+                                                                        placeholder="Ingrese sus apellidos"
                                                                         name="lastName"
                                                                         required={true}
                                                                         value={this.state.data.lastName.value}
+                                                                        onChange={(event) => this.setChangeInputEvent('lastName', event)}
                                                                         disabled={true}
                                                                         autoComplete='off'
                                                                     />
@@ -296,6 +246,8 @@ class LocalComponent extends React.Component {
                                                             </div>
 
                                                         </div>
+
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -304,25 +256,15 @@ class LocalComponent extends React.Component {
                                 </section>
                             </div>
                             <div className="modal-footer">
-
-                                <ButtonSecondary
-                                    id='btnTeamRemoveNOKId'
-                                    name='btnTeamRemoveNOKId'
-                                    key='btnTeamRemoveNOKId'
-                                    text={'Regresar'}
-                                    type="button"
-                                    data-bs-dismiss="modal"
-                                ></ButtonSecondary>
+                                <ButtonSecondary id="btnCustomerEditNOKId" text={'Regresar'} type="button" onClick={this.props.hideDialog}></ButtonSecondary>
 
                                 <ButtonPrimary
-                                    id='btnTeamEditOKId'
-                                    name='btnTeamEditOKId'
-                                    key='btnTeamEditOKId'
                                     disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
                                     className="btn-block btn-lg background-color-primary"
                                     type='submit'
                                     loading={this.state.loading}
-                                    showText={false}
+                                    showText={true}
+                                    textLoading={'Eliminando...'}
                                     text='Eliminar'
                                 />
                             </div>

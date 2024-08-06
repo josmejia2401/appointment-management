@@ -171,7 +171,7 @@ class LocalComponent extends React.Component {
                                                     <div style={{ flexDirection: "column" }}>
                                                         <h4 className="card-title">IMPORTANTE</h4>
                                                         <h6>Se realizará un eliminado lógico.</h6>
-                                                        <h6>NO se volverá a ver el cliente en procesos o asignaciones.</h6>
+                                                        <h6>NO se volverá a ver en procesos o asignaciones.</h6>
                                                     </div>
                                                 </div>
 
