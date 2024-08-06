@@ -264,23 +264,23 @@ class Page extends React.Component {
                             </div>
                         </div>
                     </div>
-                    {this.state.dialog.create && <CreateComponent
+                    {this.state.dialog.create === true && <CreateComponent
                         navigate={this.props.navigate}
                         location={this.props.location}
                         data={this.state.dataSelected}
                         addNotification={this.props.addNotification}
                         afterClosedDialog={this.afterClosedDialog}
                         hideDialog={this.hideDialog}></CreateComponent>}
-                    {this.state.dialog.edit && <EditComponent
+                    {this.state.dialog.edit === true && <EditComponent
                         navigate={this.props.navigate}
                         location={this.props.location}
                         data={this.state.dataSelected}
                         addNotification={this.props.addNotification}
                         afterClosedDialog={this.afterClosedDialog}
                         hideDialog={this.hideDialog}></EditComponent>}
-                    {this.state.dialog.remove && <RemoveComponent
-                        navigate={this.props.navigate}
-                        location={this.props.location}
+                    {this.state.dialog.remove === true && <RemoveComponent
+                        $navigate={this.props.navigate}
+                        $location={this.props.location}
                         data={this.state.dataSelected}
                         addNotification={this.props.addNotification}
                         afterClosedDialog={this.afterClosedDialog}

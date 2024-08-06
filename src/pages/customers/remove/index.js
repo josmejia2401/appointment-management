@@ -64,12 +64,6 @@ class LocalComponent extends React.Component {
             ...this.defaultState(),
             ...override
         });
-
-        const element = document.getElementById("formCustomerEditId");
-        if (element) {
-            element.classList.remove("was-validated");
-            element.reset();
-        }
     }
 
     loadFirstData(dataFirst) {
@@ -135,8 +129,8 @@ class LocalComponent extends React.Component {
         return (
             <div className="modal fade text-left show"
                 style={{ display: 'block' }}
-                tabIndex="-1" r
-                ole="dialog"
+                tabIndex="-1"
+                role="dialog"
                 aria-hidden="true"
                 data-keyboard="false"
                 data-backdrop="static"

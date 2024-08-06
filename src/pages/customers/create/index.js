@@ -105,12 +105,6 @@ class LocalComponent extends React.Component {
             ...this.defaultState(),
             ...override
         });
-
-        const element = document.getElementById("formCustomerCreateId");
-        if (element) {
-            element.classList.remove("was-validated");
-            element.reset();
-        }
     }
 
 

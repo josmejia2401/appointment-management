@@ -111,12 +111,6 @@ class LocalComponent extends React.Component {
             ...this.defaultState(),
             ...override
         });
-
-        const element = document.getElementById("formCustomerEditId");
-        if (element) {
-            element.classList.remove("was-validated");
-            element.reset();
-        }
     }
 
     loadFirstData(dataFirst) {
@@ -224,8 +218,8 @@ class LocalComponent extends React.Component {
         return (
             <div className="modal fade text-left show"
                 style={{ display: 'block' }}
-                tabIndex="-1" r
-                ole="dialog"
+                tabIndex="-1" 
+                role="dialog"
                 aria-hidden="true"
                 data-keyboard="false"
                 data-backdrop="static"
@@ -242,14 +236,14 @@ class LocalComponent extends React.Component {
                         </div>
                         <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
 
-                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
+                            {this.state.isSuccessfullyCreation === true && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
                                     Actualización exitosa!
                                 </div>
                             </div>}
 
-                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                            {this.state.errorMessage !== '' && <div className="alert alert-danger d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
                                     {this.state.errorMessage}

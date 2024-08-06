@@ -24,7 +24,7 @@ class Component extends React.Component {
 
             {loading && (<div>
                 <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                <span className={`${showText ? 'visually-hidden' : ''}`} role="status" style={{ marginLeft: '5px' }}>{textLoading}</span>
+                <span className={`${showText === true ? 'visually-hidden' : ''}`} role="status" style={{ marginLeft: '5px' }}>{textLoading}</span>
             </div>)}
 
             {!loading && (<div>
