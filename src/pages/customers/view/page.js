@@ -26,6 +26,7 @@ class Page extends React.Component {
         this.afterClosedDialog = this.afterClosedDialog.bind(this);
         this.showDialog = this.showDialog.bind(this);
         this.hideDialog = this.hideDialog.bind(this);
+        this.sortTableByColumn = this.sortTableByColumn.bind(this);
 
 
         this.checkViewDeleteAction = this.checkViewDeleteAction.bind(this);
@@ -179,6 +180,35 @@ class Page extends React.Component {
         return [1, 2].includes(key);
     }
 
+    sortTableByColumn(columnName) {
+        switch (columnName) {
+            case 'firstName':
+                this.state.dataFiltered.sort((a, b) => {
+                    if (this.state.filterType === true) {
+                        return (a.firstName > b.firstName) ? 1 : ((b.firstName > a.firstName) ? -1 : 0);
+                    } else {
+                        return (a.firstName < b.firstName) ? 1 : ((b.firstName < a.firstName) ? -1 : 0)
+                    }
+                });
+                break;
+            case 'recordStatus':
+                this.state.dataFiltered.sort((a, b) => {
+                    if (this.state.filterType === true) {
+                        return (a.recordStatus > b.recordStatus) ? 1 : ((b.recordStatus > a.recordStatus) ? -1 : 0);
+                    } else {
+                        return (a.recordStatus < b.recordStatus) ? 1 : ((b.recordStatus < a.recordStatus) ? -1 : 0)
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+        this.updateState({
+            dataFiltered: this.state.dataFiltered,
+            filterType: !this.state.filterType
+        });
+    }
+
     render() {
         return (
             <Template title={'Clientes'} navigate={this.props.navigate} location={this.props.location}>
@@ -230,11 +260,11 @@ class Page extends React.Component {
                                                     </th>
                                                 </tr>
                                                 <tr>
-                                                    <th>Nombres</th>
+                                                    <th><b>Nombres</b> <i className="fa fa-fw fa-sort" onClick={() => this.sortTableByColumn('firstName')}></i></th>
                                                     <th>Apellidos</th>
                                                     <th>Tipo documento</th>
                                                     <th>Número de documento</th>
-                                                    <th>Estado</th>
+                                                    <th><b>Estado</b> <i className="fa fa-fw fa-sort" onClick={() => this.sortTableByColumn('recordStatus')}></i></th>
                                                     <th>Acción</th>
                                                 </tr>
                                             </thead>
