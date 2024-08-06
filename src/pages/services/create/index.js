@@ -223,7 +223,7 @@ class LocalComponent extends React.Component {
                                                                         type="number"
                                                                         id="duration"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese su celular"
+                                                                        placeholder="Ingrese la duración"
                                                                         name="duration"
                                                                         required={false}
                                                                         value={this.state.data.duration.value}

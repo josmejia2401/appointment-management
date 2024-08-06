@@ -26,8 +26,8 @@ export default class Validator {
         if (String(value).length < 2) {
             return ['Campo debe tener mínimo 2 caracteres.'];
         }
-        if (String(value).length > 100) {
-            return ['Campo debe tener máximo 100 caracteres.'];
+        if (String(value).length > 50) {
+            return ['Campo debe tener máximo 50 caracteres.'];
         }
         return [];
     }
