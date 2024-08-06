@@ -84,7 +84,7 @@ class Page extends React.Component {
             }
             this.updateState({
                 data: result.results,
-                dataFiltered: result.results,
+                dataFiltered: result.results.map(clone => ({ ...clone })),
                 loading: false,
                 thereIsMoreData: thereIsMoreData,
                 lastEvaluatedKey: result.lastEvaluatedKey

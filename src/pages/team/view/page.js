@@ -82,7 +82,7 @@ class Page extends React.Component {
             const data = result.filter(p => [1, 2, 3].includes(p.recordStatus));
             this.updateState({
                 data: data,
-                dataFiltered: data,
+                dataFiltered: data.map(clone => ({ ...clone })),
                 loading: false,
                 thereIsMoreData: false,
             });
