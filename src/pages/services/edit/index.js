@@ -158,23 +158,6 @@ class LocalComponent extends React.Component {
     }
 
 
-    showAccordion(key) {
-        const realStatus = !this.state.accordion[key];
-        Object.keys(this.state.accordion).forEach(p => {
-            this.state.accordion[p] = false;
-        });
-        this.state.accordion[key] = realStatus;
-        this.updateState({ accordion: this.state.accordion });
-    }
-
-    hideAccordion() {
-        Object.keys(this.state.accordion).forEach(p => {
-            this.state.accordion[p] = false;
-        });
-        this.updateState({ accordion: this.state.accordion });
-    }
-
-
     render() {
         return (
             <div className="modal fade text-left show"
@@ -260,7 +243,7 @@ class LocalComponent extends React.Component {
                                                                         onChange={(event) => this.setChangeInputEvent('recordStatus', event)}
                                                                         disabled={this.state.loading || this.state.isSuccessfullyCreation}>
                                                                         <option value={null}>Seleccionar...</option>
-                                                                        {status.map((item, index) => {
+                                                                        {this.buildAndGetStatus().map((item, index) => {
                                                                             return (<option value={item.id} key={index}>{item.name}</option>);
                                                                         })}
                                                                     </select>
