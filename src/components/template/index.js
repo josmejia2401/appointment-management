@@ -116,7 +116,7 @@ class Page extends React.Component {
                                             data-bs-toggle="collapse"
                                             className={`nav-link px-0 align-middle ${this.state.selectedId === item.id ? 'li-active' : ''}`}
                                             onClick={(e) => this.onSelectOption(e, item.id)}>
-                                            <i className={`fa-solid ${item.icon} i-icon ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`}></i>
+                                            <i className={`fa-solid ${item.icon} i-icon ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`} style={{ marginLeft: '5px'}}></i>
                                             <span className={`d-none d-sm-inline  ${this.state.selectedId === item.id ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>{item.name}</span>
                                             {item.children && item.children.length > 0 && <i className={`fa-solid fa-angle-down ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'fa-solid fa-angle-down sidebar-icon-color'}`} style={{ marginLeft: '5px' }}></i>}
                                         </a>
