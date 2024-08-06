@@ -243,7 +243,7 @@ class LocalComponent extends React.Component {
                                 </div>
                             </div>}
 
-                            {this.state.errorMessage !== '' && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
                                     {this.state.errorMessage}
