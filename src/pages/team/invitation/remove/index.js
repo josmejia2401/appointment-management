@@ -1,13 +1,12 @@
 import * as React from 'react';
 import "./styles.css";
-import { buildPayload } from '../../../lib/form';
-import Utils from '../../../lib/utils';
+import Utils from '../../../../lib/utils';
 import Validator from '../validators/validator';
-import ButtonPrimary from '../../../components/button-primary';
-import ButtonSecondary from '../../../components/button-secondary';
-import { status } from '../../../lib/list_values';
-import { associateEmployee } from '../../../api/users.services';
-import { getTokenInfo } from '../../../api/api.common';
+import ButtonPrimary from '../../../../components/button-primary';
+import ButtonSecondary from '../../../../components/button-secondary';
+import { associateEmployee } from '../../../../api/users.services';
+import { getTokenInfo } from '../../../../api/api.common';
+import { buildPayload } from '../../../../lib/form';
 
 class LocalComponent extends React.Component {
 
@@ -22,9 +21,9 @@ class LocalComponent extends React.Component {
         this.loadFirstData = this.loadFirstData.bind(this);
         this.loadData = this.loadData.bind(this);
 
+
         //own
         this.doModifyAction = this.doModifyAction.bind(this);
-        this.buildAndGetStatus = this.buildAndGetStatus.bind(this);
 
     }
 
@@ -41,7 +40,7 @@ class LocalComponent extends React.Component {
     defaultState() {
         return {
             loading: false,
-            isValidForm: false,
+            isValidForm: true,
             errorMessage: '',
             isSuccessfullyCreation: false,
             data: {
@@ -60,12 +59,8 @@ class LocalComponent extends React.Component {
                 username: {
                     value: '',
                     errors: []
-                },
-                recordStatus: {
-                    value: '',
-                    errors: []
-                },
-            },
+                }
+            }
         };
     }
 
@@ -87,7 +82,6 @@ class LocalComponent extends React.Component {
         data.firstName.value = dataFirst.firstName;
         data.lastName.value = dataFirst.lastName;
         data.username.value = dataFirst.username;
-        data.recordStatus.value = dataFirst.recordStatus;
 
         this.updateState({ data });
     }
@@ -117,24 +111,19 @@ class LocalComponent extends React.Component {
         this.setState({ ...payload }, () => this.propagateState());
     }
 
-    buildAndGetStatus() {
-        return status.filter(p => [1, 2].includes(p.id));
-    }
-
-
     doModifyAction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         const form = e.target;
         const isValid = form.checkValidity();
         if (isValid === true) {
-            this.updateState({ loading: true, errorMessage: undefined });
-            const data = buildPayload(form, { username: this.state.data.username.value, recordStatus: 3 });
-            data.recordStatus = Number(data.recordStatus);
             const userInfo = getTokenInfo();
+            this.updateState({ loading: true });
+            const data = buildPayload(form, { username: this.state.data.username.value, recordStatus: 4 });
+            data.recordStatus = 4;
             associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
-                this.updateState({ loading: false, isSuccessfullyCreation: true })
+                this.updateState({ loading: false, isSuccessfullyCreation: true });
                 this.props.afterClosedDialog(true);
             }).catch(err => {
                 console.log(err.fileName, err);
@@ -161,17 +150,17 @@ class LocalComponent extends React.Component {
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title">Modificar un cliente</h4>
+                            <h4 className="modal-title">Eliminar un empleado</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.props.hideDialog}>
                                 <i data-feather="x"></i>
                             </button>
                         </div>
                         <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
 
-                            {this.state.isSuccessfullyCreation === true && <div className="alert alert-success d-flex align-items-center" role="alert">
+                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    Actualización exitosa!
+                                    Eliminación exitosa!
                                 </div>
                             </div>}
 
@@ -187,6 +176,15 @@ class LocalComponent extends React.Component {
                                     <div className="row match-height">
                                         <div className="col-12">
                                             <div className="card">
+
+                                                <div className="card-header">
+                                                    <div style={{ flexDirection: "column" }}>
+                                                        <h4 className="card-title">IMPORTANTE</h4>
+                                                        <h6>Se realizará un eliminado lógico.</h6>
+                                                        <h6>NO se volverá a ver en procesos o asignaciones.</h6>
+                                                    </div>
+                                                </div>
+
                                                 <div className="card-content">
                                                     <div className="card-body">
 
@@ -194,8 +192,8 @@ class LocalComponent extends React.Component {
 
                                                         <div className="row">
                                                             <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory required">
-                                                                    <label htmlFor="firstName" className="form-label control-label">Nombres</label>
+                                                                <div className="form-group mandatory">
+                                                                    <label htmlFor="firstName" className="form-label">Nombres</label>
                                                                     <input
                                                                         type="text"
                                                                         id="firstName"
@@ -206,7 +204,6 @@ class LocalComponent extends React.Component {
                                                                         value={this.state.data.firstName.value}
                                                                         onChange={(event) => this.setChangeInputEvent('firstName', event)}
                                                                         disabled={true}
-
                                                                         autoComplete='off'
                                                                     />
 
@@ -222,8 +219,8 @@ class LocalComponent extends React.Component {
                                                             </div>
 
                                                             <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory required">
-                                                                    <label htmlFor="lastName" className="form-label control-label">Apellidos</label>
+                                                                <div className="form-group mandatory">
+                                                                    <label htmlFor="lastName" className="form-label">Apellidos</label>
                                                                     <input
                                                                         type="text"
                                                                         id="lastName"
@@ -250,39 +247,6 @@ class LocalComponent extends React.Component {
 
                                                         </div>
 
-                                                        <div className='row'>
-                                                            <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory required">
-                                                                    <label htmlFor="recordStatus" className="form-label control-label">Estado</label>
-                                                                    <select
-                                                                        className="form-select"
-                                                                        id="recordStatus"
-                                                                        name='recordStatus'
-                                                                        value={this.state.data.recordStatus.value}
-                                                                        required={false}
-                                                                        onChange={(event) => this.setChangeInputEvent('recordStatus', event)}
-                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}>
-                                                                        <option value={null}>Seleccionar...</option>
-                                                                        {this.buildAndGetStatus().map((item, index) => {
-                                                                            return (<option value={item.id} key={index}>{item.name}</option>);
-                                                                        })}
-                                                                    </select>
-
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.recordStatus.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.recordStatus.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-
-
 
                                                     </div>
                                                 </div>
@@ -300,8 +264,8 @@ class LocalComponent extends React.Component {
                                     type='submit'
                                     loading={this.state.loading}
                                     showText={true}
-                                    textLoading={'Actualizando...'}
-                                    text='Actualizar'
+                                    textLoading={'Eliminando...'}
+                                    text='Eliminar'
                                 />
                             </div>
                         </form>

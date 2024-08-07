@@ -1,5 +1,5 @@
-import { findDocumentTypeById, findGenderById, findMaritalStatusById } from '../../../lib/list_values';
-import Utils from '../../../lib/utils';
+import { findDocumentTypeById, findGenderById, findMaritalStatusById } from '../../../../lib/list_values';
+import Utils from '../../../../lib/utils';
 
 export default class Validator {
 

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import "./styles.css";
-import Utils from '../../../lib/utils';
+import { buildPayload } from '../../../../lib/form';
+import Utils from '../../../../lib/utils';
 import Validator from '../validators/validator';
-import ButtonPrimary from '../../../components/button-primary';
-import ButtonSecondary from '../../../components/button-secondary';
-import { associateEmployee } from '../../../api/users.services';
-import { getTokenInfo } from '../../../api/api.common';
-import { buildPayload } from '../../../lib/form';
+import ButtonPrimary from '../../../../components/button-primary';
+import ButtonSecondary from '../../../../components/button-secondary';
+import { associateEmployee } from '../../../../api/users.services';
+import { getTokenInfo } from '../../../../api/api.common';
 
 class LocalComponent extends React.Component {
 
@@ -21,16 +21,14 @@ class LocalComponent extends React.Component {
         this.loadFirstData = this.loadFirstData.bind(this);
         this.loadData = this.loadData.bind(this);
 
-
-        //own
-        this.doModifyAction = this.doModifyAction.bind(this);
-
+        this.doInviteAction = this.doInviteAction.bind(this);
     }
+
+
 
 
     componentDidMount() {
         this.resetData({});
-        this.loadFirstData(this.props.data);
     }
 
     componentWillUnmount() {
@@ -40,30 +38,17 @@ class LocalComponent extends React.Component {
     defaultState() {
         return {
             loading: false,
-            isValidForm: true,
+            isValidForm: false,
             errorMessage: '',
             isSuccessfullyCreation: false,
             data: {
-                id: {
-                    value: '',
-                    errors: []
-                },
-                firstName: {
-                    value: '',
-                    errors: []
-                },
-                lastName: {
-                    value: '',
-                    errors: []
-                },
                 username: {
                     value: '',
                     errors: []
-                }
-            }
+                },
+            },
         };
     }
-
 
     resetData(override = {}) {
         this.updateState({
@@ -72,19 +57,8 @@ class LocalComponent extends React.Component {
         });
     }
 
-    loadFirstData(dataFirst) {
-        if (Utils.isEmpty(dataFirst)) {
-            return;
-        }
-        const { data } = this.state;
 
-        data.id.value = dataFirst.id;
-        data.firstName.value = dataFirst.firstName;
-        data.lastName.value = dataFirst.lastName;
-        data.username.value = dataFirst.username;
-
-        this.updateState({ data });
-    }
+    loadFirstData() { }
 
     loadData(e) { }
 
@@ -95,6 +69,12 @@ class LocalComponent extends React.Component {
         if (Utils.isEmpty(data[key].errors)) {
             isValidForm = true;
         }
+        Object.keys(this.state.data).forEach(p => {
+            const errors = Validator.validate(p, data[p].value);
+            if (errors.length > 0) {
+                isValidForm = false;
+            }
+        });
         this.updateState({ isValidForm, data: data });
     }
 
@@ -111,20 +91,27 @@ class LocalComponent extends React.Component {
         this.setState({ ...payload }, () => this.propagateState());
     }
 
-    doModifyAction = async (e) => {
+    /**
+     * Invita a un usuario del sistema, para ser empleado o miembro del equipo.
+     * se modifica la tabla de usuarios, y se agrega a invitaciones la invitación, 
+     * y al usuario principal, empleados.
+     * 
+     * @param {*} e 
+     */
+    doInviteAction = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         const form = e.target;
         const isValid = form.checkValidity();
         if (isValid === true) {
+            this.updateState({ loading: true, errorMessage: undefined });
+            const data = buildPayload(form, { recordStatus: 3, username: "" });
             const userInfo = getTokenInfo();
-            this.updateState({ loading: true });
-            const data = buildPayload(form, { username: this.state.data.username.value, recordStatus: 4 });
-            data.recordStatus = 4;
             associateEmployee(userInfo.payload.keyid, data).then(_result => {
                 form.reset();
-                this.updateState({ loading: false, isSuccessfullyCreation: true });
+                this.resetData({ isSuccessfullyCreation: true });
                 this.props.afterClosedDialog(true);
+
             }).catch(err => {
                 console.log(err.fileName, err);
                 this.updateState({ loading: false, isSuccessfullyCreation: false, errorMessage: err.message })
@@ -137,30 +124,32 @@ class LocalComponent extends React.Component {
 
     render() {
         return (
-            <div className="modal fade text-left show"
+            <div className="modal fade show"
                 style={{ display: 'block' }}
                 tabIndex="-1"
                 role="dialog"
-                aria-hidden="true"
+                aria-labelledby="myModalLabel33"
                 data-keyboard="false"
                 data-backdrop="static"
                 data-bs-backdrop="static"
-                data-bs-keyboard="false">
-                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                    role="document">
+                data-bs-keyboard="false"
+                aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                     <div className="modal-content">
+
                         <div className="modal-header">
-                            <h4 className="modal-title">Eliminar un empleado</h4>
+                            <h4 className="modal-title" id='myModalLabel33'>Invitación</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.props.hideDialog}>
-                                <i data-feather="x"></i>
+                                <i data-feather="x" ></i>
                             </button>
                         </div>
-                        <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
+
+                        <form id="formCustomerCreateId" className="needs-validation form" onSubmit={this.doInviteAction} noValidate>
 
                             {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    Eliminación exitosa!
+                                    Creación exitosa!
                                 </div>
                             </div>}
 
@@ -176,76 +165,50 @@ class LocalComponent extends React.Component {
                                     <div className="row match-height">
                                         <div className="col-12">
                                             <div className="card">
-
                                                 <div className="card-header">
                                                     <div style={{ flexDirection: "column" }}>
-                                                        <h4 className="card-title">IMPORTANTE</h4>
-                                                        <h6>Se realizará un eliminado lógico.</h6>
-                                                        <h6>NO se volverá a ver en procesos o asignaciones.</h6>
+                                                        <h4 className="card-title">Precondiciones</h4>
+                                                        <h6>El usuario debe estar previamente registrado.</h6>
+                                                        <h6>Al usuario le llegará una invitación para unirse al equipo.</h6>
                                                     </div>
                                                 </div>
-
                                                 <div className="card-content">
                                                     <div className="card-body">
-
-
-
                                                         <div className="row">
-                                                            <div className="col-12 col-md-6">
+                                                            <div className="col-12 col-md-12">
                                                                 <div className="form-group mandatory">
-                                                                    <label htmlFor="firstName" className="form-label">Nombres</label>
+                                                                    <label htmlFor="username" className="form-label control-label">Usuario</label>
                                                                     <input
                                                                         type="text"
-                                                                        id="firstName"
+                                                                        id="username"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese su nombre"
-                                                                        name="firstName"
+                                                                        placeholder="Ingrese el usuario del empleado"
+                                                                        name="username"
                                                                         required={true}
-                                                                        value={this.state.data.firstName.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('firstName', event)}
-                                                                        disabled={true}
+                                                                        value={this.state.data.username.value}
+                                                                        onChange={(event) => this.setChangeInputEvent('username', event)}
+                                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
                                                                         autoComplete='off'
                                                                     />
 
                                                                     <div
                                                                         className="invalid-feedback"
                                                                         style={{
-                                                                            display: this.state.data.firstName.errors.length > 0 ? 'block' : 'none'
+                                                                            display: this.state.data.username.errors.length > 0 ? 'block' : 'none'
                                                                         }}>
-                                                                        {this.state.data.firstName.errors[0]}
+                                                                        {this.state.data.username.errors[0]}
                                                                     </div>
 
                                                                 </div>
                                                             </div>
 
-                                                            <div className="col-12 col-md-6">
-                                                                <div className="form-group mandatory">
-                                                                    <label htmlFor="lastName" className="form-label">Apellidos</label>
-                                                                    <input
-                                                                        type="text"
-                                                                        id="lastName"
-                                                                        className="form-control"
-                                                                        placeholder="Ingrese sus apellidos"
-                                                                        name="lastName"
-                                                                        required={true}
-                                                                        value={this.state.data.lastName.value}
-                                                                        onChange={(event) => this.setChangeInputEvent('lastName', event)}
-                                                                        disabled={true}
-                                                                        autoComplete='off'
-                                                                    />
 
-                                                                    <div
-                                                                        className="invalid-feedback"
-                                                                        style={{
-                                                                            display: this.state.data.lastName.errors.length > 0 ? 'block' : 'none'
-                                                                        }}>
-                                                                        {this.state.data.lastName.errors[0]}
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
 
                                                         </div>
+
+
+
+
 
 
                                                     </div>
@@ -256,7 +219,7 @@ class LocalComponent extends React.Component {
                                 </section>
                             </div>
                             <div className="modal-footer">
-                                <ButtonSecondary id="btnCustomerEditNOKId" text={'Regresar'} type="button" onClick={this.props.hideDialog}></ButtonSecondary>
+                                <ButtonSecondary text={'Regresar'} type="button" onClick={this.props.hideDialog}></ButtonSecondary>
 
                                 <ButtonPrimary
                                     disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
@@ -264,8 +227,8 @@ class LocalComponent extends React.Component {
                                     type='submit'
                                     loading={this.state.loading}
                                     showText={true}
-                                    textLoading={'Eliminando...'}
-                                    text='Eliminar'
+                                    textLoading={'Invitando...'}
+                                    text='Invitar'
                                 />
                             </div>
                         </form>
