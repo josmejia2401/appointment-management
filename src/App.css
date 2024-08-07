@@ -190,3 +190,14 @@ body {
   right: 0px;
   top: 5px;
 }
+
+
+.center-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  flex-direction: column;
+  flex: 1;
+  width: 100vw;
+}
