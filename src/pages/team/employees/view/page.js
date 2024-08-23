@@ -8,7 +8,6 @@ import ButtonIcon from '../../../../components/button-icon';
 import { filter } from '../../../../api/employees.services';
 import Utils from '../../../../lib/utils';
 
-
 class Page extends React.Component {
 
     constructor(props) {
@@ -270,8 +269,11 @@ class Page extends React.Component {
 
                                             {this.state.loading && (<tr>
                                                 <td className="text-color" colSpan={6}>
-                                                    <i className="fa-solid fa-circle-info no-found-icon"></i>
-                                                    <h1 className="no-found-text">Buscando datos...</h1>
+                                                    <div className="skeleton-panel">
+                                                        <div className="skeleton-line" />
+                                                        <div className="skeleton-line" />
+                                                        <div className="skeleton-line" />
+                                                    </div>
                                                 </td>
                                             </tr>)}
 

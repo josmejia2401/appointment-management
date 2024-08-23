@@ -34,12 +34,12 @@ export const RouteComponent = ({ children: Component, ...props }) => {
             navigate("/auth/login");
         }
     }, [props?.location?.pathname, getTokenInfo, navigate]);
-    return <>
+    return (<React.Suspense fallback={<div className="center-loading">Loading...</div>}>
         <Toast ref={notificationRef} ></Toast>
         <Component
             {...props}
             location={location}
             navigate={navigate}
             addNotification={addNotification}></Component>
-    </>;
+    </React.Suspense>);
 };
