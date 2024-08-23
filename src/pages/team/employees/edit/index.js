@@ -6,7 +6,7 @@ import Validator from '../validators/validator';
 import ButtonPrimary from '../../../../components/button-primary';
 import ButtonSecondary from '../../../../components/button-secondary';
 import { documentTypes, genders, maritalStatus, status } from '../../../../lib/list_values';
-import { update } from '../../../../api/customers.services';
+import { update } from '../../../../api/employees.services';
 
 class LocalComponent extends React.Component {
 

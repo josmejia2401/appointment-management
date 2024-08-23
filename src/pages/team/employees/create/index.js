@@ -5,7 +5,7 @@ import Utils from '../../../../lib/utils';
 import Validator from '../validators/validator';
 import ButtonPrimary from '../../../../components/button-primary';
 import ButtonSecondary from '../../../../components/button-secondary';
-import { create } from '../../../../api/customers.services';
+import { create } from '../../../../api/employees.services';
 import { documentTypes, genders, maritalStatus } from '../../../../lib/list_values';
 
 class LocalComponent extends React.Component {

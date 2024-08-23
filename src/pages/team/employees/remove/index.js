@@ -4,7 +4,7 @@ import Utils from '../../../../lib/utils';
 import Validator from '../validators/validator';
 import ButtonPrimary from '../../../../components/button-primary';
 import ButtonSecondary from '../../../../components/button-secondary';
-import { del } from '../../../../api/customers.services';
+import { del } from '../../../../api/employees.services';
 
 class LocalComponent extends React.Component {
 

@@ -5,7 +5,7 @@ import EditComponent from '../edit';
 import RemoveComponent from '../remove';
 import { buildAndGetClassStatus, findDocumentTypeById, findStatusById } from '../../../../lib/list_values';
 import ButtonIcon from '../../../../components/button-icon';
-import { filter } from '../../../../api/customers.services';
+import { filter } from '../../../../api/employees.services';
 import Utils from '../../../../lib/utils';
 
 
