@@ -212,7 +212,7 @@ class Page extends React.Component {
                             </div>
                             <div className="card-content">
                                 <div className="card-body">
-                                    <p className='subtitle-color'>A continuación se muestran los <code className="highlighter-rouge">empleados</code> invitados.
+                                    <p className='subtitle-color'>A continuación se muestran los <code className="highlighter-rouge">empleados</code> invitados. No tiene control sobre sus datos.
                                     </p>
                                 </div>
 
@@ -246,8 +246,11 @@ class Page extends React.Component {
 
                                             {this.state.loading && (<tr>
                                                 <td className="text-color" colSpan={6}>
-                                                    <i className="fa-solid fa-circle-info no-found-icon"></i>
-                                                    <h1 className="no-found-text">Buscando datos...</h1>
+                                                    <div className="skeleton-panel">
+                                                        <div className="skeleton-line" />
+                                                        <div className="skeleton-line" />
+                                                        <div className="skeleton-line" />
+                                                    </div>
                                                 </td>
                                             </tr>)}
 

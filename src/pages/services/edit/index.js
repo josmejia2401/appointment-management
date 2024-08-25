@@ -173,21 +173,25 @@ class LocalComponent extends React.Component {
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title">Modificar un servicio</h4>
+                            <h4 className="modal-title">Modificar</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.props.hideDialog}>
                                 <i data-feather="x"></i>
                             </button>
                         </div>
                         <form className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
 
-                            {this.state.isSuccessfullyCreation === true && <div className="alert alert-success d-flex align-items-center" role="alert">
+                            {this.state.isSuccessfullyCreation === true && <div className="alert alert-success d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    Actualización exitosa!
+                                    Actualización exitosa.
                                 </div>
                             </div>}
 
-                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
                                     {this.state.errorMessage}
@@ -211,7 +215,7 @@ class LocalComponent extends React.Component {
                                                                         type="text"
                                                                         id="name"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese su nombre"
+                                                                        placeholder="Ingrese el nombre"
                                                                         name="name"
                                                                         required={true}
                                                                         value={this.state.data.name.value}
@@ -275,7 +279,7 @@ class LocalComponent extends React.Component {
                                                                         type="number"
                                                                         id="duration"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese su celular"
+                                                                        placeholder="Ingrese la duración"
                                                                         name="duration"
                                                                         required={false}
                                                                         value={this.state.data.duration.value}

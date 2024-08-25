@@ -218,7 +218,7 @@ class LocalComponent extends React.Component {
         return (
             <div className="modal fade text-left show"
                 style={{ display: 'block' }}
-                tabIndex="-1" 
+                tabIndex="-1"
                 role="dialog"
                 aria-hidden="true"
                 data-keyboard="false"
@@ -229,21 +229,25 @@ class LocalComponent extends React.Component {
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title">Modificar un cliente</h4>
+                            <h4 className="modal-title">Modificar empleado</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.props.hideDialog}>
                                 <i data-feather="x"></i>
                             </button>
                         </div>
                         <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
 
-                            {this.state.isSuccessfullyCreation === true && <div className="alert alert-success d-flex align-items-center" role="alert">
+                            {this.state.isSuccessfullyCreation === true && <div className="alert alert-success d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    Actualización exitosa!
+                                    Actualización exitosa.
                                 </div>
                             </div>}
 
-                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
                                     {this.state.errorMessage}
@@ -268,7 +272,7 @@ class LocalComponent extends React.Component {
                                                                         type="text"
                                                                         id="firstName"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese su nombre"
+                                                                        placeholder="Ingrese nombres"
                                                                         name="firstName"
                                                                         required={true}
                                                                         value={this.state.data.firstName.value}
@@ -296,7 +300,7 @@ class LocalComponent extends React.Component {
                                                                         type="text"
                                                                         id="lastName"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese sus apellidos"
+                                                                        placeholder="Ingrese apellidos"
                                                                         name="lastName"
                                                                         required={true}
                                                                         value={this.state.data.lastName.value}
@@ -332,7 +336,7 @@ class LocalComponent extends React.Component {
                                                                         type="text"
                                                                         id="phoneNumber"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese su celular"
+                                                                        placeholder="Ingrese el número de celular"
                                                                         name="phoneNumber"
                                                                         required={false}
                                                                         value={this.state.data.phoneNumber.value}
@@ -362,7 +366,7 @@ class LocalComponent extends React.Component {
                                                                         type="text"
                                                                         id="email"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese su email"
+                                                                        placeholder="Ingrese el correo electrónico"
                                                                         name="email"
                                                                         required={false}
                                                                         value={this.state.data.email.value}
@@ -433,7 +437,7 @@ class LocalComponent extends React.Component {
                                                                                         type="text"
                                                                                         id="documentNumber"
                                                                                         className="form-control"
-                                                                                        placeholder="Ingrese su número de documento"
+                                                                                        placeholder="Ingrese el número de documento"
                                                                                         name="documentNumber"
                                                                                         required={false}
                                                                                         value={this.state.data.documentNumber.value}
@@ -495,7 +499,7 @@ class LocalComponent extends React.Component {
                                                                                         type="date"
                                                                                         id="birthday"
                                                                                         className="form-control"
-                                                                                        placeholder="Ingrese su fecha de nacimiento"
+                                                                                        placeholder="Ingrese la fecha de nacimiento"
                                                                                         name="birthday"
                                                                                         required={false}
                                                                                         value={this.state.data.birthday.value}
@@ -555,7 +559,7 @@ class LocalComponent extends React.Component {
                                                                                         type="text"
                                                                                         id="occupation"
                                                                                         className="form-control"
-                                                                                        placeholder="Ingrese su ocupación"
+                                                                                        placeholder="Ingrese la ocupación"
                                                                                         name="occupation"
                                                                                         required={false}
                                                                                         value={this.state.data.occupation.value}
@@ -587,7 +591,7 @@ class LocalComponent extends React.Component {
                                                                                         type="text"
                                                                                         id="address"
                                                                                         className="form-control"
-                                                                                        placeholder="Ingrese su dirección"
+                                                                                        placeholder="Ingrese la dirección"
                                                                                         name="address"
                                                                                         required={false}
                                                                                         value={this.state.data.address.value}

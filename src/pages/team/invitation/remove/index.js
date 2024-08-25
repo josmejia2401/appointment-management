@@ -150,21 +150,25 @@ class LocalComponent extends React.Component {
                     role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h4 className="modal-title">Eliminar un empleado</h4>
+                            <h4 className="modal-title">Eliminar</h4>
                             <button type="button" className="close btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.props.hideDialog}>
                                 <i data-feather="x"></i>
                             </button>
                         </div>
                         <form id="formCustomerEditId" className="needs-validation form" onSubmit={this.doModifyAction} noValidate>
 
-                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
+                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    Eliminación exitosa!
+                                    Eliminación exitosa
                                 </div>
                             </div>}
 
-                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
                                     {this.state.errorMessage}

@@ -235,7 +235,7 @@ class Page extends React.Component {
                             </div>
                             <div className="card-content">
                                 <div className="card-body">
-                                    <p className='subtitle-color'>A continuación se muestran los <code className="highlighter-rouge">empleados</code> disponibles.
+                                    <p className='subtitle-color'>A continuación se muestran los <code className="highlighter-rouge">empleados</code> administrados. Tiene control total, como modificar, eliminar, y consultarlos en cualquier momento.
                                     </p>
                                 </div>
 
@@ -310,7 +310,7 @@ class Page extends React.Component {
                                                     <a
                                                         href="#"
                                                         className='center-text'
-                                                        onClick={(e) => this.loadMoreData(e)} >Cargar más
+                                                        onClick={(e) => this.loadMoreData(e)} >Cargar más ...
                                                     </a>
                                                 </td>
                                             </tr>

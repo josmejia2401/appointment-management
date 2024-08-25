@@ -146,14 +146,18 @@ class LocalComponent extends React.Component {
 
                         <form id="formCustomerCreateId" className="needs-validation form" onSubmit={this.doInviteAction} noValidate>
 
-                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
+                            {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
-                                    Creación exitosa!
+                                    Invitación exitosa.
                                 </div>
                             </div>}
 
-                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                            {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert" style={{
+                                marginLeft: '15px', marginRight: '15px'
+                            }}>
                                 <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
                                 <div>
                                     {this.state.errorMessage}
@@ -167,9 +171,10 @@ class LocalComponent extends React.Component {
                                             <div className="card">
                                                 <div className="card-header">
                                                     <div style={{ flexDirection: "column" }}>
-                                                        <h4 className="card-title">Precondiciones</h4>
+                                                        <h4 className="card-title">Consideraciones</h4>
                                                         <h6>El usuario debe estar previamente registrado.</h6>
                                                         <h6>Al usuario le llegará una invitación para unirse al equipo.</h6>
+                                                        <h6>El usuario deberá aceptar la invitación.</h6>
                                                     </div>
                                                 </div>
                                                 <div className="card-content">
@@ -182,7 +187,7 @@ class LocalComponent extends React.Component {
                                                                         type="text"
                                                                         id="username"
                                                                         className="form-control"
-                                                                        placeholder="Ingrese el usuario del empleado"
+                                                                        placeholder="Ingrese el usuario a invitar"
                                                                         name="username"
                                                                         required={true}
                                                                         value={this.state.data.username.value}
