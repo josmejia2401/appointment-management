@@ -125,176 +125,168 @@ class Page extends React.Component {
 
     render() {
         return (
-            <main className='form-signin w-100 m-auto' id="auth-register">
-                <div className="row h-100">
-                    <div className="col-12">
-                        <div id="auth-left" className='center-div'>
-                            <div className="auth-logo">
-                                <div className="logo-holder logo-5">
-                                    <h3>AppMa</h3>
-                                    <p>Grandes ideas</p>
+            <section className="background-primary-color py-3 py-md-5 py-xl-8 center-div">
+                <div className="container">
+                    <div className="row gy-4 align-items-center">
+                        <div className="col-12 col-md-6 col-xl-7">
+                            <div className="d-flex justify-content-center">
+                                <div className="col-12 col-xl-9">
+                                    <img className="img-fluid rounded mb-4" loading="lazy" src="https://cdn-icons-png.flaticon.com/512/3301/3301556.png" width="245" height="80" alt="BootstrapBrain Logo" />
+                                    <hr className="border-primary-subtle mb-4" />
+                                    <h2 className="h1 mb-4 color-text-title">Hacemos más simple la manera de gestionar agendamientos</h2>
+                                    <p className="lead mb-5">AppMa es un sistema de automatización de gestión y programación de agendamientos que simplifica y unifica las programaciones.</p>
                                 </div>
                             </div>
-
-
-
-
-                            <form className="needs-validation bgc-white1 shadow-lg mt-5" onSubmit={this.doRegisterAction} noValidate>
-
-                                {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
-                                    <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
-                                    <div>
-                                        ¡Cuenta creada con éxito!
+                        </div>
+                        <div className="col-12 col-md-6 col-xl-5">
+                            <div className="card border-0 rounded-4">
+                                <div className="card-body p-3 p-md-4 p-xl-5">
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <div className="mb-4">
+                                                <h3>Registro</h3>
+                                                <p>¿Tienes una cuenta? <a href="#" onClick={this.goToLogin}>Inicia sesión</a></p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>}
+                                    <form className="needs-validation" onSubmit={this.doRegisterAction} noValidate>
+                                        <div className="row gy-3 overflow-hidden">
 
-                                <h3 className="auth-title mb-5">Obtenga su cuenta GRATIS</h3>
+                                            <div className="col-12">
+                                                <div className="form-floating">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control form-control-xl input-color"
+                                                        name='firstName'
+                                                        id='firstName'
+                                                        value={this.state.data.firstName.value}
+                                                        onChange={(event) => this.setChangeInputEvent('firstName', event)}
+                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                        autoComplete='off'
+                                                    />
+                                                    <label htmlFor="firstName" className="form-label">Nombres</label>
+                                                    <div
+                                                        className="invalid-feedback error-color"
+                                                        style={{
+                                                            display: this.state.data.firstName.errors.length > 0 ? 'block' : 'none'
+                                                        }}>
+                                                        {this.state.data.firstName.errors[0]}
+                                                    </div>
+                                                </div>
+                                            </div>
 
 
+                                            <div className="col-12">
+                                                <div className="form-floating">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control form-control-xl input-color"
+                                                        name='lastName'
+                                                        id='lastName'
+                                                        value={this.state.data.lastName.value}
+                                                        onChange={(event) => this.setChangeInputEvent('lastName', event)}
+                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                        autoComplete='off'
+                                                    />
+                                                    <label htmlFor="lastName" className="form-label">Apellidos</label>
+                                                    <div
+                                                        className="invalid-feedback error-color"
+                                                        style={{
+                                                            display: this.state.data.lastName.errors.length > 0 ? 'block' : 'none'
+                                                        }}>
+                                                        {this.state.data.lastName.errors[0]}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">
-                                        <i className="fa-solid fa-person icon-input-color"></i>
-                                    </span>
+                                            <div className="col-12">
+                                                <div className="form-floating">
+                                                    <input
+                                                        type="email"
+                                                        className="form-control form-control-xl input-color"
+                                                        name='email'
+                                                        id='email'
+                                                        value={this.state.data.email.value}
+                                                        onChange={(event) => this.setChangeInputEvent('email', event)}
+                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                        autoComplete='off'
+                                                    />
+                                                    <label htmlFor="email" className="form-label">Email</label>
+                                                    <div
+                                                        className="invalid-feedback error-color"
+                                                        style={{
+                                                            display: this.state.data.email.errors.length > 0 ? 'block' : 'none'
+                                                        }}>
+                                                        {this.state.data.email.errors[0]}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                    <input
-                                        type="text"
-                                        className="form-control form-control-xl input-color"
-                                        placeholder="Nombres"
-                                        name='firstName'
-                                        id='firstName'
-                                        value={this.state.data.firstName.value}
-                                        onChange={(event) => this.setChangeInputEvent('firstName', event)}
-                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
-                                        autoComplete='off'
-                                    />
-                                    <div
-                                        className="invalid-feedback error-color"
-                                        style={{
-                                            display: this.state.data.firstName.errors.length > 0 ? 'block' : 'none'
-                                        }}>
-                                        {this.state.data.firstName.errors[0]}
-                                    </div>
+
+                                            <div className="col-12">
+                                                <div className="form-floating">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control form-control-xl input-color"
+                                                        placeholder="Usuario"
+                                                        name='username'
+                                                        id='username'
+                                                        value={this.state.data.username.value}
+                                                        onChange={(event) => this.setChangeInputEvent('username', event)}
+                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                        autoComplete='off'
+                                                    />
+                                                    <label htmlFor="username" className="form-label">Usuario</label>
+                                                    <div
+                                                        className="invalid-feedback error-color"
+                                                        style={{
+                                                            display: this.state.data.username.errors.length > 0 ? 'block' : 'none'
+                                                        }}>
+                                                        {this.state.data.username.errors[0]}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-12">
+                                                <div className="form-floating">
+                                                    <input
+                                                        type="password"
+                                                        className="form-control form-control-xl input-color"
+                                                        placeholder="Contraseña"
+                                                        name='password'
+                                                        id='password'
+                                                        value={this.state.data.password.value}
+                                                        onChange={(event) => this.setChangeInputEvent('password', event)}
+                                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
+                                                        autoComplete='off' />
+                                                    <label htmlFor="password" className="form-label">Password</label>
+
+                                                    <div
+                                                        className="invalid-feedback error-color"
+                                                        style={{
+                                                            display: this.state.data.password.errors.length > 0 ? 'block' : 'none'
+                                                        }}>
+                                                        {this.state.data.password.errors[0]}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-12">
+                                                <div className="d-grid">
+                                                    <ButtonPrimary
+                                                        type="submit"
+                                                        className="btn-block btn-lg mt-3"
+                                                        disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
+                                                        loading={this.state.loading}
+                                                        text={'Registrarme ahora'}></ButtonPrimary>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">
-                                        <i className="fa-solid fa-file-signature icon-input-color"></i>
-                                    </span>
-
-                                    <input
-                                        type="text"
-                                        className="form-control form-control-xl input-color"
-                                        placeholder="Apellidos"
-                                        name='lastName'
-                                        id='lastName'
-                                        value={this.state.data.lastName.value}
-                                        onChange={(event) => this.setChangeInputEvent('lastName', event)}
-                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
-                                        autoComplete='off'
-                                    />
-                                    <div
-                                        className="invalid-feedback error-color"
-                                        style={{
-                                            display: this.state.data.lastName.errors.length > 0 ? 'block' : 'none'
-                                        }}>
-                                        {this.state.data.lastName.errors[0]}
-                                    </div>
-                                </div>
-
-
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">
-                                        <i className="fa-solid fa-envelope icon-input-color"></i>
-                                    </span>
-
-                                    <input
-                                        type="email"
-                                        className="form-control form-control-xl input-color"
-                                        placeholder="Correo electrónico"
-                                        name='email'
-                                        id='email'
-                                        value={this.state.data.email.value}
-                                        onChange={(event) => this.setChangeInputEvent('email', event)}
-                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
-                                        autoComplete='off'
-                                    />
-                                    <div
-                                        className="invalid-feedback error-color"
-                                        style={{
-                                            display: this.state.data.email.errors.length > 0 ? 'block' : 'none'
-                                        }}>
-                                        {this.state.data.email.errors[0]}
-                                    </div>
-                                </div>
-
-
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">
-                                        <i className="fa-regular fa-user icon-input-color"></i>
-                                    </span>
-
-                                    <input
-                                        type="text"
-                                        className="form-control form-control-xl input-color"
-                                        placeholder="Usuario"
-                                        name='username'
-                                        id='username'
-                                        value={this.state.data.username.value}
-                                        onChange={(event) => this.setChangeInputEvent('username', event)}
-                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
-                                        autoComplete='off'
-                                    />
-                                    <div
-                                        className="invalid-feedback error-color"
-                                        style={{
-                                            display: this.state.data.username.errors.length > 0 ? 'block' : 'none'
-                                        }}>
-                                        {this.state.data.username.errors[0]}
-                                    </div>
-                                </div>
-                                <div className="input-group mb-3">
-
-                                    <span className="input-group-text">
-                                        <i className="fa-solid fa-mask icon-input-color"></i>
-                                    </span>
-
-                                    <input
-                                        type="password"
-                                        className="form-control form-control-xl input-color"
-                                        placeholder="Contraseña"
-                                        name='password'
-                                        id='password'
-                                        value={this.state.data.password.value}
-                                        onChange={(event) => this.setChangeInputEvent('password', event)}
-                                        disabled={this.state.loading || this.state.isSuccessfullyCreation}
-                                        autoComplete='off' />
-                                    <div
-                                        className="invalid-feedback error-color"
-                                        style={{
-                                            display: this.state.data.password.errors.length > 0 ? 'block' : 'none'
-                                        }}>
-                                        {this.state.data.password.errors[0]}
-                                    </div>
-                                </div>
-
-                                <ButtonPrimary
-                                    type="submit"
-                                    className="btn-block btn-lg mt-5"
-                                    disabled={!this.state.isValidForm || this.state.loading || this.state.isSuccessfullyCreation}
-                                    loading={this.state.loading}
-                                    text={'Registrar ahora'}></ButtonPrimary>
-
-                            </form>
-                            <div className="text-center mt-5 text-lg fs-4">
-                                <p className='text-gray-600'>¿Ya tienes cuenta?
-                                    <a href="#" className="font-bold" onClick={() => this.props.navigate("/auth/login")}> Inicar sesión</a>.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-            </main>
+            </section>
         );
     }
 }

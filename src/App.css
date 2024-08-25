@@ -41,7 +41,11 @@ body {
 }
 
 .primary-color {
-  color: var(--primary-color)
+  color: var(--primary-color);
+}
+
+.background-primary-color {
+  background-color: var(--primary-color);
 }
 
 .table-responsive {
