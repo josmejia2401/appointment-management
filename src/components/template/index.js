@@ -8,6 +8,8 @@ class Page extends React.Component {
         this.state = {
             loading: false,
             selectedId: null,
+            isShowSettings: false,
+            isShowSettings2: false,
             data: [
                 {
                     id: "1",
@@ -70,6 +72,8 @@ class Page extends React.Component {
 
         this.onSelectOption = this.onSelectOption.bind(this);
         this.loadData = this.loadData.bind(this);
+        this.showSettings = this.showSettings.bind(this);
+        this.showSettings2 = this.showSettings2.bind(this);
     }
 
     componentDidMount() {
@@ -97,6 +101,18 @@ class Page extends React.Component {
         this.props.navigate(loc.path);
     }
 
+    showSettings() {
+        this.setState({
+            isShowSettings: !this.state.isShowSettings
+        });
+    }
+
+    showSettings2() {
+        this.setState({
+            isShowSettings2: !this.state.isShowSettings2
+        });
+    }
+
     render() {
         return (
             <div className="container-fluid">
@@ -116,7 +132,7 @@ class Page extends React.Component {
                                             data-bs-toggle="collapse"
                                             className={`nav-link px-0 align-middle ${this.state.selectedId === item.id ? 'li-active' : ''}`}
                                             onClick={(e) => this.onSelectOption(e, item.id)}>
-                                            <i className={`fa-solid ${item.icon} i-icon ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`} style={{ marginLeft: '5px'}}></i>
+                                            <i className={`fa-solid ${item.icon} i-icon ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'sidebar-icon-color'}`} style={{ marginLeft: '5px' }}></i>
                                             <span className={`d-none d-sm-inline  ${this.state.selectedId === item.id ? 'sidebar-color-title-active' : 'sidebar-color-title'}`}>{item.name}</span>
                                             {item.children && item.children.length > 0 && <i className={`fa-solid fa-angle-down ${this.state.selectedId === item.id ? 'sidebar-icon-color-active' : 'fa-solid fa-angle-down sidebar-icon-color'}`} style={{ marginLeft: '5px' }}></i>}
                                         </a>
@@ -143,12 +159,16 @@ class Page extends React.Component {
 
                             </ul>
                             <hr />
-                            <div className="dropdown pb-4">
-                                <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div className="pb-4 dropup">
+                                <a href="#"
+                                    className="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    onClick={this.showSettings}>
                                     <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" className="rounded-circle" />
                                     <span className="d-none d-sm-inline mx-1">loser</span>
                                 </a>
-                                <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
+                                <ul className={`dropdown-menu text-small shadow ${this.state.isShowSettings === true ? "show show-dropdown" : ""}`}>
                                     <li><a className="dropdown-item" href="#">New project...</a></li>
                                     <li><a className="dropdown-item" href="#">Settings</a></li>
                                     <li><a className="dropdown-item" href="#">Profile</a></li>
@@ -168,12 +188,16 @@ class Page extends React.Component {
                                         <form className="w-100 me-3">
                                             <h4 className="card-title">{this.props.title}</h4>
                                         </form>
-                                        <div className="flex-shrink-0 dropdown">
-                                            <a href="#" className="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div className="flex-shrink-0 dropstart">
+                                            <a href="#"
+                                                className="d-block link-dark text-decoration-none dropdown-toggle"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                                onClick={this.showSettings2}>
                                                 <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" className="rounded-circle me-2" />
                                                 <strong>mdo</strong>
                                             </a>
-                                            <ul className="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                                            <ul className={`dropdown-menu text-small shadow ${this.state.isShowSettings2 === true ? "show show-dropdown-start" : ""}`} >
                                                 <li><a className="dropdown-item" href="#">New project...</a></li>
                                                 <li><a className="dropdown-item" href="#">Settings</a></li>
                                                 <li><a className="dropdown-item" href="#">Profile</a></li>

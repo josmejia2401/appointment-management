@@ -14,6 +14,7 @@ class Page extends React.Component {
         this.state = {
             loading: false,
             isValidForm: false,
+            errorMessage: undefined,
             data: {
                 username: {
                     value: '',
@@ -41,7 +42,7 @@ class Page extends React.Component {
         const form = e.target;
         const isValid = form.checkValidity();
         if (isValid === true) {
-            this.updateState({ loading: true });
+            this.updateState({ loading: true, errorMessage: '' });
             const data = buildPayload(form, { username: "", password: "" });
             signIn(data).then(_result => {
                 form.reset();
@@ -49,8 +50,8 @@ class Page extends React.Component {
                 this.goToHome();
             }).catch(err => {
                 console.log(err.fileName, err);
-                this.updateState({ loading: false });
-                this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
+                this.updateState({ loading: false, errorMessage: err.message });
+                //this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
             });
         }
         form.classList.add('was-validated');
@@ -120,6 +121,12 @@ class Page extends React.Component {
                                     <div className="row">
                                         <div className="col-12">
                                             <div className="mb-4">
+                                                {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                                                    <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
+                                                    <div>
+                                                        {this.state.errorMessage}
+                                                    </div>
+                                                </div>}
                                                 <h3>Iniciar sesión</h3>
                                                 <p>¿No tienes cuenta? <a href="#" onClick={this.goToRegister}>Crea una</a></p>
                                             </div>

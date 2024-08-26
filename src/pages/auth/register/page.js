@@ -15,6 +15,7 @@ class Page extends React.Component {
             loading: false,
             isValidForm: false,
             isSuccessfullyCreation: false,
+            errorMessage: undefined,
             data: {
                 firstName: {
                     value: '',
@@ -53,15 +54,15 @@ class Page extends React.Component {
         const form = e.target;
         const isValid = form.checkValidity();
         if (isValid === true) {
-            this.updateState({ loading: true, isSuccessfullyCreation: false });
+            this.updateState({ loading: true, isSuccessfullyCreation: false, errorMessage: '' });
             const data = buildPayload(form, { username: "", password: "", firstName: "", email: "", lastName: "" });
             create(data).then(_result => {
                 form.reset();
                 this.updateState({ isSuccessfullyCreation: true, loading: false });
             }).catch(err => {
                 console.log(err.fileName, err);
-                this.updateState({ loading: false });
-                this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
+                this.updateState({ loading: false, errorMessage: err.message });
+                //this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
             });
         }
         form.classList.add('was-validated');
@@ -144,6 +145,18 @@ class Page extends React.Component {
                                     <div className="row">
                                         <div className="col-12">
                                             <div className="mb-4">
+                                                {this.state.isSuccessfullyCreation && <div className="alert alert-success d-flex align-items-center" role="alert">
+                                                    <i className="fa-solid fa-circle-check icon-input-color bi flex-shrink-0 me-2"></i>
+                                                    <div>
+                                                        Creación exitosa.
+                                                    </div>
+                                                </div>}
+                                                {this.state.errorMessage && <div className="alert alert-danger d-flex align-items-center" role="alert">
+                                                    <i className="fa-solid fa-circle-exclamation icon-input-color bi flex-shrink-0 me-2"></i>
+                                                    <div>
+                                                        {this.state.errorMessage}
+                                                    </div>
+                                                </div>}
                                                 <h3>Registro</h3>
                                                 <p>¿Tienes una cuenta? <a href="#" onClick={this.goToLogin}>Inicia sesión</a></p>
                                             </div>
