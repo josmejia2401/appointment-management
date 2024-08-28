@@ -59,7 +59,7 @@ class Page extends React.Component {
 
     render() {
         return (
-            <Template title={'Clientes'} navigate={this.props.navigate} location={this.props.location}>
+            <Template title={'Equipo'} navigate={this.props.navigate} location={this.props.location}>
                 <div>
                     <ul className="nav nav-tabs">
                         <li className="nav-item">
