@@ -74,10 +74,16 @@ class Page extends React.Component {
         this.loadData = this.loadData.bind(this);
         this.showSettings = this.showSettings.bind(this);
         this.showSettings2 = this.showSettings2.bind(this);
+        this.handleDropdownClick = this.handleDropdownClick.bind(this);
     }
 
     componentDidMount() {
         this.loadData();
+        window.addEventListener("click", (event) => this.handleDropdownClick(event));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("click", this.handleDropdownClick);
     }
 
     async loadData() {
@@ -86,6 +92,22 @@ class Page extends React.Component {
             loc = this.state.data.filter(p => p.children && p.children.length > 0).filter(p => p.path === this.props.location.pathname)[0];
         }
         this.setState({ selectedId: loc.id });
+
+
+    }
+
+    async handleDropdownClick(event) {
+        let id = event.currentTarget.id || event.target.id || event.srcElement.id || "";
+        if (!id) {
+            id = event.target.parentNode.id;
+        }
+        console.log("event.currentTarget.id", id);
+        if (!["dropdownSetting2", "dropdownSetting"].includes(id)) {
+            this.setState({
+                isShowSettings: false,
+                isShowSettings2: false,
+            });
+        }
     }
 
     async onSelectOption(e, value) {
@@ -164,8 +186,15 @@ class Page extends React.Component {
                                     className="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
-                                    onClick={this.showSettings}>
-                                    <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" className="rounded-circle" />
+                                    onClick={this.showSettings}
+                                    id="dropdownSetting">
+                                    <img
+                                        src="https://github.com/mdo.png"
+                                        alt="hugenerd"
+                                        width="30"
+                                        height="30"
+                                        className="rounded-circle"
+                                        onClick={this.showSettings} />
                                     <span className="d-none d-sm-inline mx-1">loser</span>
                                 </a>
                                 <ul className={`dropdown-menu text-small shadow ${this.state.isShowSettings === true ? "show show-dropdown" : ""}`}>
@@ -193,8 +222,15 @@ class Page extends React.Component {
                                                 className="d-block link-dark text-decoration-none dropdown-toggle"
                                                 data-bs-toggle="dropdown"
                                                 aria-expanded="false"
-                                                onClick={this.showSettings2}>
-                                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" className="rounded-circle me-2" />
+                                                onClick={this.showSettings2}
+                                                id="dropdownSetting2">
+                                                <img
+                                                    src="https://github.com/mdo.png"
+                                                    alt="mdo"
+                                                    width="32"
+                                                    height="32"
+                                                    className="rounded-circle me-2"
+                                                    onClick={this.showSettings2} />
                                                 <strong>mdo</strong>
                                             </a>
                                             <ul className={`dropdown-menu text-small shadow ${this.state.isShowSettings2 === true ? "show show-dropdown-start" : ""}`} >
