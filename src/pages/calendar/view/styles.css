@@ -19,15 +19,95 @@
 
 .day {
     width: calc(100vw / 7);
-    line-height: 90px;
-    border: 1px solid var(--matte-black-color);
+    max-width: 200px !important;
+    line-height: 20px;
+    border: 1px solid var(--background-color2);
     text-align: left;
     vertical-align: top;
+    height: 120px;
 
+    display: inline-block;
+    /* to fit the content width OR display:table to keep the block level behavior */
+    white-space: nowrap;
+}
+
+
+.day-parent {
+    position: relative;
+    width: 100%;
+    color: black;
+    background-color: var(--background-color);
+    height: 120px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /*needed here*/
 }
 
 #prev:hover,
 #next:hover,
 .day {
     cursor: pointer;
+    padding: 3px !important;
+}
+
+.timetitle {
+    white-space: nowrap;
+    text-align: right;
+    font-weight: bold;
+}
+
+.event {
+    border-top: 1px solid #b2dba1;
+    border-bottom: 1px solid #b2dba1;
+    background-image: linear-gradient(to bottom, #dff0d8 0px, #c8e5bc 100%);
+    background-repeat: repeat-x;
+    color: #3c763d;
+    border-width: 1px;
+    font-size: .75em;
+    padding: 0 .75em;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 1px;
+}
+
+/* pendiente por usar */
+
+.eventbegin {
+    border-left: 1px solid #b2dba1;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.eventend {
+    border-right: 1px solid #b2dba1;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.event.all-day {
+    border-top: 1px solid #9acfea;
+    border-bottom: 1px solid #9acfea;
+    background-image: linear-gradient(to bottom, #d9edf7 0px, #b9def0 100%);
+    background-repeat: repeat-x;
+    color: #31708f;
+    border-width: 1px;
+}
+
+.event.all-day.begin {
+    border-left: 1px solid #9acfea;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.event.all-day.end {
+    border-right: 1px solid #9acfea;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.event.clear {
+    background: none;
+    border: 1px solid transparent;
 }

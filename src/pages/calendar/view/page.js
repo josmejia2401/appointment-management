@@ -3,6 +3,19 @@ import "./styles.css";
 import Template from '../../../components/template';
 import { findDocumentTypeById, findStatusById } from '../../../lib/list_values';
 
+
+function EventItem(events) {
+    return events && events.map((event, keyEvent) => {
+        if (keyEvent < 3) {
+            return (<div key={keyEvent} className='event eventbegin eventend'>[{event.employee.name}] {event.name}</div>);
+        } else if (keyEvent === 3) {
+            return (<div key={keyEvent} className='event eventbegin eventend'>Ver más eventos ...............................................</div>);
+        } else {
+            return null;
+        }
+    });
+}
+
 class Page extends React.Component {
 
     constructor(props) {
@@ -13,7 +26,7 @@ class Page extends React.Component {
             data: [],
             dataSelected: undefined,
             days: [],
-            daysOfWeek: []
+            daysOfWeek: [] //{day: 28, events: [{}]}
         };
 
         this.loadData = this.loadData.bind(this);
@@ -33,15 +46,15 @@ class Page extends React.Component {
 
     splitToNChunks(array, n) {
         const result = array.reduce((resultArray, item, index) => {
-            const chunkIndex = Math.floor(index / n)
+            const chunkIndex = Math.floor(index / n);
 
             if (!resultArray[chunkIndex]) {
                 resultArray[chunkIndex] = [] // start a new chunk
             }
 
-            resultArray[chunkIndex].push(item)
+            resultArray[chunkIndex].push(item);
 
-            return resultArray
+            return resultArray;
         }, []);
 
         return result;
@@ -53,6 +66,169 @@ class Page extends React.Component {
 
     async loadData() {
 
+        const data = [
+            {
+                id: 1,
+                day: '2024/08/01',
+                name: 'Nombre del evento',
+                description: 'Descripción del evento',
+                customer: {
+                    id: 1,
+                    name: 'customer',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                employee: {
+                    id: 1,
+                    name: 'employee',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                service: {
+                    id: 1,
+                    name: 'employee',
+                    duration: 15,
+                    description: '',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                }
+            },
+            {
+                id: 2,
+                day: '2024/08/01',
+                name: 'Nombre del evento',
+                description: 'Descripción del evento',
+                customer: {
+                    id: 1,
+                    name: 'customer',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                employee: {
+                    id: 1,
+                    name: 'employee',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                service: {
+                    id: 1,
+                    name: 'employee',
+                    duration: 15,
+                    description: '',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                }
+            },
+            {
+                id: 3,
+                day: '2024/08/01',
+                name: 'Nombre del evento',
+                description: 'Descripción del evento',
+                customer: {
+                    id: 1,
+                    name: 'customer',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                employee: {
+                    id: 1,
+                    name: 'employee',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                service: {
+                    id: 1,
+                    name: 'employee',
+                    duration: 15,
+                    description: '',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                }
+            },
+            {
+                id: 4,
+                day: '2024/08/01',
+                name: 'Nombre del evento',
+                description: 'Descripción del evento',
+                customer: {
+                    id: 1,
+                    name: 'customer',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                employee: {
+                    id: 1,
+                    name: 'employee',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                service: {
+                    id: 1,
+                    name: 'employee',
+                    duration: 15,
+                    description: '',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                }
+            },
+            {
+                id: 4,
+                day: '2024/08/01',
+                name: 'Nombre del evento',
+                description: 'Descripción del evento',
+                customer: {
+                    id: 1,
+                    name: 'customer',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                employee: {
+                    id: 1,
+                    name: 'employee',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                },
+                service: {
+                    id: 1,
+                    name: 'employee',
+                    duration: 15,
+                    description: '',
+                    status: {
+                        id: 1,
+                        name: 'ACTIVO'
+                    }
+                }
+            }
+        ];
+
         const date = new Date();
         const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
         const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -61,6 +237,18 @@ class Page extends React.Component {
         const lastDayNumber = lastDay.getDate();
 
         this.state.days = this.range(firstDayNumber, lastDayNumber);
+
+        this.state.days = this.state.days.map(day => ({
+            day: day,
+            events: []
+        }));
+        for (let i = 0; i < this.state.days.length; i++) {
+            const dayEvent = this.state.days[i];
+            const daysFounded = data.filter(p => new Date(p.day).getDate() === Number(dayEvent.day));
+            this.state.days[i].events.push(...daysFounded);
+        }
+
+
         this.state.daysOfWeek = this.splitToNChunks(this.state.days, 7);
 
         this.updateState({
@@ -139,7 +327,7 @@ class Page extends React.Component {
                                     </div>
 
                                     <div className="table-responsive">
-                                        <table className="table mb-0">
+                                        <table className="table mb-0 table-tight">
                                             <thead>
                                                 <tr id="weekHeader">
                                                     <th className='headerDay'>Domingo</th>
@@ -154,7 +342,14 @@ class Page extends React.Component {
                                             <tbody>
                                                 {this.state.daysOfWeek.map((item, index) => {
                                                     return (<tr key={index}>
-                                                        {item.map((day, iday) => <td className="day" key={iday}>{day}</td>)}
+                                                        {item.map((day, iday) => <td className="" key={iday}>
+                                                            <div class="day">
+                                                                <div className='day-parent'>
+                                                                    <div className='timetitle'>{day.day}</div>
+                                                                    {EventItem(day.events)}
+                                                                </div>
+                                                            </div>
+                                                        </td>)}
                                                     </tr>);
                                                 })}
                                             </tbody>
