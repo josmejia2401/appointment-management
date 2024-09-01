@@ -1,19 +1,23 @@
 import * as React from 'react';
 import "./styles.css";
 import Template from '../../../components/template';
-import { findDocumentTypeById, findStatusById } from '../../../lib/list_values';
 
 
 function EventItem(events) {
-    return events && events.map((event, keyEvent) => {
-        if (keyEvent < 3) {
-            return (<div key={keyEvent} className='event eventbegin eventend'>[{event.employee.name}] {event.name}</div>);
-        } else if (keyEvent === 3) {
-            return (<div key={keyEvent} className='event eventbegin eventend'>Ver más eventos ...............................................</div>);
-        } else {
-            return null;
+    const eventsOut = [];
+    let index = 0;
+    if (events && events.length > 0) {
+        for (const event of events) {
+            if (index == 3) {
+                // go to day detail
+                eventsOut.push(<div key={index} className='event eventbegin eventend'>{'Ver más...'}</div>);
+                break;
+            }
+            eventsOut.push(<div key={index} className='event eventbegin eventend'>[{event.employee.name.split(" "[0])}] {event.name}</div>);
+            index++;
         }
-    });
+    }
+    return eventsOut;
 }
 
 class Page extends React.Component {
@@ -327,7 +331,7 @@ class Page extends React.Component {
                                     </div>
 
                                     <div className="table-responsive">
-                                        <table className="table mb-0 table-tight">
+                                        <table className="table">
                                             <thead>
                                                 <tr id="weekHeader">
                                                     <th className='headerDay'>Domingo</th>
@@ -342,7 +346,7 @@ class Page extends React.Component {
                                             <tbody>
                                                 {this.state.daysOfWeek.map((item, index) => {
                                                     return (<tr key={index}>
-                                                        {item.map((day, iday) => <td className="" key={iday}>
+                                                        {item.map((day, iday) => <td className="custom-td" key={iday}>
                                                             <div class="day">
                                                                 <div className='day-parent'>
                                                                     <div className='timetitle'>{day.day}</div>

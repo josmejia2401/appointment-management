@@ -73,3 +73,13 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb
 https://dribbble.com/shots/23560790-Side-menu-web-application
+
+
+
+
+Running the following command solved the issue for me while installing my packages.json (MacOs) :
+
+ sudo npm install --unsafe-perm=true --allow-root
+To install only the package which caused the issue:
+
+  sudo npm install -g --unsafe-perm=true --allow-root eslint
