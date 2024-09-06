@@ -29,7 +29,7 @@ export const RouteComponent = ({ children: Component, ...props }) => {
     React.useEffect(() => {
         const tokenInfo = getTokenInfo();
         if (tokenInfo && ["/auth/login", "/auth/register"].includes(location.pathname)) {
-            navigate("/team/view");
+            navigate("/calendar/view");
         } else if (!tokenInfo && !["/auth/login", "/auth/register"].includes(location.pathname)) {
             navigate("/auth/login");
         }

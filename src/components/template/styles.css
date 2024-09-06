@@ -44,3 +44,10 @@
     margin: 0px;
     transform: translate(-107px, 0px);
 }
+
+.panel-view {
+    overflow: scroll;
+    scrollbar-color: gray white;
+    scrollbar-width: thin;
+    max-height: 100vh;
+}

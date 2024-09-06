@@ -137,7 +137,9 @@ class Page extends React.Component {
 
     render() {
         return (
-            <div className="container-fluid">
+            <div className="container-fluid" style={{
+                maxHeight: "100vh"
+            }}>
                 <div className="row flex-nowrap">
                     <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 sidebar-left">
                         <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-5 text-white min-vh-100">
@@ -209,7 +211,7 @@ class Page extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col py-1 background-color-off-blue">
+                    <div className="col py-1 background-color-off-blue panel-view">
                         <div className="page-heading">
                             <header className="py-3 mb-3 border-bottom">
                                 <div className="container-fluid d-grid gap-3 align-items-center" >

@@ -42,6 +42,8 @@ class Page extends React.Component {
 
         this.addMinutes = this.addMinutes.bind(this);
         this.getDayFromDate = this.getDayFromDate.bind(this);
+        this.getMonthFromDate = this.getMonthFromDate.bind(this);
+        this.getDayNameFromDate = this.getDayNameFromDate.bind(this);
     }
 
 
@@ -185,8 +187,24 @@ class Page extends React.Component {
         ];
         this.state.data = data;
 
-        this.state.data.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
-        //this.state.data.sort((a, b) => (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0))
+        this.state.data.sort((a, b) => {
+            return new Date(`${a.date}T07:05:00Z`).getTime() - new Date(`${b.date}T07:05:00Z`).getTime();
+        });
+
+        const dateGrouping = this.state.data.reduce(function (r, a) {
+            r[a.date] = r[a.date] || [];
+            r[a.date].push(a);
+            return r;
+        }, Object.create(null));
+
+        this.state.data = [];
+        for (const key of Object.keys(dateGrouping)) {
+            const group = dateGrouping[key];
+            const r = group.sort((a, b) => {
+                return new Date(`${a.date}T07:05:00Z`).getTime() - new Date(`${b.date}T07:05:00Z`).getTime();
+            });
+            this.state.data.push(...r);
+        }
 
         this.updateState({
             data: this.state.data,
@@ -215,10 +233,26 @@ class Page extends React.Component {
         return D(mins % (24 * 60) / 60 | 0) + ':' + D(mins % 60);
     }
 
-    getDayFromDate(dateString) {
+    getDayNameFromDate(dateString) {
+        dateString = dateString + "T07:05:00Z";
         const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const d = new Date(dateString);
         return days[d.getDay()];
+    }
+
+    getMonthFromDate(dateString) {
+        dateString = dateString + "T07:05:00Z";
+        const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dic"
+        ];
+        const d = new Date(dateString);
+        return monthNames[d.getMonth()];
+    }
+
+    getDayFromDate(dateString) {
+        dateString = dateString + "T07:05:00Z";
+        const d = new Date(dateString);
+        return d.getDate();
     }
 
     render() {
@@ -247,15 +281,15 @@ class Page extends React.Component {
                                         return (<div className="row row-striped">
                                             <div className="col-12 col-md-2 text-right">
                                                 <h1 className="display-4">
-                                                    <span className="badge bg-secondary">{new Date(item.date).getDate()}</span>
+                                                    <span className="badge bg-secondary">{this.getDayFromDate(item.date)}</span>
                                                 </h1>
-                                                <h2>OCT</h2>
+                                                <h2>{this.getMonthFromDate(item.date)}</h2>
                                             </div>
                                             <div className="col-12 col-md-10">
                                                 <h3 className="text-uppercase"><strong>{item.name}</strong></h3>
                                                 <ul className="list-inline">
                                                     <li className="list-inline-item">
-                                                        <i className="fa fa-calendar-o" aria-hidden="true"></i> {this.getDayFromDate(item.date)}
+                                                        <i className="fa fa-calendar-o" aria-hidden="true"></i> {this.getDayNameFromDate(item.date)}
                                                     </li>
                                                     <li className="list-inline-item">
                                                         <i className="fa fa-clock-o" aria-hidden="true"></i> {item.time} - {this.addMinutes(item.time, item.service.duration)}

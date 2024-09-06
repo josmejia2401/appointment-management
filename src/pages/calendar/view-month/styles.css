@@ -163,3 +163,10 @@
     background: none;
     border: 1px solid transparent;
 }
+
+.table-view {
+    overflow: scroll;
+    scrollbar-color: gray white;
+    scrollbar-width: thin;
+    max-width: 100vw;
+}

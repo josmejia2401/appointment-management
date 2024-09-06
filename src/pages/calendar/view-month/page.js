@@ -268,7 +268,7 @@ class Page extends React.Component {
                                     </p>
                                 </div>
 
-                                <div className="table-responsive">
+                                <div className="table-responsive table-view">
                                     <table className="table">
                                         <thead>
                                             <tr id="weekHeader">
