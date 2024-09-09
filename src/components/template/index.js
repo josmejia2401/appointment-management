@@ -66,6 +66,14 @@ class Page extends React.Component {
                             href: "6.1"
                         }
                     ]
+                },
+                {
+                    id: "7",
+                    name: "Perfil",
+                    icon: "fa-chart-line",
+                    path: "/profile/edit",
+                    href: "",
+                    children: null
                 }
             ]
         };

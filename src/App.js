@@ -23,6 +23,8 @@ const CalendarViewPage = React.lazy(() => import('./pages/calendar/view'));
 //import ServiceViewPage from './pages/services/view';
 const ServiceViewPage = React.lazy(() => import('./pages/services/view'));
 
+const ProfileEditPage = React.lazy(() => import('./pages/profile/edit'));
+
 
 function App() {
   return (
@@ -39,6 +41,7 @@ function App() {
             <Route exact path="/team/view" element={<RouteComponent children={TeamViewPage}></RouteComponent>} />
             <Route exact path="/calendar/view" element={<RouteComponent children={CalendarViewPage}></RouteComponent>} />
             <Route exact path="/services/view" element={<RouteComponent children={ServiceViewPage}></RouteComponent>} />
+            <Route exact path="/profile/edit" element={<RouteComponent children={ProfileEditPage}></RouteComponent>} />
             <Route path="*" element={<Navigate to={"/auth/login"} replace></Navigate>} />
           </Routes>
         </Router>
