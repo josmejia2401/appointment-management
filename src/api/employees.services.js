@@ -1,5 +1,4 @@
-import axios from 'axios';
-
+import { axiosInstance } from './fetch.js'
 import api from './api.constants';
 import { buildAndThrowNewError, buildHeaders } from './api.common';
 
@@ -7,7 +6,7 @@ import { buildAndThrowNewError, buildHeaders } from './api.common';
 export const create = async (payload) => {
     try {
         const authHeaders = buildHeaders();
-        const res = await axios.post(`${api.employees.create}`, payload, {
+        const res = await axiosInstance.post(`${api.employees.create}`, payload, {
             headers: {
                 ...authHeaders
             },
@@ -23,7 +22,7 @@ export const create = async (payload) => {
 export const find = async (id) => {
     try {
         const authHeaders = buildHeaders();
-        const res = await axios.get(`${api.employees.find.replace(":id", id)}`, {
+        const res = await axiosInstance.get(`${api.employees.find.replace(":id", id)}`, {
             headers: {
                 ...authHeaders
             },
@@ -41,7 +40,7 @@ export const filter = async (payload) => {
 
         const urlParameters = payload && Object.keys(payload).length !== 0 ? `?${Object.entries(payload).map(e => e.join('=')).join('&')}` : '';
         const authHeaders = buildHeaders();
-        const res = await axios.get(`${api.employees.filter}${urlParameters}`, {
+        const res = await axiosInstance.get(`${api.employees.filter}${urlParameters}`, {
             headers: {
                 ...authHeaders
             },
@@ -58,7 +57,7 @@ export const filter = async (payload) => {
 export const update = async (id, payload) => {
     try {
         const authHeaders = buildHeaders();
-        const res = await axios.put(`${api.employees.update.replace(":id", id)}`, payload, {
+        const res = await axiosInstance.put(`${api.employees.update.replace(":id", id)}`, payload, {
             headers: {
                 ...authHeaders
             },
@@ -75,7 +74,7 @@ export const update = async (id, payload) => {
 export const del = async (id) => {
     try {
         const authHeaders = buildHeaders();
-        const res = await axios.delete(`${api.employees.delete.replace(":id", id)}`, {
+        const res = await axiosInstance.delete(`${api.employees.delete.replace(":id", id)}`, {
             headers: {
                 ...authHeaders
             },

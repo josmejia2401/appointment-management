@@ -109,7 +109,6 @@ class Page extends React.Component {
         if (!id) {
             id = event.target.parentNode.id;
         }
-        console.log("event.currentTarget.id", id);
         if (!["dropdownSetting2", "dropdownSetting"].includes(id)) {
             this.setState({
                 isShowSettings: false,

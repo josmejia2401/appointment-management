@@ -1,7 +1,7 @@
 import * as React from 'react';
 import "./styles.css";
 import Template from '../../../components/template';
-import { findStatusById } from '../../../lib/list_values';
+import { buildAndGetClassStatus, documentTypes, findStatusById } from '../../../lib/list_values';
 import { find } from '../../../api/users.services';
 import { getTokenInfo } from '../../../api/api.common';
 import Validator from '../validators/validator';
@@ -24,10 +24,12 @@ class Page extends React.Component {
 
 
     componentDidMount() {
+        console.log("componentDidMount");
         this.loadData();
     }
 
     componentWillUnmount() {
+        console.log("componentWillUnmount");
         this.resetData();
     }
 
@@ -111,6 +113,9 @@ class Page extends React.Component {
             });
         }).catch(err => {
             console.log(err.fileName, err);
+            if (err.message === 'Cancelled due to new request') {
+                return;
+            }
             this.updateState({ loading: false });
             this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
         });
@@ -152,7 +157,7 @@ class Page extends React.Component {
 
     render() {
         return (
-            <Template title={'Servicios'} navigate={this.props.navigate} location={this.props.location}>
+            <Template title={'Perfil'} navigate={this.props.navigate} location={this.props.location}>
                 <div className="container">
                     <div className="row flex-lg-nowrap">
                         <div className="col">
@@ -170,10 +175,10 @@ class Page extends React.Component {
                                                         </div>
                                                     </div>
                                                     <div className="col d-flex flex-column flex-sm-row justify-content-between mb-3">
-                                                        <div className="text-center text-sm-left mb-2 mb-sm-0">
-                                                            <h4 className="pt-sm-2 pb-1 mb-0 text-nowrap" style={{ textAlign: 'left' }}>{this.state.data.firstName.value}</h4>
-                                                            <p className="mb-0" style={{ textAlign: 'left' }}>@johnny.s</p>
-                                                            <div className="text-muted"><small>Last seen 2 hours ago</small></div>
+                                                        <div className="text-left text-sm-left mb-2 mb-sm-0">
+                                                            <h4 className="pt-sm-2 pb-1 mb-0 text-nowrap">{this.state.data.firstName.value}</h4>
+                                                            <p className="mb-0" style={{ textAlign: 'left' }}>@{this.state.data.username.value}</p>
+                                                            <div className={`${buildAndGetClassStatus(this.state.data.recordStatus.value)} text-muted`}><small>{findStatusById(this.state.data.recordStatus.value).name}</small></div>
                                                             <div className="mt-2">
                                                                 <button className="btn btn-primary" type="button">
                                                                     <i className="fa fa-fw fa-camera"></i>
@@ -183,7 +188,7 @@ class Page extends React.Component {
                                                         </div>
                                                         <div className="text-center text-sm-right">
                                                             <span className="badge badge-secondary">administrator</span>
-                                                            <div className="text-muted"><small>Uniste el </small></div>
+                                                            <div className="text-muted"><small>Desde el {this.state.data.createdAt.value.split("T")[0]}</small></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -196,7 +201,7 @@ class Page extends React.Component {
                                                             <div className="row">
                                                                 <div className="col">
                                                                     <div className="row">
-                                                                        <div className="col">
+                                                                        <div className="col-12 col-md-6 mb-3">
                                                                             <div className="form-group">
                                                                                 <label htmlhtmlFor="firstName" className="form-label">Nombres</label>
                                                                                 <input
@@ -218,26 +223,125 @@ class Page extends React.Component {
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div className="col">
+                                                                        <div className="col-12 col-md-6 mb-3">
                                                                             <div className="form-group">
-                                                                                <label>Username</label>
-                                                                                <input className="form-control" type="text" name="username" placeholder="johnny.s" value="johnny.s" />
+                                                                                <label htmlhtmlFor="lastName" className="form-label">Apellidos</label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className="form-control form-control-xl input-color"
+                                                                                    name='lastName'
+                                                                                    id='lastName'
+                                                                                    value={this.state.data.lastName.value}
+                                                                                    onChange={(event) => this.setChangeInputEvent('lastName', event)}
+                                                                                    disabled={this.state.loading}
+                                                                                    autoComplete='off'
+                                                                                />
+                                                                                <div
+                                                                                    className="invalid-feedback error-color"
+                                                                                    style={{
+                                                                                        display: this.state.data.lastName.errors.length > 0 ? 'block' : 'none'
+                                                                                    }}>
+                                                                                    {this.state.data.lastName.errors[0]}
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
+
                                                                     <div className="row">
-                                                                        <div className="col">
+                                                                        <div className="col-12 col-md-6 mb-3">
                                                                             <div className="form-group">
-                                                                                <label>Email</label>
-                                                                                <input className="form-control" type="text" placeholder="user@example.com" />
+                                                                                <label htmlhtmlFor="documentType" className="form-label">Tipo de documento</label>
+                                                                                <select
+                                                                                    className="form-select"
+                                                                                    id="documentType"
+                                                                                    name='documentType'
+                                                                                    value={this.state.data.documentType.value}
+                                                                                    required={false}
+                                                                                    onChange={(event) => this.setChangeInputEvent('documentType', event)}
+                                                                                    disabled={this.state.loading || this.state.isSuccessfullyCreation}>
+                                                                                    <option value={null}>Seleccionar...</option>
+                                                                                    {documentTypes.map((item, index) => {
+                                                                                        return (<option value={item.id} key={index}>{item.name}</option>);
+                                                                                    })}
+                                                                                </select>
+                                                                                <div
+                                                                                    className="invalid-feedback error-color"
+                                                                                    style={{
+                                                                                        display: this.state.data.documentType.errors.length > 0 ? 'block' : 'none'
+                                                                                    }}>
+                                                                                    {this.state.data.documentType.errors[0]}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-12 col-md-6 mb-3">
+                                                                            <div className="form-group">
+                                                                                <label htmlhtmlFor="documentNumber" className="form-label">Número de documento</label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className="form-control form-control-xl input-color"
+                                                                                    name='documentNumber'
+                                                                                    id='documentNumber'
+                                                                                    value={this.state.data.documentNumber.value}
+                                                                                    onChange={(event) => this.setChangeInputEvent('documentNumber', event)}
+                                                                                    disabled={this.state.loading}
+                                                                                    autoComplete='off'
+                                                                                />
+                                                                                <div
+                                                                                    className="invalid-feedback error-color"
+                                                                                    style={{
+                                                                                        display: this.state.data.documentNumber.errors.length > 0 ? 'block' : 'none'
+                                                                                    }}>
+                                                                                    {this.state.data.documentNumber.errors[0]}
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
+
                                                                     <div className="row">
-                                                                        <div className="col mb-3">
+                                                                        <div className="col-12 col-md-6 mb-3">
                                                                             <div className="form-group">
-                                                                                <label>About</label>
-                                                                                <textarea className="form-control" rows="5" placeholder="My Bio"></textarea>
+                                                                                <label htmlhtmlFor="email" className="form-label">Correo electrónico</label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className="form-control form-control-xl input-color"
+                                                                                    name='email'
+                                                                                    id='email'
+                                                                                    value={this.state.data.email.value}
+                                                                                    onChange={(event) => this.setChangeInputEvent('email', event)}
+                                                                                    disabled={this.state.loading}
+                                                                                    autoComplete='off'
+                                                                                />
+                                                                                <div
+                                                                                    className="invalid-feedback error-color"
+                                                                                    style={{
+                                                                                        display: this.state.data.email.errors.length > 0 ? 'block' : 'none'
+                                                                                    }}>
+                                                                                    {this.state.data.email.errors[0]}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-12 col-md-6 mb-3">
+                                                                            <div className="form-group">
+                                                                                <label htmlhtmlFor="phoneNumber" className="form-label">Número de celular</label>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className="form-control form-control-xl input-color"
+                                                                                    name='phoneNumber'
+                                                                                    id='phoneNumber'
+                                                                                    value={this.state.data.phoneNumber.value}
+                                                                                    onChange={(event) => this.setChangeInputEvent('phoneNumber', event)}
+                                                                                    disabled={this.state.loading}
+                                                                                    autoComplete='off'
+                                                                                />
+                                                                                <div
+                                                                                    className="invalid-feedback error-color"
+                                                                                    style={{
+                                                                                        display: this.state.data.phoneNumber.errors.length > 0 ? 'block' : 'none'
+                                                                                    }}>
+                                                                                    {this.state.data.phoneNumber.errors[0]}
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -313,16 +417,16 @@ class Page extends React.Component {
                                             <div className="px-xl-3">
                                                 <button className="btn btn-block btn-secondary">
                                                     <i className="fa fa-sign-out"></i>
-                                                    <span>Logout</span>
+                                                    <span style={{ marginLeft: '5px' }}>Salir</span>
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="card">
                                         <div className="card-body">
-                                            <h6 className="card-title font-weight-bold">Support</h6>
-                                            <p className="card-text">Get fast, free help from our friendly assistants.</p>
-                                            <button type="button" className="btn btn-primary">Contact Us</button>
+                                            <h6 className="card-title font-weight-bold">Soporte</h6>
+                                            <p className="card-text">Obtén ayuda y soluciona rápido las solicitudes.</p>
+                                            <button type="button" className="btn btn-primary">Contáctanos</button>
                                         </div>
                                     </div>
                                 </div>
