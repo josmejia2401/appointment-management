@@ -11,19 +11,20 @@ import Error403Page from './pages/errors/403';
 import Error404Page from './pages/errors/404';
 import Error500Page from './pages/errors/500';
 
-//import CustomersViewPage from './pages/customers/view';
-const CustomersViewPage = React.lazy(() => import('./pages/customers/view'));
+import CustomersViewPage from './pages/customers/view';
+//const CustomersViewPage = React.lazy(() => import('./pages/customers/view'));
 
-//import TeamViewPage from './pages/team/view';
-const TeamViewPage = React.lazy(() => import('./pages/team/view'));
+import TeamViewPage from './pages/team/view';
+//const TeamViewPage = React.lazy(() => import('./pages/team/view'));
 
-//import CalendarViewPage from './pages/calendar/view';
-const CalendarViewPage = React.lazy(() => import('./pages/calendar/view'));
+import CalendarViewPage from './pages/calendar/view';
+//const CalendarViewPage = React.lazy(() => import('./pages/calendar/view'));
 
-//import ServiceViewPage from './pages/services/view';
-const ServiceViewPage = React.lazy(() => import('./pages/services/view'));
+import ServiceViewPage from './pages/services/view';
+//const ServiceViewPage = React.lazy(() => import('./pages/services/view'));
 
-const ProfileEditPage = React.lazy(() => import('./pages/profile/edit'));
+import ProfileEditPage from './pages/profile/edit';
+//const ProfileEditPage = React.lazy(() => import('./pages/profile/edit'));
 
 
 function App() {

@@ -88,7 +88,7 @@ class Page extends React.Component {
         }).catch(err => {
             console.log(err.fileName, err);
             this.updateState({ loading: false });
-            this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
+            //this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
         });
     }
 
@@ -114,7 +114,7 @@ class Page extends React.Component {
         }).catch(err => {
             console.log(err.fileName, err);
             this.updateState({ loading: false });
-            this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
+            //this.props.addNotification({ typeToast: 'error', text: err.message, title: err.error });
         });
     }
 
